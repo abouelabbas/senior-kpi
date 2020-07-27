@@ -322,7 +322,7 @@
     "select-hose": "^2.0.0",
     "selfsigned": "^1.10.4",
     "semver": "^5.7.0",
-    "serialize-javascript": "^1.7.0",
+    "serialize-javascript": "^2.1.1",
     "serve-index": "^1.9.1",
     "set-blocking": "^2.0.0",
     "set-value": "^2.0.1",
