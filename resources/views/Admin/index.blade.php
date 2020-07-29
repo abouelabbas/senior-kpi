@@ -58,7 +58,7 @@
               <div class="col-xl-6 col-md-12">
                   <div class="ms-panel">
                       <div class="ms-panel-header">
-                          <h6>Recent Students</h6>
+                          <h6>Last Students</h6>
                       </div>
                       <div class="ms-panel-body p-0">
                           <div class="table-responsive">
