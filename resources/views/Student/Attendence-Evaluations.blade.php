@@ -170,7 +170,7 @@
 
                           <div class="progress-value">
 
-                              @if ($AllAttend != 0)
+                              @if ($Run != 0)
 
                               {{number_format(($IsAttend/$Run)*100,1)}}%
 
