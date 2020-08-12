@@ -198,7 +198,7 @@
 
                               aria-valuenow="
 
-                              @if ($AllAttend != 0)
+                              @if ($Run != 0)
 
                               {{($IsAttend/$Run)*100}}
 
