@@ -224,7 +224,7 @@
 
                       data-target="#taskModal{{$Session->SessionId}}">
 
-                          <i class="fa fa-eye"></i> View
+                          <i class="fa fa-eye"></i> Trainer task
 
                         </a>
 
@@ -234,14 +234,16 @@
 
                       data-target="#uploadtaskModal{{$Session->SessionId}}">
 
-                          <i class="fa fa-upload"></i> Upload
+                          <i class="fa fa-upload"></i> Upload solution
 
                         </a>
-  <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->TaskURL}}" download class="
+  <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->TaskURL}}" download class="@if ($Session->SessionTask === null && $Session->TaskText === null)disabled
+
+    @endif
 
 btn btn-square btn-outline-info has-icon" >
 
-<i class="fa fa-eye"></i> Download my task
+<i class="fa fa-eye"></i> Download solution
 
 </a>
                       </td>
