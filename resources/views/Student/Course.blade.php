@@ -228,9 +228,7 @@
 
                         </a>
 
-                        <a href="#" class="@if ($Session->SessionTask === null && $Session->TaskText === null)disabled
-
-                          @endif btn btn-square btn-outline-info has-icon" data-toggle="modal"
+                        <a href="#" class="btn btn-square btn-outline-info has-icon" data-toggle="modal"
 
                       data-target="#uploadtaskModal{{$Session->SessionId}}">
 
