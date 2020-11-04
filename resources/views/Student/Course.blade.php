@@ -235,11 +235,7 @@
                           <i class="fa fa-upload"></i> Upload solution
 
                         </a>
-  <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->TaskURL}}" download class="@if ($Session->SessionTask === null && $Session->TaskText === null)disabled
-
-    @endif
-
-btn btn-square btn-outline-info has-icon" >
+  <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->TaskURL}}" download class="btn btn-square btn-outline-info has-icon" >
 
 <i class="fa fa-eye"></i> Download solution
 
