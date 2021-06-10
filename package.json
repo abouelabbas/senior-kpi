@@ -96,7 +96,7 @@
     "css-select-base-adapter": "^0.1.1",
     "css-selector-tokenizer": "^0.7.1",
     "css-tree": "^1.0.0-alpha.33",
-    "css-what": "^2.1.3",
+    "css-what": "^5.0.1",
     "cssesc": "^0.1.0",
     "cyclist": "^0.2.2",
     "date-now": "^0.1.4",
