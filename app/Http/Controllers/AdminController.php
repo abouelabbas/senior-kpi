@@ -49,9 +49,6 @@ class AdminController extends Controller
 
         $this->middleware('login');
         $this->middleware('AvoidStudentsAndTrainers');
-
-        $this->TrainerRounds = TrainerController::TrainerRounds();
-        $this->HistoryRounds = TrainerController::HistoryRounds();
         
     }
 
@@ -1476,7 +1473,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
     {
         $RoundId = $id;
         $Round = DB::table('rounds')->join('courses','courses.CourseId','=','rounds.CourseId')->where('RoundId','=',$id)->first();
-        return View('Admin.MyCourses.my-Courses',['Round'=>$Round,'Notifications'=>AdminController::Notifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundId'=>$RoundId,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications()]);
+        return View('Admin.MyCourses.my-Courses',['Round'=>$Round,'Notifications'=>AdminController::Notifications(),'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),'RoundId'=>$RoundId,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications()]);
     }
     public function CourseStudents(int $id)
     {
@@ -1489,7 +1486,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
         ->where('rounds.RoundId','=',$id)
         ->first();
 
-        return View('Admin.MyCourses.students',['Notifications'=>AdminController::Notifications(),'TrainerRounds'=>$this->TrainerRounds,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'HistoryRounds'=>$this->HistoryRounds,'RoundStudents'=>$RoundStudents,'Round'=>$Round]);
+        return View('Admin.MyCourses.students',['Notifications'=>AdminController::Notifications(),'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'RoundStudents'=>$RoundStudents,'Round'=>$Round]);
     }
     public function StudentDetails(int $id)
     {
@@ -1539,8 +1536,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
         ->join('roundcontent','roundcontent.RoundContentId','=','studentevaluation.RoundContentId')
         ->where('StudentRoundId','=',$id)->get();
         return View('Admin.MyCourses.student-details',[
-            'TrainerRounds'=>$this->TrainerRounds,
-            'HistoryRounds'=>$this->HistoryRounds,
+            'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),
             'Attendance'=>$Attendance,
             'IsAttend'=>$IsAttend,
             'NotAttend'=>$NotAttend,
@@ -1571,8 +1567,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
              'Course'=>$Course,
              'ActiveRounds'=>AdminController::ActiveRounds(),
              'CountNotifications'=>AdminController::CountNotifications(),
-             'TrainerRounds'=>$this->TrainerRounds,
-             'HistoryRounds'=>$this->HistoryRounds,
+             'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),
              'Sessions'=>$Sessions]);
     }
     public function CourseDoneTopic(int $id)
@@ -1587,7 +1582,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
         $RoundId = $id;
         $Round = Rounds::find($id);
         $Course = Courses::find($Round->CourseId);
-        return View('Admin.MyCourses.doneTopics',['Notifications'=>AdminController::Notifications(),'Course'=>$Course,'Round'=>$Round,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);
+        return View('Admin.MyCourses.doneTopics',['Notifications'=>AdminController::Notifications(),'Course'=>$Course,'Round'=>$Round,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);
     }
     public function AddTopicTrainer(Request $request,int $id)
     {
@@ -1965,7 +1960,7 @@ public function SeniorEvaluation(int $id)
     {
         $Sessions = Sessions::where('RoundId','=',$id)->get();
 
-        return View('Admin.MyCourses.attendence',['Notifications'=>AdminController::Notifications(),'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'Sessions'=>$Sessions]);
+        return View('Admin.MyCourses.attendence',['Notifications'=>AdminController::Notifications(),'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),'Sessions'=>$Sessions]);
     }
     public function CourseAttendanceDetails(int $id)
     {
