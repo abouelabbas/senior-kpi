@@ -1582,6 +1582,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
         ->get();
         $SubTopics = DB::table('roundsubcontents')
         ->join('roundcontent','roundcontent.RoundContentId','=','roundsubcontents.RoundContentId')
+        ->where('RoundId','=',$id)
         ->get();
         $RoundId = $id;
         $Round = Rounds::find($id);
