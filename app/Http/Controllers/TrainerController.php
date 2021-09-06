@@ -111,8 +111,6 @@ class TrainerController extends Controller
     //
     public function Index()
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $Rounds = Rounds::all()->count();
         $RunningRounds = Rounds::where('Done','=',1)->count();
         $Courses = Courses::all()->count();
@@ -125,7 +123,7 @@ class TrainerController extends Controller
         return View('Trainer.index',[
             'Rounds'=>$Rounds,'Running'=>$RunningRounds,'Courses'=>$Courses,'Students'=>$Students,'Trainers'=>$Trainers,
             'Branches'=>$Branches,'Labs'=>$Labs,'RecentStudents'=>$RecentStudents,
-            'Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds]);
+            'Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds()]);
     }
 
     //
