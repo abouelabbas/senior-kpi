@@ -321,6 +321,8 @@ class TrainerController extends Controller
     //
     public function CourseDoneTopic(int $id)
     {
+        $TrainerRounds = TrainerController::TrainerRounds();
+        $HistoryRounds = TrainerController::HistoryRounds();
         $Topics = DB::table('roundcontent')
         ->where('RoundId','=',$id)
         ->get();
@@ -329,7 +331,7 @@ class TrainerController extends Controller
         ->where('RoundId','=',$id)
         ->get();
         $RoundId = $id;
-        return View('Trainer.doneTopics',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);
+        return View('Trainer.doneTopics',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);
     }
 
     //
