@@ -37,8 +37,8 @@ class TrainerController extends Controller
         $this->middleware('login');
         $this->middleware('AvoidStudentsAndAdmins');
 
-        $this->TrainerRounds = $this->TrainerRounds();
-        $this->HistoryRounds = $this->HistoryRounds();
+        $this->TrainerRounds = TrainerController::TrainerRounds();
+        $this->HistoryRounds = TrainerController::HistoryRounds();
     }
     //
     // Layout Data
