@@ -37,8 +37,6 @@ class TrainerController extends Controller
         $this->middleware('login');
         $this->middleware('AvoidStudentsAndAdmins');
 
-        $this->TrainerRounds = TrainerController::TrainerRounds();
-        $this->HistoryRounds = TrainerController::HistoryRounds();
     }
     //
     // Layout Data
@@ -142,8 +140,8 @@ class TrainerController extends Controller
         [
             'Notifications'=>TrainerController::Notifications(),
             'CountNotifications'=>TrainerController::CountNotifications(),
-            'TrainerRounds'=>$this->TrainerRounds,
-            'HistoryRounds'=>$this->HistoryRounds,
+            'TrainerRounds'=>TrainerController::TrainerRounds(),
+            'HistoryRounds'=>TrainerController::HistoryRounds(),
             // 'ExternalCourses'=>$ExternalCoursesArr
             ]);
     }
