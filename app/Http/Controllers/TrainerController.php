@@ -326,6 +326,7 @@ class TrainerController extends Controller
         ->get();
         $SubTopics = DB::table('roundsubcontents')
         ->join('roundcontent','roundcontent.RoundContentId','=','roundsubcontents.RoundContentId')
+        ->where('RoundId','=',$id)
         ->get();
         $RoundId = $id;
         return View('Trainer.doneTopics',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);

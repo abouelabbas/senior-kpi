@@ -65,7 +65,7 @@
                                                             $i = 1
                                                         @endphp
                                                         @foreach ($SubTopics as $SubTopic)
-                                                        @if ($SubTopic->RoundContentId == $Topic->RoundContentId)
+                                                        {{-- @if ($SubTopic->RoundContentId == $Topic->RoundContentId) --}}
                                                         <tr>
                                                           <td>{{$i}}</td>
                                                             <td>
@@ -98,7 +98,7 @@
                                                           @php
                                                               $i++
                                                           @endphp
-                                                        @endif
+                                                        {{-- @endif --}}
                                                            
                                                         @endforeach
                                                        
