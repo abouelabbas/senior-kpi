@@ -36,6 +36,9 @@ class TrainerController extends Controller
     {
         $this->middleware('login');
         $this->middleware('AvoidStudentsAndAdmins');
+
+        $this->TrainerRounds = TrainerController::TrainerRounds();
+        $this->HistoryRounds = TrainerController::HistoryRounds();
     }
     //
     // Layout Data
@@ -56,7 +59,7 @@ class TrainerController extends Controller
         return $TrainerRounds;
     }
 
-    public function Notifications(Type $var = null)
+    public static function Notifications()
     {
         return Notifications::where([
             // ['IsRead','=',0],
@@ -66,7 +69,7 @@ class TrainerController extends Controller
         ->OrderBy('NotificationDate','Desc')
         ->get();
     }
-    public function CountNotifications(Type $var = null)
+    public static function CountNotifications()
     {
         return Notifications::where([
             ['IsRead','=',0],
@@ -110,9 +113,7 @@ class TrainerController extends Controller
     //
     public function Index()
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
 
-        $HistoryRounds = TrainerController::HistoryRounds();
         $Rounds = Rounds::all()->count();
         $RunningRounds = Rounds::where('Done','=',1)->count();
         $Courses = Courses::all()->count();
@@ -125,7 +126,7 @@ class TrainerController extends Controller
         return View('Trainer.index',[
             'Rounds'=>$Rounds,'Running'=>$RunningRounds,'Courses'=>$Courses,'Students'=>$Students,'Trainers'=>$Trainers,
             'Branches'=>$Branches,'Labs'=>$Labs,'RecentStudents'=>$RecentStudents,
-            'Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds]);
+            'Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds]);
     }
 
     //
@@ -133,8 +134,6 @@ class TrainerController extends Controller
     //
     public function profile()
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         // $ExternalCourses = session()->get('ExternalCourses');
         // $ExternalCoursesArr = explode(",",$ExternalCourses);
 
@@ -142,8 +141,8 @@ class TrainerController extends Controller
         [
             'Notifications'=>TrainerController::Notifications(),
             'CountNotifications'=>TrainerController::CountNotifications(),
-            'TrainerRounds'=>$TrainerRounds,
-            'HistoryRounds'=>$HistoryRounds,
+            'TrainerRounds'=>$this->TrainerRounds,
+            'HistoryRounds'=>$this->HistoryRounds,
             // 'ExternalCourses'=>$ExternalCoursesArr
             ]);
     }
@@ -153,10 +152,8 @@ class TrainerController extends Controller
     //
     public function CourseProgress(int $id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $RoundId = $id;
-        return View('Trainer.my-Courses',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'RoundId'=>$RoundId]);
+        return View('Trainer.my-Courses',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundId'=>$RoundId]);
     }
 
     //
@@ -164,8 +161,6 @@ class TrainerController extends Controller
     //
     public function CourseStudents($id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $RoundStudents = DB::table('studentrounds')
         ->join('students','students.StudentId','=','studentrounds.StudentId')
         ->where('RoundId','=',$id)
@@ -175,7 +170,7 @@ class TrainerController extends Controller
         ->where('rounds.RoundId','=',$id)
         ->first();
 
-        return View('Trainer.students',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'RoundStudents'=>$RoundStudents,'Round'=>$Round]);
+        return View('Trainer.students',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundStudents'=>$RoundStudents,'Round'=>$Round]);
     }
 
     //
@@ -183,11 +178,9 @@ class TrainerController extends Controller
     //
     public function CourseAttendance(int $id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $Sessions = Sessions::where('RoundId','=',$id)->get();
 
-        return View('Trainer.attendence',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'Sessions'=>$Sessions,'RoundId'=>$id]);
+        return View('Trainer.attendence',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'Sessions'=>$Sessions,'RoundId'=>$id]);
     }
 
     //
@@ -195,8 +188,6 @@ class TrainerController extends Controller
     //
     public function CourseAttendanceDetails(int $id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $Attendance = DB::table('attendance')
         ->join('studentrounds','studentrounds.StudentRoundsId','=','attendance.StudentRoundsId')
         ->join('students','studentrounds.StudentId','=','students.StudentId')
@@ -215,7 +206,7 @@ class TrainerController extends Controller
             $AttendanceKPI = 0;
         }
 
-        return View('Trainer.session-attendence',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'Attendance'=>$Attendance,'KPI'=>$AttendanceKPI,'RoundId'=>$Session->RoundId]);
+        return View('Trainer.session-attendence',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'Attendance'=>$Attendance,'KPI'=>$AttendanceKPI,'RoundId'=>$Session->RoundId]);
     }
 
     //
@@ -223,13 +214,11 @@ class TrainerController extends Controller
     //
     public function CourseSessions(int $id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $Sessions = Sessions::where('RoundId','=',$id)->get();
         $Round = Rounds::find($id);
         $Course = Courses::find($Round->CourseId);
 
-        return View('Trainer.sessions',['Round'=>$Round,'Course'=>$Course,'Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'Sessions'=>$Sessions]);
+        return View('Trainer.sessions',['Round'=>$Round,'Course'=>$Course,'Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'Sessions'=>$Sessions]);
     }
 
     //
@@ -332,8 +321,6 @@ class TrainerController extends Controller
     //
     public function CourseDoneTopic(int $id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $Topics = DB::table('roundcontent')
         ->where('RoundId','=',$id)
         ->get();
@@ -341,7 +328,7 @@ class TrainerController extends Controller
         ->join('roundcontent','roundcontent.RoundContentId','=','roundsubcontents.RoundContentId')
         ->get();
         $RoundId = $id;
-        return View('Trainer.doneTopics',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);
+        return View('Trainer.doneTopics',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);
     }
 
     //
@@ -453,8 +440,6 @@ class TrainerController extends Controller
     //
     public function StudentDetails(int $id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $StudentRound = StudentRounds::find($id);
         $Student = Students::find($StudentRound->StudentId);
         $AttendanceStatement = DB::table("attendance")
@@ -507,8 +492,8 @@ class TrainerController extends Controller
 
 
         return View('Trainer.student-details',[
-            'TrainerRounds'=>$TrainerRounds,
-            'HistoryRounds'=>$HistoryRounds,
+            'TrainerRounds'=>$this->TrainerRounds,
+            'HistoryRounds'=>$this->HistoryRounds,
             'Attendance'=>$Attendance,
             'IsAttend'=>$IsAttend,
             'NotAttend'=>$NotAttend,
@@ -736,8 +721,6 @@ if($dataPercentage){
     //
     public function CenterEvaluation(int $id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $TrainerRound= TrainerRounds::where([
             ['RoundId','=',$id],['TrainerId','=',session('Id')]
         ])->first();
@@ -751,7 +734,7 @@ if($dataPercentage){
 
         // return $CenterEvaluations;
 
-        return View('Trainer.trainer-center',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'RoundContent'=>$CenterEvaluations]);
+        return View('Trainer.trainer-center',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundContent'=>$CenterEvaluations]);
     }
 
     //
@@ -759,11 +742,9 @@ if($dataPercentage){
     //
     public function EditProfile()
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $Trainer = Trainers::where('TrainerId','=',session()->get('Id'))->first();
 
-        return View('Trainer.edit-profile',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'Trainer'=>$Trainer]);
+        return View('Trainer.edit-profile',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'Trainer'=>$Trainer]);
     }
 
     //
@@ -856,10 +837,9 @@ if($dataPercentage){
         ->get();
         $RoundEvalCount = $RoundEvaluations->count();
         // return $RoundEvaluations[0]->Enough_Hours/$RoundEvalCount;
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
+
         return View('Trainer.Attendence-Evaluations',[
-            'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,
+            'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,
             'TrainerEvaluations'=>$TrainerEvaluations,
             'RoundEvaluations'=>$RoundEvaluations,
             'TrainerEvalCount'=>$TrainerEvalCount,
@@ -882,11 +862,8 @@ if($dataPercentage){
     //
     public function chat()
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
 
-        $HistoryRounds = TrainerController::HistoryRounds();
-
-        return View('Trainer.chat',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds]);
+        return View('Trainer.chat',['Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds]);
     }
 
     //
