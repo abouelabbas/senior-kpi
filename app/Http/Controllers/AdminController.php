@@ -1575,8 +1575,6 @@ public function ConfirmCancelStudentRegisteration(int $id)
     }
     public function CourseDoneTopic(int $id)
     {
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
         $Topics = DB::table('roundcontent')
         ->where('RoundId','=',$id)
         ->get();
