@@ -43,14 +43,15 @@ use PHPUnit\Framework\Constraint\Count;
 class AdminController extends Controller
 {
 
+
     public function __construct()
     {
 
         $this->middleware('login');
         $this->middleware('AvoidStudentsAndTrainers');
 
-        $TrainerRounds = TrainerController::TrainerRounds();
-        $HistoryRounds = TrainerController::HistoryRounds();
+        $this->TrainerRounds = TrainerController::TrainerRounds();
+        $this->HistoryRounds = TrainerController::HistoryRounds();
     }
 
     //Controller methods
@@ -1584,7 +1585,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
         $RoundId = $id;
         $Round = Rounds::find($id);
         $Course = Courses::find($Round->CourseId);
-        return View('Admin.MyCourses.doneTopics',['Notifications'=>AdminController::Notifications(),'Course'=>$Course,'Round'=>$Round,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds,'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);
+        return View('Admin.MyCourses.doneTopics',['Notifications'=>AdminController::Notifications(),'Course'=>$Course,'Round'=>$Round,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'TrainerRounds'=>$this->TrainerRounds,'HistoryRounds'=>$this->HistoryRounds,'RoundId'=>$RoundId,'Topics'=>$Topics,'SubTopics'=>$SubTopics]);
     }
     public function AddTopicTrainer(Request $request,int $id)
     {
