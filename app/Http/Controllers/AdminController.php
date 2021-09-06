@@ -45,8 +45,12 @@ class AdminController extends Controller
 
     public function __construct()
     {
+
         $this->middleware('login');
         $this->middleware('AvoidStudentsAndTrainers');
+
+        $TrainerRounds = TrainerController::TrainerRounds();
+        $HistoryRounds = TrainerController::HistoryRounds();
     }
 
     //Controller methods
@@ -61,7 +65,7 @@ class AdminController extends Controller
         ->join('courses','rounds.CourseId','=','courses.CourseId')->get();
     }
     
-    public function Notifications(Type $var = null)
+    public static function Notifications()
     {
         return Notifications::where([
             // ['IsRead','=',0],
@@ -71,7 +75,7 @@ class AdminController extends Controller
         ->get();
         // ->take(6)
     }
-    public function CountNotifications(Type $var = null)
+    public static function CountNotifications()
     {
         return Notifications::where([
             ['IsRead','=',0],
