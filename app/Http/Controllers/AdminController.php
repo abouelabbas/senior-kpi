@@ -2074,7 +2074,7 @@ public function StudentResetPassword(Request $request)
 
             
             $Task = Tasks::find($TaskId);
-            $filename = $request->task->storeAs('/public/uploads/round'. $Round->id .'/session'.$Task->SessionId ,"$Student->FullnameEn" . time() .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn" . time() .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
 
             //storing task
             // $Task = Tasks::where([
