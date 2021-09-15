@@ -368,7 +368,7 @@
 
                                                          <td>
                                                            @if($Grade->TaskURL !== null)
-                                                           <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Grade->TaskURL}}" download class="ms-btn-icon-outline btn-info">
+                                                           <a href='{{url("/storage/app/public/$Grade->TaskURL")}}' download class="ms-btn-icon-outline btn-info">
 
                                                                  <i class="fa fa-download"></i>
 
