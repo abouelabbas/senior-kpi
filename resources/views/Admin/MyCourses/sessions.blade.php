@@ -223,7 +223,7 @@
 
 
 
-                            <i class="fa fa-gear"></i> 
+                            <i class="fa fa-cog"></i> 
 
 
 

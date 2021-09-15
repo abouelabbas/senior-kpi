@@ -76,6 +76,7 @@ Route::get('/Admin/Session/Cancel/{id}','AdminController@CancelSession');
 Route::get('/Admin/Session/Cancel/{id}/Undo','AdminController@UndoCancelSession');
 Route::get('/Admin/Course/Student/CancelRegisteration/{id}','AdminController@CancelStudentRegisteration');
 Route::get('/Admin/Course/Student/CancelRegisteration/Confirm/{id}','AdminController@ConfirmCancelStudentRegisteration');
+Route::get('/session/task/students/{id}','AdminController@TaskProgress');
 
 
 //Admin-POST Routes

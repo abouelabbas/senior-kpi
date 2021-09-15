@@ -2123,4 +2123,8 @@ public function UndoCancelSession(int $id)
         
         return redirect()->back()->with('cancelsession',"Session $Session->SessionNumber is reactivated successfully");
     }
+    public function TaskProgress(int $id)
+    {
+        return $id;
+    }
 }
