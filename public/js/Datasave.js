@@ -44,6 +44,58 @@ $('#saveTPer').click(function(){
 
 
 
+//session prog table mapping
+
+$('#savesessionprog').click(function(){
+
+    debugger;
+    $('#prog > tbody  > tr').each(function() {    
+
+    var id = $(this).find('input.id').val();
+
+    // var StudentRound = $(this).find('input.quiz').attr('data-studentround');
+
+    var TaskGrade = $(this).find('input.task').val();
+
+    $.ajax({
+
+        type:'GET',
+
+        url:'/sessionProg',
+
+        data:{
+
+            id:id,
+
+            // StudentRound:StudentRound,
+
+            TaskGrade:TaskGrade,
+            Status:"update",
+
+        },
+
+        success:function(data) {
+
+           alert(data);
+
+        },
+
+        error: function (request, status, error) {
+
+            alert(request.responseText);
+
+        }
+
+     });
+
+});
+
+alert("تم حفظ البيانات");
+
+window.location.reload();
+
+})
+
 
 
 

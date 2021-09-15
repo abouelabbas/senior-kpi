@@ -2125,6 +2125,39 @@ public function UndoCancelSession(int $id)
     }
     public function TaskProgress(int $id)
     {
-        return $id;
+        $Session = Sessions::find($id);
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        $tasks = DB::table('tasks')
+        ->join('studentrounds','studentrounds.StudentRoundsId','=','tasks.StudentRoundId')
+        ->join('students','studentrounds.StudentId','=','students.StudentId')
+        ->join('grades','grades.TaskId','=','tasks.TaskId')
+        ->where('SessionId','=',$id)->get();
+        
+        return View('Admin.MyCourses.session-prog',
+        ['ActiveRounds'=>AdminController::ActiveRounds(),
+        'CountNotifications'=>AdminController::CountNotifications(),
+        'Notifications'=>AdminController::Notifications(),
+        'SessionId'=>$id,
+        'Tasks'=>$tasks,
+        'Round'=>$Round,
+        'Course'=>$Course,
+        'Session'=>$Session
+        ]);
+    }
+
+    public function sessionProg(Request $request)
+    {
+        if($request->ajax()){
+            
+            if($request->Status == 'update'){
+                $grade = Grades::find($request->id);
+                $grade->TaskGrade=$request->TaskGrade;
+                $grade->save();
+            }
+            return "$request->TaskGrade - $request->id";
+            
+        }
+
     }
 }
