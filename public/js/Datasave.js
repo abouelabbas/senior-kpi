@@ -75,8 +75,9 @@ $('#savesessionprog').click(function(){
         },
 
         success:function(data) {
+            alert("تم حفظ البيانات");
 
-           alert(data);
+            window.location.reload();
 
         },
 
@@ -90,9 +91,7 @@ $('#savesessionprog').click(function(){
 
 });
 
-alert("تم حفظ البيانات");
 
-window.location.reload();
 
 })
 
@@ -142,7 +141,10 @@ $('#save').click(function(){
 
         success:function(data) {
 
-           //alert("Success");
+           
+alert("تم حفظ البيانات");
+
+window.location.reload();
 
         },
 
@@ -156,9 +158,6 @@ $('#save').click(function(){
 
 });
 
-alert("تم حفظ البيانات");
-
-window.location.reload();
 
 })
 
