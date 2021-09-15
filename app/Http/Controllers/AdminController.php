@@ -2063,11 +2063,14 @@ public function StudentResetPassword(Request $request)
     public function UploadTask(Request $request)
     {
         if($request->hasFile('task')){
-            $filename = $request->task->store('/public/uploads',['disk' => 'public']);
             //$request->ImagePath->storeAs('/public/uploads',$filename);
             $TaskId = $request->TaskId;
             // $round = $request->round;
             $StudentRoundId = $request->id;
+
+            $StudentRound = StudentRounds::find($StudentRoundId);
+            $Student = Students::find($StudentRound->StudentId);
+            $filename = $request->task->storeAs('/public/uploads',"$Student->FullnameEn - " . uniqid(),['disk' => 'public']);
 
             //storing task
             // $Task = Tasks::where([
@@ -2082,9 +2085,6 @@ public function StudentResetPassword(Request $request)
             
             
 
-
-            $StudentRound = StudentRounds::find($StudentRoundId);
-            $Student = Students::find($StudentRound->StudentId);
             $Round = Rounds::find($StudentRound->RoundId);
             $Course = Courses::find($Round->CourseId);
             $ThisSession = Sessions::find($Task->SessionId);
