@@ -117,10 +117,19 @@
                         </td>
 
                         <td>
+                          <input class="set" type="hidden"
+                          @if($Task->TaskURL != null)
+                          value="1"
+                          @else
+                          value="0"
+                          @endif
+                          />
                          @if($Task->TaskURL != null)
+                          
                           <input class="form-control id" type="hidden" value="{{$Task->GradeId}}" />
                           <input class="form-control task" placeholder="ex: 50" value="{{$Task->TaskGrade}}" />
                          @endif
+                         
                         </td>
 
                   

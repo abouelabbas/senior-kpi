@@ -2152,7 +2152,7 @@ public function UndoCancelSession(int $id)
             
             if($request->Status == 'update'){
                 $grade = Grades::find($request->id);
-                $grade->TaskGrade=$request->TaskGrade;
+                $grade->TaskGrade = $request->TaskGrade;
                 $grade->save();
             }
             return "$request->TaskGrade - $request->id";

@@ -49,11 +49,16 @@ $('#saveTPer').click(function(){
 $('#savesessionprog').click(function(){
     $('#prog > tbody  > tr').each(function() {    
 
+       if($(this).find('input.set').val() == "1"){
         var id = $(this).find('input.id').val();
     
         // var StudentRound = $(this).find('input.quiz').attr('data-studentround');
-    
-        var TaskGrade = $(this).find('input.task').val();
+        if($(this).find('input.task').val()){
+            var TaskGrade = $(this).find('input.task').val();
+
+        }else{
+            var TaskGrade = null;
+        }
     
         $.ajax({
     
@@ -73,16 +78,17 @@ $('#savesessionprog').click(function(){
             },
     
             success:function(data) {
-    
+                console.log(data)
             },
     
             error: function (request, status, error) {
     
-                alert(request.responseText);
+                //console.log(request.responseText);
     
             }
     
          });
+       }
     
     });
             
