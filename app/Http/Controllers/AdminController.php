@@ -2070,7 +2070,7 @@ public function StudentResetPassword(Request $request)
 
             $StudentRound = StudentRounds::find($StudentRoundId);
             $Student = Students::find($StudentRound->StudentId);
-            $filename = $request->task->storeAs('/public/uploads',"$Student->FullnameEn - " . uniqid() . $request->task->extension() ,['disk' => 'public']);
+            $filename = $request->task->storeAs('/public/uploads',"$Student->FullnameEn" . time() ,['disk' => 'public']);
 
             //storing task
             // $Task = Tasks::where([
