@@ -208,7 +208,7 @@
 
                           </a>
                           @if ($Session->SessionTask !== null || $Session->TaskText !== null)
-                          <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->SessionTask}}" class="btn btn-square btn-outline-primary has-icon" >
+                          <a href='{{url("/storage/app/public/$Session->SessionTask")}}' class="btn btn-square btn-outline-primary has-icon" >
 
 
 
@@ -219,6 +219,17 @@
                             Download Task
 
                           </a>
+                          <a href='{{url("/session/task/students/$Session->SessionId")}}' class="btn btn-square btn-outline-primary has-icon" >
+
+
+
+                            <i class="fa fa-gear"></i> 
+
+
+
+                          Check progress
+
+                        </a>
                           @endif
                           @endif
                         </td>

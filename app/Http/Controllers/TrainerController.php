@@ -1062,29 +1062,27 @@ if($dataPercentage){
     public function UploadTask(Request $request)
     {
         if($request->hasFile('task')){
-            $filename = $request->task->store('/public/uploads',['disk' => 'public']);
             //$request->ImagePath->storeAs('/public/uploads',$filename);
             $TaskId = $request->TaskId;
             // $round = $request->round;
             $StudentRoundId = $request->id;
-
+            $StudentRound = StudentRounds::find($StudentRoundId);
+            $Student = Students::find($StudentRound->StudentId);
+            $Round = Rounds::find($StudentRound->RoundId);
+            
+            $Task = Tasks::find($TaskId);
+            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn" . time() .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
             //storing task
             // $Task = Tasks::where([
             //     ['StudentRoundId','=',$StudentRoundId],
             //     ['SessionId','=',$Session]
             // ])->first();
-            $Task = Tasks::find($TaskId);
             $Task->TaskURL = $filename;
             $Task->IsGrade = 1;
             $Task->save();
             // return $Task;
             
-            
 
-
-            $StudentRound = StudentRounds::find($StudentRoundId);
-            $Student = Students::find($StudentRound->StudentId);
-            $Round = Rounds::find($StudentRound->RoundId);
             $Course = Courses::find($Round->CourseId);
             $ThisSession = Sessions::find($Task->SessionId);
                 $TrainerRounds = TrainerRounds::where('RoundId','=',$StudentRound->RoundId)->get();
