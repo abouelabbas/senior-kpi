@@ -2167,7 +2167,7 @@ public function UndoCancelSession(int $id)
     {
         $Session = $Session = Sessions::find($id);
 
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         $filename = "Round".$Session->RoundId."-Session".$Session->SessionId."-".time().".zip";
         if ($zip->open(storage_path($filename), \ZipArchive::CREATE)== TRUE)
         {
