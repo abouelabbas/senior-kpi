@@ -147,6 +147,7 @@ Route::get('/Trainer/Course/DoneTopics/Delete/{RoundSubContentsId}/{RoundId}','T
 Route::get('/Admin/Course/DoneTopics/Delete/{RoundSubContentsId}/{RoundId}','AdminController@DeleteSubContent');
 Route::get('/test','TrainerController@test');
 Route::get('/sessionProg','AdminController@sessionProg');
+Route::get('/Session/{id}/Progress/File','AdminController@SessionProgressZip');
 Route::post('/Admin/TaskUpload','AdminController@UploadTask');
 Route::post('/Trainer/TaskUpload','TrainerController@UploadTask');
 Route::get('/ExamGrade','TrainerController@ExamGrade');

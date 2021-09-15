@@ -32,13 +32,16 @@ use App\Trainers;
 use App\TrainerSubAgenda;
 use Carbon\Carbon;
 use DateTime;
+use File;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File as FacadesFile;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use PHPUnit\Framework\Constraint\Count;
+use ZipArchive;
 
 class AdminController extends Controller
 {
@@ -2159,5 +2162,23 @@ public function UndoCancelSession(int $id)
             
         }
 
+    }
+    public function SessionProgressZip(int $id)
+    {
+        $Session = $Session = Sessions::find($id);
+
+        $zip = new \ZipArchive();
+        $filename = "Round".$Session->RoundId."-Session".$Session->SessionId."-".time().".zip";
+        if ($zip->open(storage_path($filename), \ZipArchive::CREATE)== TRUE)
+        {
+            $files = File::files(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId));
+            foreach ($files as $key => $value){
+                $relativeName = basename($value);
+                $zip->addFile($value, $relativeName);
+            }
+            $zip->close();
+        }
+
+        return response()->download(storage_path($filename));
     }
 }

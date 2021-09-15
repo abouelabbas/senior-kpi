@@ -10,8 +10,7 @@
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "predis/predis": "^1.1",
-        "pusher/pusher-php-server": "v3.0.1",
-        "chumper/zipper": "1.0.x"
+        "pusher/pusher-php-server": "v3.0.1"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

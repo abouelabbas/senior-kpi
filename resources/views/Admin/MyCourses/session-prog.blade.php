@@ -38,7 +38,11 @@
 
             <div class="ms-panel-body">
               <div class="d-flex justify-content-end">
+                <form action='{{url("/Session/$Session->SessionId/Progress/File")}}' method="get">
+                  <input type="button" value="Download all tasks" class="btn btn-success mb-2 mt-0">
+                </form>&nbsp;
                 <input type="submit" value="Save" id="savesessionprog" class="btn btn-success mb-2 mt-0">
+                
 
             </div>
 
