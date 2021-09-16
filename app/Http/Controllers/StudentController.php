@@ -297,33 +297,48 @@ class StudentController extends Controller
     public function UploadTask(Request $request)
     {
         if($request->hasFile('task')){
-            $filename = $request->task->store('/public/uploads',['disk' => 'public']);
             //$request->ImagePath->storeAs('/public/uploads',$filename);
-            $Session = $request->session;
-            $round = $request->round;
+            $TaskId = $request->TaskId;
+            // $round = $request->round;
             $StudentRoundId = $request->id;
 
-            //storing task
+            $StudentRound = StudentRounds::find($StudentRoundId);
+            $Round = Rounds::find($StudentRound->RoundId);
+            $Student = Students::find($StudentRound->StudentId);
+
+            $Session = $request->session;
+            
             $Task = Tasks::where([
                 ['StudentRoundId','=',$StudentRoundId],
                 ['SessionId','=',$Session]
             ])->first();
+            
+            if($Task->TaskURL){
+                if(file_exists(storage_path("app/public/".$Task->TaskURL))){
+                    unlink(storage_path("app/public/" . $Task->TaskURL));
+                }
+            }
+
+            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn" . time() .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+
+            //storing task
+            // $Task = Tasks::where([
+            //     ['StudentRoundId','=',$StudentRoundId],
+            //     ['SessionId','=',$Session]
+            // ])->first();
             $Task->TaskURL = $filename;
+            $Task->IsGrade = 1;
             $Task->save();
+            // return $Task;
             
             
 
-
-            $StudentRound = StudentRounds::find($StudentRoundId);
-            $Student = Students::find($StudentRound->StudentId);
-            $Round = Rounds::find($round);
             $Course = Courses::find($Round->CourseId);
-            $ThisSession = Sessions::find($Session);
-                $TrainerRounds = TrainerRounds::where('RoundId','=',$round)->get();
+            $ThisSession = Sessions::find($Task->SessionId);
+                $TrainerRounds = TrainerRounds::where('RoundId','=',$StudentRound->RoundId)->get();
                 foreach ($TrainerRounds as $key => $TrainerRound) {
                     $Notification = new Notifications();
                     $Notification->Notification = "$Student->FullnameEn has added his task in $Course->CourseNameEn GR$Round->GroupNo Session $ThisSession->SessionNumber";
-                    $Notification->NotificationLink = "/Course/Student/Details/$StudentRoundId";
                     $Notification->ForId = $TrainerRound->TrainerId;
                     $Notification->ForType = "Trainer";
                     $Notification->save();
@@ -331,12 +346,11 @@ class StudentController extends Controller
                 $Notification = new Notifications();
                 $Notification->Notification = "$Student->FullnameEn has added his task in $Course->CourseNameEn GR$Round->GroupNo Session $ThisSession->SessionNumber";
                 $Notification->ForType = "Admin";
-                $Notification->NotificationLink = "/Admin/Course/Student/Details/$StudentRoundId";
-
                 $Notification->save();
-           return Redirect::to("/Student/Course/$round");
+                return Redirect::to("/Student/Course/$Round->RoundId");
            
         }
+        
     }
 
     //trainer center evaluations

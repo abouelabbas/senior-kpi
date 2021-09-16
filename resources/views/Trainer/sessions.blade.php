@@ -224,6 +224,17 @@
                 Download Task
 
               </a>
+              <a href='{{url("/Trainer/session/task/students/$Session->SessionId")}}' class="btn btn-square btn-outline-primary has-icon" >
+
+
+
+                <i class="fa fa-cog"></i> 
+
+
+
+              Check progress
+
+            </a>
               @endif
               @endif
             </td>

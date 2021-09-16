@@ -315,7 +315,7 @@
                                   <th>Task Grade<br>100%</th>
 
                                   <th>Download Task</th>
-
+<th>Task notes</th>
 
 
 
@@ -381,7 +381,13 @@
 
                                                          </td>
 
-
+                                                         <td>
+                                                          @if($Grade->TaskURL != null)
+                                                           
+                                                          <textarea class="form-control comment" placeholder="ex: Great work!">{{$Grade->TaskComment}}</textarea>
+                                                          @endif
+                                                          
+                                                         </td>
 
                                                        </form>
 

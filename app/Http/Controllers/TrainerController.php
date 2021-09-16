@@ -28,6 +28,7 @@ use App\Events\ChatEvent;
 use App\Labs;
 use App\Notifications;
 use App\StudentEvaluations;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 
 class TrainerController extends Controller
@@ -542,6 +543,9 @@ $Notification->save();
 }
 
                $grade->TaskId = $request->id;
+               $Task = Tasks::find($grade->TaskId);
+                $Task->TaskComment = $request->comment;
+                $Task->save();
                $grade->QuizGrade=$request->QuizVal;
                $grade->TaskGrade=$request->TaskGrade;
                 $grade->save();
@@ -1066,12 +1070,22 @@ if($dataPercentage){
             $TaskId = $request->TaskId;
             // $round = $request->round;
             $StudentRoundId = $request->id;
+
             $StudentRound = StudentRounds::find($StudentRoundId);
-            $Student = Students::find($StudentRound->StudentId);
             $Round = Rounds::find($StudentRound->RoundId);
+            $Student = Students::find($StudentRound->StudentId);
+
             
             $Task = Tasks::find($TaskId);
+            
+            if($Task->TaskURL){
+                if(file_exists(storage_path("app/public/".$Task->TaskURL))){
+                    unlink(storage_path("app/public/" . $Task->TaskURL));
+                }
+            }
+
             $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn" . time() .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+
             //storing task
             // $Task = Tasks::where([
             //     ['StudentRoundId','=',$StudentRoundId],
@@ -1081,6 +1095,7 @@ if($dataPercentage){
             $Task->IsGrade = 1;
             $Task->save();
             // return $Task;
+            
             
 
             $Course = Courses::find($Round->CourseId);
@@ -1100,6 +1115,62 @@ if($dataPercentage){
            return Redirect::to("/Course/Student/Details/$StudentRoundId");
            
         }
+    }
+
+    public function TaskProgress(int $id)
+    {
+        $Session = Sessions::find($id);
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        $tasks = DB::table('tasks')
+        ->join('studentrounds','studentrounds.StudentRoundsId','=','tasks.StudentRoundId')
+        ->join('students','studentrounds.StudentId','=','students.StudentId')
+        ->join('grades','grades.TaskId','=','tasks.TaskId')
+        ->where('SessionId','=',$id)->get();
+        
+        return View('Trainer.session-prog',
+        ['TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),
+        'CountNotifications'=>AdminController::CountNotifications(),
+        'Notifications'=>AdminController::Notifications(),
+        'SessionId'=>$id,
+        'Tasks'=>$tasks,
+        'Round'=>$Round,
+        'Course'=>$Course,
+        'Session'=>$Session
+        ]);
+    }
+
+    public function sessionProg(Request $request)
+    {
+        if($request->ajax()){
+            
+            if($request->Status == 'update'){
+                $grade = Grades::find($request->id);
+                $grade->TaskGrade = $request->TaskGrade;
+                $grade->save();
+            }
+            return "$request->TaskGrade - $request->id";
+            
+        }
+
+    }
+    public function SessionProgressZip(int $id)
+    {
+        $Session = $Session = Sessions::find($id);
+
+        $zip = new \ZipArchive();
+        $filename = "Round".$Session->RoundId."-Session".$Session->SessionId."-".time().".zip";
+        if ($zip->open(storage_path($filename), \ZipArchive::CREATE)== TRUE)
+        {
+            $files = File::files(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId));
+            foreach ($files as $key => $value){
+                $relativeName = basename($value);
+                $zip->addFile($value, $relativeName);
+            }
+            $zip->close();
+        }
+
+        return response()->download(storage_path($filename));
     }
 
 }

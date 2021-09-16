@@ -47,6 +47,7 @@ $('#saveTPer').click(function(){
 //session prog table mapping
 
 $('#savesessionprog').click(function(){
+
     $('#prog > tbody  > tr').each(function() {    
 
        if($(this).find('input.set').val() == "1"){
@@ -59,6 +60,9 @@ $('#savesessionprog').click(function(){
         }else{
             var TaskGrade = null;
         }
+        
+        var comment = $(this).find('textarea.comment').val();
+    
     
         $.ajax({
     
@@ -69,11 +73,9 @@ $('#savesessionprog').click(function(){
             data:{
     
                 id:id,
-    
-                // StudentRound:StudentRound,
-    
                 TaskGrade:TaskGrade,
                 Status:"update",
+                comment:comment,
     
             },
     
@@ -105,7 +107,7 @@ $('#savesessionprog').click(function(){
 $('#save').click(function(){
 
     $('#grades > tbody  > tr').each(function() {    
-
+        debugger;
     var QuizVal = $(this).find('input.quiz').val();
 
     var id = $(this).find('input.quiz').attr('data-id')
@@ -113,6 +115,8 @@ $('#save').click(function(){
     // var StudentRound = $(this).find('input.quiz').attr('data-studentround');
 
     var TaskGrade = $(this).find('input.task').val();
+
+    var comment = $(this).find('textarea.comment').val();
 
     var Status = $(this).find('input.task').attr('data-status');
 
@@ -136,7 +140,8 @@ $('#save').click(function(){
 
             Status:Status,
 
-            GradeId:GradeId
+            GradeId:GradeId,
+            comment:comment
 
         },
 

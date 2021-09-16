@@ -1,4 +1,4 @@
-@extends('Layouts.adminkpi',['ActiveRounds'=>$ActiveRounds])
+@extends('Layouts/trainerkpi',['TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds])
 
 @section('content')
 
@@ -8,7 +8,7 @@
 
               <li class="breadcrumb-item"><a href="/Admin"><i class="material-icons">home</i> Home</a></li>
 
-            <li class="breadcrumb-item active" aria-current="page"><a href="/Admin/Courses/{{$Round->RoundId}}">{{$Course->CourseNameEn}} - {{$Round->GroupNo}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><a href="/Trainer/Courses/{{$Round->RoundId}}">{{$Course->CourseNameEn}} - {{$Round->GroupNo}}</a></li>
 
               <li class="breadcrumb-item active" aria-current="page">Session progress</li>
 
@@ -38,7 +38,7 @@
 
             <div class="ms-panel-body">
               <div class="d-flex justify-content-end">
-                <a href="{{url("/Session/$Session->SessionId/Progress/File")}}" class="btn btn-success mb-2 mt-0">Download all tasks</a>&nbsp;
+                <a href="{{url("/Trainer/Session/$Session->SessionId/Progress/File")}}" class="btn btn-success mb-2 mt-0">Download all tasks</a>&nbsp;
                 <input type="submit" value="Save" id="savesessionprog" class="btn btn-success mb-2 mt-0">
                 
 
@@ -59,7 +59,7 @@
                     <th class="text-left">Task </th>
 
                     <th class="text-left">Grade %</th>
-                    <th class="text-left">Comment/Notes</th>
+                    <th class="text-left">Comment</th>
 
                     
 
@@ -134,14 +134,16 @@
                          @endif
                          
                         </td>
-
+                        
                         <td>
-                          @if($Task->TaskURL != null)
-                           
-                           <textarea class="form-control comment" placeholder="ex: Great work!">{{$Task->TaskComment}}</textarea>
-                          @endif
+                         @if($Task->TaskURL != null)
                           
-                         </td>
+                         <textarea class="form-control comment" placeholder="ex: Great work!">{{$Task->TaskComment}}</textarea>
+                         @endif
+                         
+                        </td>
+
+                  
 
                       </tr>
 

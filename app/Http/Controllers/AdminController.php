@@ -1992,6 +1992,10 @@ public function SeniorEvaluation(int $id)
                 $grade = Grades::find($request->GradeId);
                 $grade->TaskId=$request->id;
                 $grade->QuizGrade=$request->QuizVal;
+                
+                $Task = Tasks::find($grade->TaskId);
+                $Task->TaskComment = $request->comment;
+                $Task->save();
                 $grade->TaskGrade=$request->TaskGrade;
                 $grade->save();
             }
@@ -2077,6 +2081,13 @@ public function StudentResetPassword(Request $request)
 
             
             $Task = Tasks::find($TaskId);
+            
+            if($Task->TaskURL){
+                if(file_exists(storage_path("app/public/".$Task->TaskURL))){
+                    unlink(storage_path("app/public/" . $Task->TaskURL));
+                }
+            }
+
             $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn" . time() .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
 
             //storing task
@@ -2155,6 +2166,9 @@ public function UndoCancelSession(int $id)
             
             if($request->Status == 'update'){
                 $grade = Grades::find($request->id);
+                $Task = Tasks::find($grade->TaskId);
+                $Task->TaskComment = $request->comment;
+                $Task->save();
                 $grade->TaskGrade = $request->TaskGrade;
                 $grade->save();
             }

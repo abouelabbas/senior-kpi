@@ -281,7 +281,7 @@
                         <th>Quiz Grade</th>
 
                         <th>Task Grade</th>
-
+<th>Task notes</th>
                        
 
                       </thead>
@@ -326,7 +326,12 @@
 
                           </td>
 
-                          
+                          <td>
+                             
+                            <textarea disabled class="form-control comment">{{$Grade->TaskComment}}</textarea>
+
+                            
+                           </td>
 
                         </tr>
 

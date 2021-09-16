@@ -129,6 +129,10 @@ Route::get('/Trainer','TrainerController@Index');
 Route::get('/Trainer/Profile','TrainerController@profile');
 Route::get('/Trainer/Profile/Edit','TrainerController@EditProfile');
 Route::get('/Trainer/Courses/{id}','TrainerController@CourseProgress');
+Route::get('/Trainer/sessionProg','TrainerController@sessionProg');
+Route::get('/Trainer/Session/{id}/Progress/File','TrainerController@SessionProgressZip');
+Route::get('/Trainer/session/task/students/{id}','TrainerController@TaskProgress');
+
 //other face
 Route::get('/Admin/Courses/{id}','AdminController@CourseProgress');
 Route::get('/Trainer/Course/{id}/Students','TrainerController@CourseStudents');
