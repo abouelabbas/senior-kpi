@@ -1079,7 +1079,7 @@
         
                   <div class="col-12 p-5">
         
-                    <textarea class="form-control" id="comment-box">{{$GradeModal->TaskComment}}</textarea>
+                    <textarea disabled class="form-control" id="comment-box">{{$GradeModal->TaskComment}}</textarea>
                   </div>
         
                 </div>
