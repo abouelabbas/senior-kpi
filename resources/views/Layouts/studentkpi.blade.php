@@ -387,7 +387,7 @@
                         $Img = session('ImagePath');
                     @endphp
 
-                    <img class="ms-user-img ms-img-round float-left" style="height:35px;width:35px;" src="{{ asset("http://kpi.seniorsteps.net/storage/app/public/$Img") }}" alt="people"> 
+                    <img class="ms-user-img ms-img-round float-left" style="height:35px;width:35px;" src="{{ url("/storage/app/public/$Img") }}" alt="people"> 
                     {{-- <img class="ms-user-img ms-img-round float-left" style="height:35px;width:35px;" src="{{ asset("http://kpi.seniorsteps.net/storage/app/public/$Img") }}" alt="people">  --}}
 
 
