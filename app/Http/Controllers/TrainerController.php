@@ -1160,20 +1160,24 @@ if($dataPercentage){
     public function SessionProgressZip(int $id)
     {
         $Session = $Session = Sessions::find($id);
-
-        $zip = new \ZipArchive();
-        $filename = "Round".$Session->RoundId."-Session".$Session->SessionId."-".time().".zip";
-        if ($zip->open(storage_path($filename), \ZipArchive::CREATE)== TRUE)
-        {
-            $files = File::files(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId));
-            foreach ($files as $key => $value){
-                $relativeName = basename($value);
-                $zip->addFile($value, $relativeName);
+        if($files = File::files(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId))){
+            $zip = new \ZipArchive();
+            $filename = "Round".$Session->RoundId."-Session".$Session->SessionId."-".time().".zip";
+            if ($zip->open(storage_path($filename), \ZipArchive::CREATE)== TRUE)
+            {
+                $files = File::files(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId));
+                foreach ($files as $key => $value){
+                    $relativeName = basename($value);
+                    $zip->addFile($value, $relativeName);
+                }
+                $zip->close();
             }
-            $zip->close();
+    
+            return response()->download(storage_path($filename));
+        }else{
+            return redirect()->back();
         }
-
-        return response()->download(storage_path($filename));
+        
     }
 
 }
