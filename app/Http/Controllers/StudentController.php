@@ -42,7 +42,7 @@ class StudentController extends Controller
         ->where('StudentId','=',session()->get('Id'))->get();
     }
 
-    public function Notifications(Type $var = null)
+    public function Notifications()
     {
         return Notifications::where([
             // ['IsRead','=',0],
@@ -53,7 +53,7 @@ class StudentController extends Controller
         ->get();
     }
 
-    public function CountNotifications(Type $var = null)
+    public function CountNotifications()
     {
         return Notifications::where([
             ['IsRead','=',0],
@@ -327,6 +327,7 @@ class StudentController extends Controller
             //     ['SessionId','=',$Session]
             // ])->first();
             $Task->TaskURL = $filename;
+            $Task->TaskDate = date("Y-m-d");
             $Task->IsGrade = 1;
             $Task->save();
             // return $Task;
@@ -347,6 +348,7 @@ class StudentController extends Controller
                 $Notification->Notification = "$Student->FullnameEn has added his task in $Course->CourseNameEn GR$Round->GroupNo Session $ThisSession->SessionNumber";
                 $Notification->ForType = "Admin";
                 $Notification->save();
+
                 return Redirect::to("/Student/Course/$Round->RoundId");
            
         }

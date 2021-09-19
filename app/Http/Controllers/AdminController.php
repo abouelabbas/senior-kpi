@@ -2096,6 +2096,7 @@ public function StudentResetPassword(Request $request)
             //     ['SessionId','=',$Session]
             // ])->first();
             $Task->TaskURL = $filename;
+            $Task->TaskDate = date("Y-m-d");
             $Task->IsGrade = 1;
             $Task->save();
             // return $Task;
@@ -2116,6 +2117,7 @@ public function StudentResetPassword(Request $request)
                 $Notification->Notification = "$Student->FullnameEn has added his task in $Course->CourseNameEn GR$Round->GroupNo Session $ThisSession->SessionNumber";
                 $Notification->ForType = "Admin";
                 $Notification->save();
+                
            return Redirect::to("/Admin/Course/Student/Details/$StudentRoundId");
            
         }

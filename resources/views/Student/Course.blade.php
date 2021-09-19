@@ -714,7 +714,7 @@
 
             <div class="col-12 p-5">
 
-              <form action="/Student/UploadTask" method="POST" enctype="multipart/form-data">
+              <form action="/Student/UploadTask" id="form-prog" method="POST" enctype="multipart/form-data">
 
                 {{ csrf_field() }}
 
@@ -734,7 +734,7 @@
 
                       <input  type="hidden" name="round" value="{{$round}}" />
 
-                    <input type="file" name="task" class="custom-file-input" id="inputGroupFile01"
+                    <input type="file" id="uploadFile" name="task" class="custom-file-input" id="inputGroupFile01"
 
                       aria-describedby="inputGroupFileAddon01">
 
@@ -761,7 +761,14 @@
                   <input type="submit" value="upload" class="btn btn-success m-auto">
 
                 </div>
-
+                <div class="card">
+                  <div class="card-body">
+                    <label>Upload precentage : <span id="prog-perc">0%</span></label>
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                  </div>
+                </div>
               </form>
 
             </div>
@@ -780,4 +787,35 @@
 
 @endforeach
 
+@endsection
+@section('scripts')
+<script>
+  $(document).ready(function(){
+$('#form-prog').submit(function(event){
+if($('#uploadFile').val())
+{
+  // event.preventDefault();
+  $(this).ajaxSubmit({
+    // target: '#targetLayer',
+    beforeSubmit:function(){
+      $('.progress-bar').width('0%');
+    },
+    uploadProgress: function(event, position, total, percentageComplete)
+    {
+      $('.progress-bar').animate({
+        width: percentageComplete + '%'
+      }, {
+        duration: 500
+      });
+      $("#prog-perc").html(percentageComplete+ "%");
+    },
+    success:function(){
+      // $('#form-prog').submit();
+    },
+    // resetForm: true
+  });
+}
+});
+});
+</script>
 @endsection

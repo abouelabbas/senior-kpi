@@ -663,6 +663,8 @@ if($dataPercentage){
         }
                $data = [
                     'percentage'=>$percentage,
+                    'attended'=>$attend,
+                    'all'=>$all,
                     'TimeRespect'=>$TimeRespect,
                     'Lecture_Practice'=>$Lecture_Practice,
                     'Solve_Home_Tasks'=>$Solve_Home_Tasks,
@@ -1092,6 +1094,7 @@ if($dataPercentage){
             //     ['SessionId','=',$Session]
             // ])->first();
             $Task->TaskURL = $filename;
+            $Task->TaskDate = date("Y-m-d");
             $Task->IsGrade = 1;
             $Task->save();
             // return $Task;

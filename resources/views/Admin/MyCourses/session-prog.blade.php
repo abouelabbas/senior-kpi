@@ -31,7 +31,7 @@
 
                 <h2>{{$Course->CourseNameEn}} - {{$Round->GroupNo}} </h2>
 
-                <h6>Session {{$Session->SessionNumber}} List </h6>
+                <h6>Session {{$Session->SessionNumber}} List -  {{ date('d-m-Y', strtotime($Session->SessionDate))}}</h6>
 
             </div>
 
@@ -57,6 +57,7 @@
                     <th class="text-left"> State</th>
 
                     <th class="text-left">Task </th>
+                    <th class="text-left">Solution date </th>
 
                     <th class="text-left">Grade %</th>
                     <th class="text-left">Comment/Notes</th>
@@ -118,7 +119,12 @@
 
 
                         </td>
-
+                        <td>
+                        @if($Task->TaskDate != null)
+                          {{$Task->TaskDate}}
+                          @endif
+                        </td>
+                        
                         <td>
                           <input class="set" type="hidden"
                           @if($Task->TaskURL != null)
@@ -134,6 +140,7 @@
                          @endif
                          
                         </td>
+
 
                         <td>
                           @if($Task->TaskURL != null)

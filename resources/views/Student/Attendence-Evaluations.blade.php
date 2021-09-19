@@ -327,8 +327,8 @@
                           </td>
 
                           <td>
-                             
-                            <textarea disabled class="form-control comment">{{$Grade->TaskComment}}</textarea>
+                            <a href="" class="btn btn-light d-inline" data-toggle="modal" data-target="#comment{{$Grade->GradeId}}" >review notes</a>
+                                                           
 
                             
                            </td>
@@ -1060,5 +1060,38 @@
 
 
       </div>
+      @foreach ($Grades as $index => $GradeModal)
+      <div class="modal fade" id="comment{{$GradeModal->GradeId}}" tabindex="-1" role="dialog" aria-labelledby="NoteModal">
 
+        <div class="modal-dialog modal-dialog-centered " role="document">
+        
+          <div class="modal-content">
+        
+        
+        
+            <div class="modal-body">
+        
+        
+        
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        
+              <div class="ms-auth-container row no-gutters">
+        
+                  <div class="col-12 p-5">
+        
+                    <textarea class="form-control" id="comment-box">{{$GradeModal->TaskComment}}</textarea>
+                  </div>
+        
+                </div>
+        
+              </div>
+        
+        
+        
+            </div>
+        
+          </div>
+        
+        </div>
+      @endforeach
 @endsection

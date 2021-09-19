@@ -745,7 +745,7 @@
 
         success:function(data) {
 
-          thistr.find('div.attendanceper').text(parseFloat(data.percentage).toFixed(1));
+          thistr.find('div.attendanceper').text(data.attended + " / " + data.all);
 
           // thistr.find('div.attendance').attr('data-value',(parseFloat(data).toFixed(0)/100);
 

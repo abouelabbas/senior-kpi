@@ -46,7 +46,7 @@
 
   <link href="{{ asset('css/slick.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet"> --}}
 
   <!-- Mystic styles -->
 
@@ -570,7 +570,7 @@
 
    <script src="{{ asset('js/datepicker.min.js') }}"></script>
 
-      <script src="{{ asset('js/select2.min.js') }}"></script>
+      {{-- <script src="{{ asset('js/select2.min.js') }}"></script> --}}
 
   
 
@@ -599,6 +599,7 @@
     <script src="{{ asset('js/settings.js') }}"></script>
 
     <script src="{{ asset('js/Datasave.js') }}"></script>
+    <script src="{{ asset('js/jquery.form.js') }}"></script>
 
   @yield('scripts')
 

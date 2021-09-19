@@ -80,7 +80,7 @@
 
                     <td><span style="visibility: hidden;">{{$i}}</span>
                         @if ($RoundStudent->ImagePath != null)
-                      <img  src="http://kpi.seniorsteps.net/storage/app/public/{{$RoundStudent->ImagePath}}" style="max-width:50px;height:50px;border-radius:50%;"/>
+                      <img  src="{{url("/storage/app/public/$RoundStudent->ImagePath")}}" style="max-width:50px;height:50px;border-radius:50%;"/>
                             
                         @else
                             
@@ -747,7 +747,7 @@
         success:function(data) {
           console.table(data);
 
-          thistr.find('div.attendanceper').text(parseFloat(data.percentage).toFixed(1));
+          thistr.find('div.attendanceper').text(data.attended + " / " + data.all);
 
           // thistr.find('div.attendance').attr('data-value',(parseFloat(data).toFixed(0)/100);
 

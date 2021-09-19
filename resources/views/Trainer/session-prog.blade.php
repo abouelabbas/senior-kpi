@@ -57,7 +57,7 @@
                     <th class="text-left"> State</th>
 
                     <th class="text-left">Task </th>
-
+                    <th class="text-left">Solution date </th>
                     <th class="text-left">Grade %</th>
                     <th class="text-left">Comment</th>
 
@@ -118,7 +118,11 @@
 
 
                         </td>
-
+                        <td>
+                          @if($Task->TaskDate != null)
+                            {{$Task->TaskDate}}
+                            @endif
+                          </td>
                         <td>
                           <input class="set" type="hidden"
                           @if($Task->TaskURL != null)

@@ -618,6 +618,7 @@
 
 <script src="{{ asset('js/Datasave.js') }}"></script>
 
+<script src="{{ asset('js/jquery.form.js') }}"></script>
 @yield('scripts')
 
 </body>

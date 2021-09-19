@@ -383,8 +383,9 @@
 
                                                          <td>
                                                           @if($Grade->TaskURL != null)
+                                                         <a href="" class="btn btn-light d-inline" data-toggle="modal" data-target="#comment{{$Grade->GradeId}}" >Add comment</a>
                                                            
-                                                          <textarea class="form-control comment" placeholder="ex: Great work!">{{$Grade->TaskComment}}</textarea>
+                                                          <textarea style="display:none;" class="form-control comment" data-id="{{$i}}" placeholder="ex: Great work!">{{$Grade->TaskComment}}</textarea>
                                                           @endif
                                                           
                                                          </td>
@@ -819,7 +820,7 @@
 
 
   </main>
-  @foreach ($Grades as $GradeModal)
+  @foreach ($Grades as $index => $GradeModal)
       <!-- note Modal -->
 
       <div class="modal fade" id="TUpload{{$GradeModal->GradeId}}" tabindex="-1" role="dialog" aria-labelledby="NoteModal">
@@ -840,16 +841,25 @@
 
           <div class="col-12 p-5">
 
-              <form action="/Admin/TaskUpload" method="POST" enctype="multipart/form-data">
+              <form action="/Admin/TaskUpload" method="POST" id="form-prog" enctype="multipart/form-data">
               {{ csrf_field() }}
               <div class="input-group text-center">
               <input type="hidden" name="TaskId" value="{{$GradeModal->TaskId}}" />
                 <input type="hidden" name="id" value="{{$StudentRound->StudentRoundsId}}" />
-<input type="file" name="task"/>
+<input type="file" id="uploadFile" name="task"/>
+
+
                   <input type="submit" value="Upload" class="btn btn-primary m-auto">
 
               </div>
-
+              <div class="card">
+                <div class="card-body">
+                  <label>Upload precentage : <span id="prog-perc">0%</span></label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+                </div>
+              </div>
               </form>
 
           </div>
@@ -865,6 +875,41 @@
   </div>
 
 </div>
+
+<div class="modal fade" id="comment{{$GradeModal->GradeId}}" tabindex="-1" role="dialog" aria-labelledby="NoteModal">
+
+  <div class="modal-dialog modal-dialog-centered " role="document">
+  
+    <div class="modal-content">
+  
+  
+  
+      <div class="modal-body">
+  
+  
+  
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  
+        <div class="ms-auth-container row no-gutters">
+  
+            <div class="col-12 p-5">
+  
+              <textarea class="form-control" id="comment-box" placeholder="ex: Great work!">{{$GradeModal->TaskComment}}</textarea>
+                <button type="button" class="btn btn-primary" data-id="{{$index+1}}" id="comment-add">add comment</button>
+  
+            </div>
+  
+          </div>
+  
+        </div>
+  
+  
+  
+      </div>
+  
+    </div>
+  
+  </div>
 
 <!-- Task Modal -->
   @endforeach
@@ -923,249 +968,7 @@
 
         </div>
 
-  <!-- Task Modal -->
-
-  <div class="modal fade" id="DoneTopics" tabindex="-1" role="dialog" aria-labelledby="DoneTopics">
-
-    <div class="modal-dialog modal-dialog-centered " role="document">
-
-      <div class="modal-content">
-
-        <div class="modal-body">
-
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-
-              aria-hidden="true">&times;</span></button>
-
-          <div class="ms-auth-container row no-gutters">
-
-            <div class="col-12 p-5">
-
-              <form action="">
-
-                <div class="row">
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="" checked="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span>   HTML </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="" checked="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> CSS </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="" checked="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> CSS3 </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> JavaScript </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-                  <div class="col-md-6 my-2">
-
-                    <label class="ms-checkbox-wrap ms-checkbox-success">
-
-                      <input type="checkbox" value="">
-
-                      <i class="ms-checkbox-check"></i>
-
-                    </label>
-
-                    <span> Jquery </span>
-
-                  </div>
-
-
-
-                </div>
-
-                <div class="input-group text-center">
-
-                  <input type="submit" value="Save" class="btn btn-success m-auto">
-
-                </div>
-
-              </form>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  
+ 
 <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModal">
 
 <div class="modal-dialog modal-dialog-centered " role="document">
@@ -1204,4 +1007,39 @@
 
 </div>
 
+@endsection
+@section('scripts')
+<script>
+  $(document).ready(function(){
+$('#form-prog').submit(function(event){
+if($('#uploadFile').val())
+{
+  // event.preventDefault();
+  $(this).ajaxSubmit({
+    // target: '#targetLayer',
+    beforeSubmit:function(){
+      $('.progress-bar').width('0%');
+    },
+    uploadProgress: function(event, position, total, percentageComplete)
+    {
+      $('.progress-bar').animate({
+        width: percentageComplete + '%'
+      }, {
+        duration: 500
+      });
+      $("#prog-perc").html(percentageComplete+ "%");
+    },
+    success:function(){
+      // $('#form-prog').submit();
+    },
+    // resetForm: true
+  });
+}
+});
+});
+$('#comment-add').click(function(){
+  $('.comment[data-id='+$(this).attr('data-id')+']').val($('#comment-box').val());
+  $('.modal').modal('hide');
+});
+</script>
 @endsection

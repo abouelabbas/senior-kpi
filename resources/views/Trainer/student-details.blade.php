@@ -379,8 +379,9 @@
                                                      </td>
                                                      <td>
                                                       @if($Grade->TaskURL != null)
-                                                       
-                                                      <textarea class="form-control comment" placeholder="ex: Great work!">{{$Grade->TaskComment}}</textarea>
+                                                      <a href="" class="btn btn-light d-inline" data-toggle="modal" data-target="#comment{{$Grade->GradeId}}" >Add comment</a>
+                                                           
+                                                      <textarea style="display:none;" class="form-control comment" data-id="{{$i}}" placeholder="ex: Great work!">{{$Grade->TaskComment}}</textarea>
                                                       @endif
                                                       
                                                      </td>
@@ -836,16 +837,24 @@
 
           <div class="col-12 p-5">
 
-              <form action="/Trainer/TaskUpload" method="POST" enctype="multipart/form-data">
+              <form action="/Trainer/TaskUpload" id="form-prog" method="POST" enctype="multipart/form-data">
               {{ csrf_field() }}
               <div class="input-group text-center">
               <input type="hidden" name="TaskId" value="{{$GradeModal->TaskId}}" />
                 <input type="hidden" name="id" value="{{$StudentRound->StudentRoundsId}}" />
-<input type="file" name="task"/>
+<input type="file" id="uploadFile" name="task"/>
                   <input type="submit" value="Upload" class="btn btn-primary m-auto">
 
               </div>
-
+              <div class="card">
+                <div class="card-body">
+                  <label>Upload precentage : <span id="prog-perc">0%</span></label>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+                </div>
+              </div>
+              
               </form>
 
           </div>
@@ -861,7 +870,40 @@
   </div>
 
 </div>
+<div class="modal fade" id="comment{{$GradeModal->GradeId}}" tabindex="-1" role="dialog" aria-labelledby="NoteModal">
 
+  <div class="modal-dialog modal-dialog-centered " role="document">
+  
+    <div class="modal-content">
+  
+  
+  
+      <div class="modal-body">
+  
+  
+  
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  
+        <div class="ms-auth-container row no-gutters">
+  
+            <div class="col-12 p-5">
+  
+              <textarea class="form-control" id="comment-box" placeholder="ex: Great work!">{{$GradeModal->TaskComment}}</textarea>
+                <button type="button" class="btn btn-primary" data-id="{{$index+1}}" id="comment-add">add comment</button>
+  
+            </div>
+  
+          </div>
+  
+        </div>
+  
+  
+  
+      </div>
+  
+    </div>
+  
+  </div>
 <!-- Task Modal -->
   @endforeach
 
@@ -1161,4 +1203,38 @@
 
 </div>
 
+@endsection
+@section('scripts')
+<script>
+  $(document).ready(function(){
+$('#form-prog').submit(function(event){
+if($('#uploadFile').val())
+{
+  // event.preventDefault();
+  $(this).ajaxSubmit({
+    // target: '#targetLayer',
+    beforeSubmit:function(){
+      $('.progress-bar').width('0%');
+    },
+    uploadProgress: function(event, position, total, percentageComplete)
+    {
+      $('.progress-bar').animate({
+        width: percentageComplete + '%'
+      }, {
+        duration: 1000
+      });
+    },
+    success:function(){
+      // $('#form-prog').submit();
+    },
+    // resetForm: true
+  });
+}
+});
+});
+$('#comment-add').click(function(){
+  $('.comment[data-id='+$(this).attr('data-id')+']').val($('#comment-box').val());
+  $('.modal').modal('hide');
+});
+</script>
 @endsection
