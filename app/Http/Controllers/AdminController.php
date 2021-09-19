@@ -2183,7 +2183,7 @@ public function UndoCancelSession(int $id)
     {
         $Session = $Session = Sessions::find($id);
 
-        if($files = File::files(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId))){
+        if(file_exists(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId))){
             $zip = new \ZipArchive();
             $filename = "Round".$Session->RoundId."-Session".$Session->SessionId."-".time().".zip";
             if ($zip->open(storage_path($filename), \ZipArchive::CREATE)== TRUE)
