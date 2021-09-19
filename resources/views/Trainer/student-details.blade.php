@@ -816,7 +816,7 @@
 
 </main>
 
-@foreach ($Grades as $GradeModal)
+@foreach ($Grades as $index => $GradeModal)
       <!-- note Modal -->
 
       <div class="modal fade" id="TUpload{{$GradeModal->GradeId}}" tabindex="-1" role="dialog" aria-labelledby="NoteModal">
