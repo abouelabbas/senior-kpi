@@ -1223,6 +1223,7 @@ if($('#uploadFile').val())
       }, {
         duration: 1000
       });
+      $('#prog-perc').html(percentageComplete + "%");
     },
     success:function(){
       // $('#form-prog').submit();
