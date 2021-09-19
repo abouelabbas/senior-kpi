@@ -543,6 +543,8 @@
 
   <script src="{{ asset('js/jquery.form.js') }}"></script>
 
+
+  @yield('scripts')
 </body>
 
 
