@@ -1038,8 +1038,6 @@ if($('#uploadFile').val())
 });
 });
 $('.comment-add').click(function(){
-  alert($(this).attr('data-id'));
-  debugger;
   $('.comment[data-id='+$(this).attr('data-id')+']').val($('.comment-box[data-id='+$(this).attr('data-id')+']').val());
   // $(this).closest( ".modal" ).modal('hide');
 });
