@@ -318,8 +318,9 @@ class StudentController extends Controller
                     unlink(storage_path("app/public/" . $Task->TaskURL));
                 }
             }
+            $Session = Sessions::find($Task->SessionId);
+            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn"."_"."$Round->GroupNo"."_"."$Session->SessionNumber"."_" .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
 
-            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn" . time() .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
 
             //storing task
             // $Task = Tasks::where([

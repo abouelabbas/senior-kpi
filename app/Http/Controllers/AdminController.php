@@ -2081,6 +2081,7 @@ public function StudentResetPassword(Request $request)
 
             
             $Task = Tasks::find($TaskId);
+            $Session = Sessions::find($Task->SessionId);
             
             if($Task->TaskURL){
                 if(file_exists(storage_path("app/public/".$Task->TaskURL))){
@@ -2088,7 +2089,8 @@ public function StudentResetPassword(Request $request)
                 }
             }
 
-            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn" . time() .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn"."_"."$Round->GroupNo"."_"."$Session->SessionNumber"."_" .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+
 
             //storing task
             // $Task = Tasks::where([

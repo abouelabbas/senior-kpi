@@ -894,8 +894,8 @@
   
             <div class="col-12 p-5">
   
-              <textarea class="form-control" id="comment-box" placeholder="ex: Great work!">{{$GradeModal->TaskComment}}</textarea>
-                <button type="button" class="btn btn-primary" data-id="{{$index+1}}" id="comment-add">add comment</button>
+              <textarea class="form-control comment-box" data-id="{{$index+1}}" placeholder="ex: Great work!">{{$GradeModal->TaskComment}}</textarea>
+                <button type="button" class="btn btn-primary comment-add" data-id="{{$index+1}}" data-dismiss="modal" aria-label="Close">add comment</button>
   
             </div>
   
@@ -1037,9 +1037,11 @@ if($('#uploadFile').val())
 }
 });
 });
-$('#comment-add').click(function(){
-  $('.comment[data-id='+$(this).attr('data-id')+']').val($('#comment-box').val());
-  $('.modal').modal('hide');
+$('.comment-add').click(function(){
+  alert($(this).attr('data-id'));
+  debugger;
+  $('.comment[data-id='+$(this).attr('data-id')+']').val($('.comment-box[data-id='+$(this).attr('data-id')+']').val());
+  // $(this).closest( ".modal" ).modal('hide');
 });
 </script>
 @endsection
