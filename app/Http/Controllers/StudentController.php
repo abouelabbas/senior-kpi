@@ -319,7 +319,8 @@ class StudentController extends Controller
                 }
             }
             $Session = Sessions::find($Task->SessionId);
-            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn"."_"."$Round->GroupNo"."_"."$Session->SessionNumber"."_" .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn"."_round_"."$Round->GroupNo"."_session_"."$Session->SessionNumber"."_" .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+
 
 
             //storing task

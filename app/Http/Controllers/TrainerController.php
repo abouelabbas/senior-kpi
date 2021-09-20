@@ -1087,7 +1087,8 @@ if($dataPercentage){
                 }
             }
 
-            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn"."_"."$Round->GroupNo"."_"."$Session->SessionNumber"."_" .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn"."_round_"."$Round->GroupNo"."_session_"."$Session->SessionNumber"."_" .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+
 
             //storing task
             // $Task = Tasks::where([
@@ -1161,9 +1162,10 @@ if($dataPercentage){
     public function SessionProgressZip(int $id)
     {
         $Session = $Session = Sessions::find($id);
+        $Round = Rounds::find($Session->RoundId);
         if(file_exists(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId))){
             $zip = new \ZipArchive();
-            $filename = "Round".$Session->RoundId."-Session".$Session->SessionId."-".time().".zip";
+            $filename = "Round".$Round->GroupNo."-Session".$Session->SessionNumber."-".time().".zip";
             if ($zip->open(storage_path($filename), \ZipArchive::CREATE)== TRUE)
             {
                 $files = File::files(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId));
