@@ -150,7 +150,7 @@ Route::get('/Admin/Course/Student/Details/{id}','AdminController@StudentDetails'
 Route::get('/Trainer/Course/DoneTopics/Delete/{RoundSubContentsId}/{RoundId}','TrainerController@DeleteSubContent');
 Route::get('/Admin/Course/DoneTopics/Delete/{RoundSubContentsId}/{RoundId}','AdminController@DeleteSubContent');
 Route::get('/test','TrainerController@test');
-Route::get('/sessionProg','AdminController@sessionProg');
+Route::get('/sessionProg','TrainerController@sessionProg');
 Route::get('/Session/{id}/Progress/File','AdminController@SessionProgressZip');
 Route::post('/Admin/TaskUpload','AdminController@UploadTask');
 Route::post('/Trainer/TaskUpload','TrainerController@UploadTask');
