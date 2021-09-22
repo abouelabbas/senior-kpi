@@ -1151,6 +1151,9 @@ if($dataPercentage){
             
             if($request->Status == 'update'){
                 $grade = Grades::find($request->id);
+                $Task = Tasks::find($grade->TaskId);
+                $Task->TaskComment = $request->comment;
+                $Task->save();
                 $grade->TaskGrade = $request->TaskGrade;
                 $grade->save();
             }

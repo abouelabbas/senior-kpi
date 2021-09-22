@@ -188,3 +188,11 @@
 
   
 @endsection
+@section('scripts')
+    <script>
+      setInterval(function(){
+          var progress_rate = "@if(!empty(Session::get('progress'))) {{ Session::get('progress')}} @endif";
+          console.log(progress_rate);
+      }, 500);
+    </script>
+@endsection
