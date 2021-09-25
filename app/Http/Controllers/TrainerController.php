@@ -577,6 +577,8 @@ $Notification->save();
     {
         if(request()->ajax()){
             $StudentRoundId = $request->StudentRoundsId;
+            $StudentRound = StudentRounds::find($StudentRoundId);
+
             $all = DB::table('attendance')
             ->join('sessions','sessions.sessionId','=','attendance.sessionId')
             ->where([['StudentRoundsId','=',$StudentRoundId],['IsAttend','<>',null]
@@ -592,7 +594,8 @@ $percentage = ($attend/$all)*100;
             }else{
                 $percentage = 0;
             }
-
+            $SessionsDone = Sessions::where([['IsDone','=','1'],['RoundId','=',$StudentRound->RoundId]])->count();
+            $TasksDone = Tasks::where([['StudentRoundId','=',$StudentRoundId],['TaskURL','!=',null]])->count();
             $dataPercentage = StudentEvaluations::where('StudentRoundId','=',$StudentRoundId)
             ->selectRaw('count(TimeRespect) as RowCount,sum(TimeRespect) as TimeRespect, sum(Lecture_Practice) as Lecture_Practice,sum(Solve_Home_Tasks) as Solve_Home_Tasks, sum(Student_Interaction) as Student_Interaction, sum(Student_Attitude) as Student_Attitude, sum(Student_Focus) as Student_Focus , sum(Understand_Speed) as Understand_Speed')
             ->first();
@@ -672,7 +675,8 @@ if($dataPercentage){
                     'Student_Attitude'=>$Student_Attitude,
                     'Student_Focus'=>$Student_Focus,
                     'Understand_Speed'=>$Understand_Speed,
-                    
+                    'SessionsDone'=>$SessionsDone,
+                    'TasksDone'=>$TasksDone,
                 ];
     
                 return $data;

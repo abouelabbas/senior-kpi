@@ -136,7 +136,7 @@
                          @if($Task->TaskURL != null)
                           
                           <input class="form-control id" type="hidden" value="{{$Task->GradeId}}" />
-                          <input class="form-control task" placeholder="ex: 50" value="{{$Task->TaskGrade}}" />
+                          <input class="form-control task" value="{{$Task->TaskGrade}}" />
                          @endif
                          
                         </td>
@@ -145,7 +145,7 @@
                         <td>
                           @if($Task->TaskURL != null)
                            
-                           <textarea class="form-control comment" placeholder="ex: Great work!">{{$Task->TaskComment}}</textarea>
+                           <textarea class="form-control comment">{{$Task->TaskComment}}</textarea>
                           @endif
                           
                          </td>
