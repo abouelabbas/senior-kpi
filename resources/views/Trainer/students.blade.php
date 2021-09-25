@@ -787,11 +787,20 @@
 
           thistr.find('div.understand').circleProgress({value: parseFloat(data.Understand_Speed).toFixed(0)/100});
 
-          thistr.find('div.solveper').text(parseFloat(data.Solve_Home_Tasks).toFixed(1));
+          if( data.SessionsDone) {
+            thistr.find('div.solveper').text(data.TasksDone + " / " + data.SessionsDone);
 
-          // thistr.find('div.attendance').attr('data-value',(parseFloat(data).toFixed(0)/100);
+// thistr.find('div.attendance').attr('data-value',(parseFloat(data).toFixed(0)/100);
 
-          thistr.find('div.solve').circleProgress({value: parseFloat(data.Solve_Home_Tasks).toFixed(0)/100});
+            thistr.find('div.solve').circleProgress({value: parseFloat((data.TasksDone/data.SessionsDone)*100).toFixed(0)/100});
+          }else{
+            thistr.find('div.solveper').text(0);
+
+// thistr.find('div.attendance').attr('data-value',(parseFloat(data).toFixed(0)/100);
+
+thistr.find('div.solve').circleProgress({value: 0});
+          }
+
           var total = (data.percentage + data.TimeRespect + data.Lecture_Practice + data.Student_Interaction + data.Student_Attitude + data.Student_Focus + data.Understand_Speed + data.Solve_Home_Tasks)/8;
           thistr.find('div.totalper').text(parseFloat(total).toFixed(1));
 
