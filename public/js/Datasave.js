@@ -46,7 +46,7 @@ $('#saveTPer').click(function(){
 
 //session prog table mapping
 
-$('#savesessionprog').click(function(){
+$('.changable').change(function(){
 
     $('#prog > tbody  > tr').each(function() {    
 
@@ -95,8 +95,8 @@ $('#savesessionprog').click(function(){
     });
             
     
-    alert("تم حفظ البيانات");
-    window.location.reload();
+    //alert("تم حفظ البيانات");
+    //window.location.reload();
 });
 
 
