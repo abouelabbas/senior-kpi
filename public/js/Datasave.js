@@ -46,8 +46,8 @@ $('#saveTPer').click(function(){
 
 //session prog table mapping
 
-$('.changable').change(function(){
-    debugger;
+$('#savesessionprog').click(function(){
+
     $('#prog > tbody  > tr').each(function() {    
 
        if($(this).find('input.set').val() == "1"){
@@ -80,12 +80,12 @@ $('.changable').change(function(){
             },
     
             success:function(data) {
-                console.log(data)
+                //console.log(data)
             },
     
             error: function (request, status, error) {
     
-                //console.log(request.responseText);
+                console.log(request.responseText);
     
             }
     
@@ -95,7 +95,7 @@ $('.changable').change(function(){
     });
             
     
-    //alert("تم حفظ البيانات");
+    alert("تم حفظ البيانات");
     //window.location.reload();
 });
 
