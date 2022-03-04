@@ -46,7 +46,7 @@ $('#saveTPer').click(function(){
 
 //session prog table mapping
 
-$('#savesessionprog').click(function(){
+$('.changable').change(function(){
 
     $('#prog > tbody  > tr').each(function() {    
 
