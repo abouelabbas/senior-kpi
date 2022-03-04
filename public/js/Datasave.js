@@ -95,7 +95,7 @@ $('.changable').change(function(){
     });
             
     
-    alert("تم حفظ البيانات");
+    //alert("تم حفظ البيانات");
     //window.location.reload();
 });
 
