@@ -292,11 +292,11 @@
 
                           <div class="d-flex justify-content-end">
 
-                              <input type="reset" value="undo" class="btn btn-warning mb-2 mx-1 mt-0">
+                              {{-- <input type="reset" value="undo" class="btn btn-warning mb-2 mx-1 mt-0"> --}}
 
 
 
-                              <input type="submit" value="Save" id="save" class="btn btn-success mb-2 mt-0">
+                              {{-- <input type="submit" value="Save" id="save" class="btn btn-success mb-2 mt-0"> --}}
 
                           </div>
 
@@ -356,13 +356,13 @@
 
 
 
-                                                         <input type="text" value="{{$Grade->QuizGrade}}" name="quiz1-grade" data-id="{{$Grade->TaskId}}" placeholder="10%" class="quiz form-control">
+                                                         <input type="text" value="{{$Grade->QuizGrade}}" name="quiz1-grade" data-id="{{$Grade->TaskId}}" placeholder="10%" class="quiz form-control q-changable">
 
                                                          </td>
 
                                                          <td>
 
-                                                         <input type="text" value="{{$Grade->TaskGrade}}" name="task1-grade" data-status="update" data-grade="{{$Grade->GradeId}}" placeholder="10%" class="task form-control">
+                                                         <input type="text" value="{{$Grade->TaskGrade}}" name="task1-grade" data-status="update" data-grade="{{$Grade->GradeId}}" placeholder="10%" class="task form-control q-changable">
 
                                                          </td>
 
@@ -385,7 +385,7 @@
                                                           @if($Grade->TaskURL != null)
                                                          <a href="" class="btn btn-light d-inline" data-toggle="modal" data-target="#comment{{$Grade->GradeId}}" >Add comment</a>
                                                            
-                                                          <textarea style="display:none;" class="form-control comment" data-id="{{$i}}" placeholder="ex: Great work!">{{$Grade->TaskComment}}</textarea>
+                                                          <textarea style="display:none;" class="form-control comment q-changable" data-id="{{$i}}" placeholder="ex: Great work!">{{$Grade->TaskComment}}</textarea>
                                                           @endif
                                                           
                                                          </td>
@@ -1039,6 +1039,7 @@ if($('#uploadFile').val())
 });
 $('.comment-add').click(function(){
   $('.comment[data-id='+$(this).attr('data-id')+']').val($('.comment-box[data-id='+$(this).attr('data-id')+']').val());
+  $('.comment[data-id='+$(this).attr('data-id')+']').change();
   // $(this).closest( ".modal" ).modal('hide');
 });
 </script>

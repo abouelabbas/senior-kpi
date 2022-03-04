@@ -39,7 +39,7 @@
             <div class="ms-panel-body">
               <div class="d-flex justify-content-end">
                 <a href="{{url("/Session/$Session->SessionId/Progress/File")}}" class="btn btn-success mb-2 mt-0">Download all tasks</a>&nbsp;
-                <input type="submit" value="Save" id="savesessionprog" class="btn btn-success mb-2 mt-0">
+                {{-- <input type="submit" value="Save" id="savesessionprog" class="btn btn-success mb-2 mt-0"> --}}
                 
 
             </div>
@@ -136,7 +136,7 @@
                          @if($Task->TaskURL != null)
                           
                           <input class="form-control id" type="hidden" value="{{$Task->GradeId}}" />
-                          <input class="form-control task" value="{{$Task->TaskGrade}}" />
+                          <input class="form-control task changable" value="{{$Task->TaskGrade}}" />
                          @endif
                          
                         </td>
@@ -145,7 +145,7 @@
                         <td>
                           @if($Task->TaskURL != null)
                            
-                           <textarea class="form-control comment">{{$Task->TaskComment}}</textarea>
+                           <textarea class="form-control comment changable">{{$Task->TaskComment}}</textarea>
                           @endif
                           
                          </td>

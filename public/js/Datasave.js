@@ -104,7 +104,7 @@ $('.changable').change(function(){
 
 //Grades table mapping
 
-$('#save').click(function(){
+$('.q-changable').change(function(){
 
     $('#grades > tbody  > tr').each(function() {    
         debugger;
@@ -161,9 +161,9 @@ $('#save').click(function(){
 
 });
 
-alert("تم حفظ البيانات");
+//alert("تم حفظ البيانات");
 
-window.location.reload();
+//window.location.reload();
 
 })
 
