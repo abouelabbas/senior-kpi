@@ -47,7 +47,7 @@ $('#saveTPer').click(function(){
 //session prog table mapping
 
 $('.changable').change(function(){
-
+    debugger;
     $('#prog > tbody  > tr').each(function() {    
 
        if($(this).find('input.set').val() == "1"){
