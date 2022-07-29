@@ -215,7 +215,7 @@ $('#saveExam').click(function(){
 
 alert("تم حفظ البيانات");
 
-window.location.reload();
+// window.location.reload();
 
 });
 
@@ -303,7 +303,7 @@ $('#saveStudentEval').click(function(){
 
 alert("تم حفظ البيانات");
 
-window.location.reload();
+// window.location.reload();
 
 })
 
@@ -415,7 +415,7 @@ $('#saveCenter').click(function(){
 
 alert("تم حفظ البيانات");
 
-window.location.reload();
+// window.location.reload();
 
 })
 
@@ -507,7 +507,7 @@ $('#save-student').click(function(){
 
 alert('Attendance has been submitted successfully!');
 
-           window.location.reload();
+        //    window.location.reload();
 
 })
 

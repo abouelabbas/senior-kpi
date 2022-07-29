@@ -35,7 +35,7 @@ $('#saveTPer').click(function(){
     // alert(notes);
 });
 alert("تم حفظ البيانات");
-window.location.reload();
+// window.location.reload();
 })
 
 $('#savesenior').click(function(){
@@ -75,7 +75,7 @@ $('#savesenior').click(function(){
     // alert(notes);
 });
 alert("تم حفظ البيانات");
-window.location.reload();
+// window.location.reload();
 })
 
     //Round Evaluation table mapping
@@ -112,7 +112,7 @@ window.location.reload();
         // alert(notes);
     });
     alert("تم حفظ البيانات");
-    window.location.reload();
+    // window.location.reload();
     })
 
 
@@ -152,7 +152,7 @@ window.location.reload();
         // alert(notes);
     });
     alert("تم حفظ البيانات");
-    window.location.reload();
+    // window.location.reload();
     })
 
 

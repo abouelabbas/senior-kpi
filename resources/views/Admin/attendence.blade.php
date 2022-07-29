@@ -64,7 +64,7 @@
 
                   <div class="table-responsive">
 
-                    <table class=" fixed-thead-width dattable table thead-dark  w-100">
+                    <table class="fixed-thead-width dattable table thead-dark w-100">
 
                       <thead>
 
