@@ -1010,23 +1010,35 @@
 @endsection
 @section('scripts')
 <script>
+
+// function progressHandler(event) {
+//   _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+//   var percent = (event.loaded / event.total) * 100;
+//   _("progressBar").value = Math.round(percent);
+//   _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+// }
+
+
+//-------------------------------
   $(document).ready(function(){
 $('#form-prog').submit(function(event){
 if($('#uploadFile').val())
 {
   // event.preventDefault();
   $(this).ajaxSubmit({
+    
     // target: '#targetLayer',
     beforeSubmit:function(){
       $('.progress-bar').width('0%');
     },
     uploadProgress: function(event, position, total, percentageComplete)
     {
-      $('.progress-bar').animate({
-        width: percentageComplete + '%'
-      }, {
-        duration: 500
-      });
+      $('.progress-bar').width(percentageComplete + '%')
+      // $('.progress-bar').animate({
+      //   width: percentageComplete + '%'
+      // }, {
+      //   duration: 1
+      // });
       $("#prog-perc").html(percentageComplete+ "%");
     },
     success:function(){
