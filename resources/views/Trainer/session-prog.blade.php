@@ -142,7 +142,7 @@
                         <td>
                          @if($Task->TaskURL != null)
                           
-                         <textarea class="form-control comment changable">{{$Task->TaskComment}}</textarea>
+                         <textarea class="form-control comment changable" rows="3">{{$Task->TaskComment}}</textarea>
                          @endif
                          
                         </td>

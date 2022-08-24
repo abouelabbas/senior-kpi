@@ -2133,7 +2133,7 @@ public function StudentResetPassword(Request $request)
         
         return redirect()->back()->with('cancelsession',"Session $Session->SessionNumber is cancelled successfully");
     }
-public function UndoCancelSession(int $id)
+    public function UndoCancelSession(int $id)
     {
         $Session = Sessions::find($id);
         $Session->IsCancelled = null;

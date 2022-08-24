@@ -7095,8 +7095,11 @@ table#centerEval > tbody > tr > td .btn{
   min-width: 80px;
   margin: auto
 }
-table td > .form-control{
-  max-width: 80px !important 
+table td > .form-control.comment{
+  width: 100%;
+  resize: auto;
+  direction: rtl;
+  overflow-y: hidden;
 }
 table td > .form-control[placeholder *= "note"]{
   min-width: 200px !important ;
