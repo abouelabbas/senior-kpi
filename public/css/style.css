@@ -7099,7 +7099,7 @@ table td > .form-control.comment{
   width: 100%;
   resize: auto;
   direction: rtl;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 table td > .form-control[placeholder *= "note"]{
   min-width: 200px !important ;
