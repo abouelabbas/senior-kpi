@@ -235,7 +235,7 @@
                           <i class="fa fa-upload"></i> Upload solution
 
                         </a>
-  <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->TaskURL}}" download class="btn btn-square btn-outline-info has-icon" >
+  <a href="{{url("/storage/app/public/$Session->TaskURL")}}" download class="btn btn-square btn-outline-info has-icon" >
 
 <i class="fa fa-eye"></i> Download solution
 
@@ -714,7 +714,7 @@
 
             <div class="col-12 p-5">
 
-              <form action="/Student/UploadTask" id="form-prog" method="POST" enctype="multipart/form-data">
+              <form action="/Student/UploadTask" class="form-prog" id="form-prog" method="POST" enctype="multipart/form-data">
 
                 {{ csrf_field() }}
 
@@ -728,13 +728,13 @@
     
                   <div class="custom-file">
 
-                      <input  type="hidden" name="session" value="{{$SessionModal->SessionId}}" />
+                      <input  type="hidden" class="session_id" name="session" value="{{$SessionModal->SessionId}}" />
 
-                      <input  type="hidden" name="id" value="{{$StudentRoundId[0]->StudentRoundsId}}" />
+                      <input  type="hidden" class="sround_id" name="id" value="{{$StudentRoundId[0]->StudentRoundsId}}" />
 
                       <input  type="hidden" name="round" value="{{$round}}" />
 
-                    <input type="file" id="uploadFile" name="task" class="custom-file-input" id="inputGroupFile01"
+                    <input type="file" id="uploadFile" name="task" class="custom-file-input uploadFile" id="inputGroupFile01"
 
                       aria-describedby="inputGroupFileAddon01">
 
@@ -763,9 +763,9 @@
                 </div>
                 <div class="card">
                   <div class="card-body">
-                    <label>Upload precentage : <span id="prog-perc">0%</span></label>
+                    <label>Upload precentage : <span id="prog-perc" class="prog-perc-{{$SessionModal->SessionId}}-{{$StudentRoundId[0]->StudentRoundsId}}">0%</span></label>
                 <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar-{{$SessionModal->SessionId}}-{{$StudentRoundId[0]->StudentRoundsId}} bg-primary" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                   </div>
                 </div>
@@ -791,23 +791,29 @@
 @section('scripts')
 <script>
   $(document).ready(function(){
-$('#form-prog').submit(function(event){
-if($('#uploadFile').val())
+$('.form-prog').submit(function(event){
+  var session = $(this).find(".session_id").val();
+  var sround = $(this).find(".sround_id").val();
+  //event.preventDefault();
+if($(this).find('.uploadFile').val())
 {
   // event.preventDefault();
   $(this).ajaxSubmit({
     // target: '#targetLayer',
     beforeSubmit:function(){
-      $('.progress-bar').width('0%');
+      $('.progress-bar-'+session+'-'+sround).width('0%');
     },
     uploadProgress: function(event, position, total, percentageComplete)
     {
-      $('.progress-bar').animate({
-        width: percentageComplete + '%'
-      }, {
-        duration: 500
-      });
-      $("#prog-perc").html(percentageComplete+ "%");
+      console.log(percentageComplete);
+      $('.progress-bar-'+session+'-'+sround).width(percentageComplete + '%')
+
+      // $('.progress-bar').animate({
+      //   width: percentageComplete + '%'
+      // }, {
+      //   duration: 500
+      // });
+      $('.prog-perc-'+session+'-'+sround).html(percentageComplete+ "%");
     },
     success:function(){
       // $('#form-prog').submit();
