@@ -1872,6 +1872,7 @@ public function SeniorEvaluation(int $id)
         if($request->SessionRole == 'Material'){
             $Session = Sessions::find($request->SessionId);
             $Session->MaterialText = $request->MaterialText;
+            $Session->IsDone = 1;
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
             ->where('RoundId','=',$Session->RoundId)->first();
@@ -1895,6 +1896,7 @@ public function SeniorEvaluation(int $id)
         }elseif($request->SessionRole == 'Video'){
             $Session = Sessions::find($request->SessionId);
             $Session->VideoText = $request->VideoText;
+            $Session->IsDone = 1;
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
             ->where('RoundId','=',$Session->RoundId)->first();
@@ -1916,6 +1918,7 @@ public function SeniorEvaluation(int $id)
         }elseif($request->SessionRole == 'Quiz'){
             $Session = Sessions::find($request->SessionId);
             $Session->QuizText = $request->QuizText;
+            $Session->IsDone = 1;
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
             ->where('RoundId','=',$Session->RoundId)->first();
@@ -1937,6 +1940,7 @@ public function SeniorEvaluation(int $id)
         }else{
             $Session = Sessions::find($request->SessionId);
             $Session->TaskText = $request->TaskText;
+            $Session->IsDone = 1;
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
             ->where('RoundId','=',$Session->RoundId)->first();
