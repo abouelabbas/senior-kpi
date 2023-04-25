@@ -105,7 +105,7 @@
 
                           </a>
                           @if ($Session->SessionMaterial !== null || $Session->MaterialText !== null)
-                          <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->SessionMaterial}}" class="btn btn-square btn-outline-success has-icon" >
+                          {{-- <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->SessionMaterial}}" class="btn btn-square btn-outline-success has-icon" >
 
 
 
@@ -114,6 +114,13 @@
 
 
                             Download Material
+
+                          </a> --}}
+                          <a href="" class="btn btn-square btn-outline-success has-icon" data-toggle="modal"
+
+                                  data-target="#viewmaterialModal{{$Session->SessionId}}">
+
+                              <i class="fa fa-eye"></i> View Material
 
                           </a>
                           @endif
@@ -175,7 +182,7 @@
 
                           </a>
                           @if ($Session->SessionQuiz !== null || $Session->QuizText !== null)
-                          <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->SessionQuiz}}" class="btn btn-square btn-outline-dark has-icon" >
+                          {{-- <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->SessionQuiz}}" class="btn btn-square btn-outline-dark has-icon" >
 
 
 
@@ -184,6 +191,13 @@
 
 
                             Download Quiz
+
+                          </a> --}}
+                          <a href="" class="btn btn-square btn-outline-dark has-icon" data-toggle="modal"
+
+                              data-target="#viewquizModal{{$Session->SessionId}}">
+
+                              <i class="fa fa-eye"></i> View Quiz
 
                           </a>
                           @endif
@@ -208,7 +222,7 @@
 
                           </a>
                           @if ($Session->SessionTask !== null || $Session->TaskText !== null)
-                          <a href='{{url("/storage/app/public/$Session->SessionTask")}}' class="btn btn-square btn-outline-primary has-icon" >
+                          {{-- <a href='{{url("/storage/app/public/$Session->SessionTask")}}' class="btn btn-square btn-outline-primary has-icon" >
 
 
 
@@ -217,6 +231,13 @@
 
 
                             Download Task
+
+                          </a> --}}
+                          <a href="" class="btn btn-square btn-outline-primary has-icon" data-toggle="modal"
+
+                              data-target="#viewtaskModal{{$Session->SessionId}}">
+
+                              <i class="fa fa-eye"></i> View Task
 
                           </a>
                           <a href='{{url("/session/task/students/$Session->SessionId")}}' class="btn btn-square btn-outline-primary has-icon" >
@@ -297,42 +318,22 @@
               <div class="ms-auth-container row no-gutters">
 
                   <div class="col-12 p-5">
-
-                        {{-- <div class="input-group">
-
-                          <div class="input-group-prepend">
-
-                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-
-                          </div>
-
-                          
-
-                          <div class="custom-file">
-
-                            <input type="file" name="MaterialFile" class="custom-file-input" id="inputGroupFile01"
-
-                              aria-describedby="inputGroupFileAddon01">
-
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-
-                          </div>
-
-                        </div> --}}
-
+{{-- 
                         <div class="input-group mb-3">
 
                             <div class="custom-file">
 
                       <input type="file" name="MaterialFile" value="{{$SessionModal->SessionMaterial}}" id="inputGroupFile0{{$SessionModal->SessionId}} student_img" class="custom-file-input">
 
-                      {{-- <input type="file" /> --}}
+                      <input type="file" />
 
                                 <label class="custom-file-label" for="inputGroupFile0{{$SessionModal->SessionId}}">Choose file</label>
 
                             </div>
 
-                        </div>
+                        </div> --}}
+                      <label for="note">Material Link</label>
+                      <input type="text" name="material_link" class="form-control" placeholder="Enter material link">
 
                       <label for="note">Note</label>
 
@@ -469,40 +470,8 @@
                   <div class="ms-auth-container row no-gutters">
 
                       <div class="col-12 p-5">
-
-                            {{-- <div class="input-group">
-
-                              <div class="input-group-prepend">
-
-                                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-
-                              </div>
-
-                              <div class="custom-file">
-
-                                <input type="file" name="QuizFile" class="custom-file-input" id="inputGroupFile01"
-
-                                  aria-describedby="inputGroupFileAddon01">
-
-                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-
-                              </div>
-
-                            </div> --}}
-
-                            <div class="input-group mb-3">
-
-                                <div class="custom-file">
-
-                          <input type="file" name="QuizFile" value="{{$SessionModal->SessionQuiz}}" id="inputGroupFileq0{{$SessionModal->SessionId}} student_img" class="custom-file-input">
-
-                          {{-- <input type="file" /> --}}
-
-                                    <label class="custom-file-label" for="inputGroupFileq0{{$SessionModal->SessionId}}">Choose file</label>
-
-                                </div>
-
-                            </div>
+                                            <label for="note">Quiz Link</label>
+                <input type="text" name="quiz_link" class="form-control" placeholder="Enter quiz link">
 
                             <label for="note">Note</label>
 
@@ -563,40 +532,10 @@
                   <div class="ms-auth-container row no-gutters">
 
                       <div class="col-12 p-5">
+                        
+              <label for="note">Task Link<br/><span class="text-info"> (<i class="fab fa-google-drive"></i> Google Drive - <i class="fab fa-github"></i> Github)</span></label>
+              <input type="text" name="task_link" class="form-control" placeholder="Enter task link">
 
-                            {{-- <div class="input-group">
-
-                              <div class="input-group-prepend">
-
-                                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-
-                              </div>
-
-                              <div class="custom-file">
-
-                                <input type="file" name="TaskFile" class="custom-file-input" id="inputGroupFile01"
-
-                                  aria-describedby="inputGroupFileAddon01">
-
-                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-
-                              </div>
-
-                            </div> --}}
-
-                            <div class="input-group mb-3">
-
-                                <div class="custom-file">
-
-                          <input type="file" name="TaskFile" value="{{$SessionModal->SessionMaterial}}" id="inputGroupFilet0{{$SessionModal->SessionId}} student_img" class="custom-file-input">
-
-                          {{-- <input type="file" /> --}}
-
-                                    <label class="custom-file-label" for="inputGroupFilet0{{$SessionModal->SessionId}}">Choose file</label>
-
-                                </div>
-
-                            </div>
 
                           <label for="note">Note</label>
 
@@ -629,6 +568,140 @@
           </div>
 
         </div>
+
+        
+<div class="modal fade" id="viewtaskModal{{$SessionModal->SessionId}}" tabindex="-1" role="dialog" aria-labelledby="MaterialModal">
+
+<div class="modal-dialog modal-dialog-centered " role="document">
+
+<div class="modal-content">
+
+
+
+<div class="modal-body">
+
+
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+      <div class="ms-auth-container row no-gutters">
+
+           <div class="col-12 p-5">
+              <div class="text-center">
+                <a href="{{$SessionModal->SessionTask}}" target="_blank" class="btn btn-primary">View Task</a>
+              </div>
+              <div class="input-group">
+
+                  <textarea name="notes" id="note" disabled class="form-control mt-3 text-left" rows="10" placeholder="write note">
+                    {{$SessionModal->TaskText}}
+                  </textarea>
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+  </div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="modal fade" id="viewmaterialModal{{$SessionModal->SessionId}}" tabindex="-1" role="dialog" aria-labelledby="MaterialModal">
+
+<div class="modal-dialog modal-dialog-centered " role="document">
+
+<div class="modal-content">
+
+
+
+<div class="modal-body">
+
+
+
+
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+      <div class="ms-auth-container row no-gutters">
+
+           <div class="col-12 p-5">
+              <div class="text-center">
+                <a href="{{$SessionModal->SessionMaterial}}" target="_blank" class="btn btn-primary">View Material</a>
+              </div>
+              <div class="input-group">
+
+                  <textarea name="notes" id="note" disabled class="form-control mt-3 text-left" rows="10" placeholder="write note">
+                    {{$SessionModal->MaterialText}}
+                  </textarea>
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+  </div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+<div class="modal fade" id="viewquizModal{{$SessionModal->SessionId}}" tabindex="-1" role="dialog" aria-labelledby="MaterialModal">
+
+<div class="modal-dialog modal-dialog-centered " role="document">
+
+<div class="modal-content">
+
+
+
+<div class="modal-body">
+
+
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+      <div class="ms-auth-container row no-gutters">
+
+           <div class="col-12 p-5">
+              <div class="text-center">
+                <a href="{{$SessionModal->SessionQuiz}}" target="_blank" class="btn btn-primary">View Quiz</a>
+              </div>
+              <div class="input-group">
+
+                  <textarea name="notes" id="note" disabled class="form-control mt-3 text-left" rows="10" placeholder="write note">
+                    {{$SessionModal->QuizText}}
+                  </textarea>
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+  </div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
 
   @endforeach
 

@@ -103,7 +103,7 @@
 
                         <td> 
                               @if($Task->TaskURL != null)
-                              <a href='{{url("/storage/app/public/$Task->TaskURL")}}' class="btn btn-square btn-outline-primary has-icon" >
+                              <a href="{{$Task->TaskURL}}" target="_blank" class="btn btn-square btn-outline-primary has-icon" >
 
 
 
@@ -111,7 +111,7 @@
 
 
 
-                                Download task
+                                View task
 
                             </a>
 

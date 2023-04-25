@@ -170,7 +170,7 @@
 
                           {{-- {{asset("Storage/$Session->SessionMaterial")}} --}}
 
-                      <span data-toggle="tooltip" data-placement="top" title="Download">
+                      <span data-toggle="tooltip" data-placement="top" title="View">
 
                       <a href="/storage/{{$Session->SessionMaterial}}" data-toggle="modal"
 
@@ -235,11 +235,14 @@
                           <i class="fa fa-upload"></i> Upload solution
 
                         </a>
-  <a href="{{url("/storage/app/public/$Session->TaskURL")}}" download class="btn btn-square btn-outline-info has-icon" >
+                        {{-- {{url("/storage/app/public/$Session->TaskURL")}} --}}
+                    <a href="{{$Session->TaskURL}}" class="btn btn-square btn-outline-info has-icon" data-toggle="modal"
 
-<i class="fa fa-eye"></i> Download solution
+                      data-target="#viewtaskModal{{$Session->SessionId}}">
 
-</a>
+                  <i class="fa fa-eye"></i> View solution
+
+                  </a>
                       </td>
 
                     </tr>
@@ -482,13 +485,13 @@
 
                     @if ($SessionModal->SessionQuiz)
 
-                    <a href="http://kpi.seniorsteps.net/storage/app/public/{{$SessionModal->SessionQuiz}}" Download class="ms-btn-icon-outline btn-dark" data-toggle="tooltip" data-placement="top"
+                    <a href="{{$SessionModal->SessionQuiz}}" target="_blank" class="btn btn-dark" data-toggle="tooltip" data-placement="top"
 
-                      title="Download">
+                        title="Open Task Link">
 
-                      <i class="fa fa-download"></i>
+                        Quiz Link
 
-                    </a>
+                      </a>
 
                     @else
 
@@ -570,11 +573,11 @@
 
                       @if ($SessionModal->SessionTask)
 
-                      <a href="http://kpi.seniorsteps.net/storage/app/public/{{$SessionModal->SessionTask}}" Download class="ms-btn-icon-outline btn-dark" data-toggle="tooltip" data-placement="top"
+                      <a href="{{$SessionModal->SessionTask}}" target="_blank" class="btn btn-dark" data-toggle="tooltip" data-placement="top"
 
-                        title="Download">
+                        title="Open Task Link">
 
-                        <i class="fa fa-download"></i>
+                        Task Link
 
                       </a>
 
@@ -656,14 +659,13 @@
 
                     @if ($SessionModal->SessionMaterial)
 
-                    <a href="http://kpi.seniorsteps.net/storage/app/public/{{$SessionModal->SessionMaterial}}" Download class="ms-btn-icon-outline btn-dark" data-toggle="tooltip" data-placement="top"
+                    <a href="{{$SessionModal->SessionMaterial}}" target="_blank" class="btn btn-dark" data-toggle="tooltip" data-placement="top"
 
-                      title="Download">
+                        title="Open Task Link">
 
-                      <i class="fa fa-download"></i>
+                        Material Link
 
-                    </a>
-
+                      </a>
                     @else
 
                     No Material attachement is sent
@@ -718,32 +720,14 @@
 
                 {{ csrf_field() }}
 
-                <div class="input-group">
 
-                  <div class="input-group-prepend">
+                <input  type="hidden" class="session_id" name="session" value="{{$SessionModal->SessionId}}" />
 
-                    <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                <input  type="hidden" class="sround_id" name="id" value="{{$StudentRoundId[0]->StudentRoundsId}}" />
 
-                  </div>
-    
-                  <div class="custom-file">
-
-                      <input  type="hidden" class="session_id" name="session" value="{{$SessionModal->SessionId}}" />
-
-                      <input  type="hidden" class="sround_id" name="id" value="{{$StudentRoundId[0]->StudentRoundsId}}" />
-
-                      <input  type="hidden" name="round" value="{{$round}}" />
-
-                    <input type="file" id="uploadFile" name="task" class="custom-file-input uploadFile" id="inputGroupFile01"
-
-                      aria-describedby="inputGroupFileAddon01">
-
-                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-
-                  </div>
-
-                </div>
-
+                <input  type="hidden" name="round" value="{{$round}}" />
+                <label for="note">Task Link<br/><span class="text-info"> (<i class="fab fa-google-drive"></i> Google Drive - <i class="fab fa-github"></i> Github)</span></label>
+                <input type="text" name="task_link" class="form-control" placeholder="Enter task link">
   
 
                 <label for="note">Note</label>
@@ -761,16 +745,61 @@
                   <input type="submit" value="upload" class="btn btn-success m-auto">
 
                 </div>
-                <div class="card">
+                {{-- <div class="card">
                   <div class="card-body">
                     <label>Upload precentage : <span id="prog-perc" class="prog-perc-{{$SessionModal->SessionId}}-{{$StudentRoundId[0]->StudentRoundsId}}">0%</span></label>
                 <div class="progress">
                   <div class="progress-bar-{{$SessionModal->SessionId}}-{{$StudentRoundId[0]->StudentRoundsId}} bg-primary" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                   </div>
-                </div>
+                </div> --}}
               </form>
 
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="modal fade" id="viewtaskModal{{$SessionModal->SessionId}}" tabindex="-1" role="dialog" aria-labelledby="uploadtaskModal">
+
+    <div class="modal-dialog modal-dialog-centered " role="document">
+
+      <div class="modal-content">
+
+
+
+        <div class="modal-body">
+
+
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+
+              aria-hidden="true">&times;</span></button>
+
+          <div class="ms-auth-container row no-gutters">
+
+            <div class="col-12 p-5">
+              <div class="text-center">
+                <a href="{{$SessionModal->TaskURL}}" target="_blank" class="btn btn-primary">View Task</a>
+              </div>
+              <div class="input-group">
+
+                  <textarea name="notes" id="note" disabled class="form-control mt-3 text-left" rows="10" placeholder="write note">
+                    {{$SessionModal->TaskNotes}}
+                  </textarea>
+
+
+
+                </div>
             </div>
 
           </div>
@@ -791,37 +820,37 @@
 @section('scripts')
 <script>
   $(document).ready(function(){
-$('.form-prog').submit(function(event){
-  var session = $(this).find(".session_id").val();
-  var sround = $(this).find(".sround_id").val();
-  //event.preventDefault();
-if($(this).find('.uploadFile').val())
-{
-  // event.preventDefault();
-  $(this).ajaxSubmit({
-    // target: '#targetLayer',
-    beforeSubmit:function(){
-      $('.progress-bar-'+session+'-'+sround).width('0%');
-    },
-    uploadProgress: function(event, position, total, percentageComplete)
-    {
-      console.log(percentageComplete);
-      $('.progress-bar-'+session+'-'+sround).width(percentageComplete + '%')
+// $('.form-prog').submit(function(event){
+//   var session = $(this).find(".session_id").val();
+//   var sround = $(this).find(".sround_id").val();
+//   //event.preventDefault();
+// if($(this).find('.uploadFile').val())
+// {
+//   // event.preventDefault();
+//   $(this).ajaxSubmit({
+//     // target: '#targetLayer',
+//     beforeSubmit:function(){
+//       $('.progress-bar-'+session+'-'+sround).width('0%');
+//     },
+//     uploadProgress: function(event, position, total, percentageComplete)
+//     {
+//       console.log(percentageComplete);
+//       $('.progress-bar-'+session+'-'+sround).width(percentageComplete + '%')
 
-      // $('.progress-bar').animate({
-      //   width: percentageComplete + '%'
-      // }, {
-      //   duration: 500
-      // });
-      $('.prog-perc-'+session+'-'+sround).html(percentageComplete+ "%");
-    },
-    success:function(){
-      // $('#form-prog').submit();
-    },
-    // resetForm: true
-  });
-}
-});
+//       // $('.progress-bar').animate({
+//       //   width: percentageComplete + '%'
+//       // }, {
+//       //   duration: 500
+//       // });
+//       $('.prog-perc-'+session+'-'+sround).html(percentageComplete+ "%");
+//     },
+//     success:function(){
+//       // $('#form-prog').submit();
+//     },
+//     // resetForm: true
+//   });
+// }
+// });
 });
 </script>
 @endsection

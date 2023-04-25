@@ -40,6 +40,11 @@ use Illuminate\Support\Facades\File as FacadesFile;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PHPUnit\Framework\Constraint\Count;
 use ZipArchive;
 
@@ -1491,6 +1496,71 @@ public function ConfirmCancelStudentRegisteration(int $id)
 
         return View('Admin.MyCourses.students',['Notifications'=>AdminController::Notifications(),'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'RoundStudents'=>$RoundStudents,'Round'=>$Round]);
     }
+    public function DownloadStudentsReport(int $id)
+    {
+        $RoundStudents = DB::table('studentrounds')
+            ->join('students', 'students.StudentId', '=', 'studentrounds.StudentId')
+            ->where('RoundId', '=', $id)
+            ->get();
+        $Round = DB::table('rounds')
+            ->join('courses', 'courses.CourseId', '=', 'rounds.CourseId')
+            ->where('rounds.RoundId', '=', $id)
+            ->first();
+
+        $spreadsheet = new Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+        $worksheet->setCellValue('A1', '#')
+            ->setCellValue('B1', 'Full Name')
+            ->setCellValue('C1', 'Email')
+            ->setCellValue('D1', 'Phone')
+            ->setCellValue('E1', 'Password');
+
+        $style = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => Color::COLOR_DARKBLUE,
+                ],
+                'size' => 12
+            ],
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_WHITE,
+                ],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ]
+
+        ];
+
+        // Set the width of column A
+        $worksheet->getColumnDimension('A')->setWidth(10);
+        for ($col = 'B'; $col !== 'F'; $col++) {
+            $worksheet->getColumnDimension($col)->setWidth(40);
+        }
+
+        // Set the height of row 1
+        $worksheet->getRowDimension(1)->setRowHeight(30);
+        $worksheet->getStyle('A1:E1')->applyFromArray($style);
+        foreach ($RoundStudents as $key => $Student) {
+            $worksheet->setCellValue('A' . ($key + 2), $key + 2)
+                ->setCellValue('B' . ($key + 2), $Student->FullnameEn)
+                ->setCellValue('C' . ($key + 2), $Student->Email)
+                ->setCellValue('D' . ($key + 2), $Student->Phone)
+                ->setCellValue('E' . ($key + 2), $Student->Password);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save(public_path('students.xlsx'));
+
+        $pathToFile = public_path('students.xlsx');
+        $response = response()->download($pathToFile, "students.xlsx")->deleteFileAfterSend();
+
+        return $response;
+    }
+
     public function StudentDetails(int $id)
     {
         $StudentRound = StudentRounds::find($id);
@@ -1876,11 +1946,8 @@ public function SeniorEvaluation(int $id)
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
             ->where('RoundId','=',$Session->RoundId)->first();
-            if($request->hasFile('MaterialFile')){
-                $filename = $request->MaterialFile->store('/public/uploads',['disk' => 'public']);
 
-                $Session->SessionMaterial = $filename;
-                }
+            $Session->SessionMaterial = $request->material_link;
             $Session->save();
             $StudentRounds = StudentRounds::where('RoundId','=',$Session->RoundId)->get();
             
@@ -1922,11 +1989,8 @@ public function SeniorEvaluation(int $id)
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
             ->where('RoundId','=',$Session->RoundId)->first();
-            if($request->hasFile('QuizFile')){
-                $filename = $request->QuizFile->store('/public/uploads',['disk' => 'public']);
 
-                $Session->SessionQuiz = $filename;
-                }
+            $Session->SessionQuiz = $request->quiz_link;
             $Session->save();
             $StudentRounds = StudentRounds::where('RoundId','=',$Session->RoundId)->get();
             foreach ($StudentRounds as $StudentRound) {
@@ -1944,11 +2008,8 @@ public function SeniorEvaluation(int $id)
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
             ->where('RoundId','=',$Session->RoundId)->first();
-            if($request->hasFile('TaskFile')){
-                $filename = $request->TaskFile->store('/public/uploads',['disk' => 'public']);
 
-                $Session->SessionTask = $filename;
-                }
+            $Session->SessionTask = $request->task_link;
             $Session->save();
             $StudentRounds = StudentRounds::where('RoundId','=',$Session->RoundId)->get();
             foreach ($StudentRounds as $StudentRound) {
@@ -2189,24 +2250,81 @@ public function StudentResetPassword(Request $request)
     {
         $Session = $Session = Sessions::find($id);
         $Round = Rounds::find($Session->RoundId);
+        $tasks = DB::table('tasks')
+            ->join('studentrounds', 'studentrounds.StudentRoundsId', '=', 'tasks.StudentRoundId')
+            ->join('students', 'studentrounds.StudentId', '=', 'students.StudentId')
+            ->join('grades', 'grades.TaskId', '=', 'tasks.TaskId')
+            ->where('SessionId', '=', $id)->get();
+        $spreadsheet = new Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+        $worksheet->setCellValue('A1', '#')
+            ->setCellValue('B1', 'Full Name')
+            ->setCellValue('C1', 'State')
+            ->setCellValue('D1', 'Task Link');
 
-        if(file_exists(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId))){
-            $zip = new \ZipArchive();
-            $filename = "Round".$Round->GroupNo."-Session".$Session->SessionNumber."-".time().".zip";
-            if ($zip->open(storage_path($filename), \ZipArchive::CREATE)== TRUE)
-            {
-                $files = File::files(storage_path("app/public/public/uploads/round".$Session->RoundId."/session".$Session->SessionId));
-                foreach ($files as $key => $value){
-                    $relativeName = basename($value);
-                    $zip->addFile($value, $relativeName);
-                }
-                $zip->close();
-            }
-    
-            return response()->download(storage_path($filename));
-        }else{
-            return redirect()->back();
+        $style = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => Color::COLOR_DARKBLUE,
+                ],
+                'size' => 12
+            ],
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_WHITE,
+                ],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ]
+
+        ];
+
+        $notsubstyle = [
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_DARKRED,
+                ],
+            ]
+
+        ];
+        $substyle = [
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_DARKGREEN,
+                ],
+            ]
+
+        ];
+
+        // Set the width of column A
+        $worksheet->getColumnDimension('A')->setWidth(10);
+        for ($col = 'B'; $col !== 'D'; $col++) {
+            $worksheet->getColumnDimension($col)->setWidth(40);
         }
-        
+        $worksheet->getColumnDimension('D')->setWidth(80);
+
+        // Set the height of row 1
+        $worksheet->getRowDimension(1)->setRowHeight(30);
+        $worksheet->getStyle('A1:D1')->applyFromArray($style);
+        foreach ($tasks as $key => $task) {
+            $worksheet->setCellValue('A' . ($key + 2), $key + 2)
+                ->setCellValue('B' . ($key + 2), $task->FullnameEn)
+                ->setCellValue('C' . ($key + 2), $task->TaskURL == null ? "Not Submitted" : "Submitted")
+                ->setCellValue('D' . ($key + 2), $task->TaskURL);
+
+            $worksheet->getStyle('C' . ($key + 2))->applyFromArray(($task->TaskURL == null) ? $notsubstyle : $substyle);
+
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $pathToFile = public_path('Tasks_Round' . $Round->GroupNo . '_Session' . $Session->SessionNumber . '.xlsx');
+        $writer->save($pathToFile);
+
+        $response = response()->download($pathToFile, 'Tasks_Round' . $Round->GroupNo . '_Session' . $Session->SessionNumber . '.xlsx')->deleteFileAfterSend();
+
+        return $response;
     }
 }

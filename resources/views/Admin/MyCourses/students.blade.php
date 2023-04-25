@@ -31,9 +31,12 @@
               <h2>{{$Round->CourseNameEn}} G{{$Round->GroupNo}}</h2>
 
               <h6>Students List </h6>
-
+              
             </div>
-
+            <div class="mx-4 mt-3">
+              <h4 class="mb-0">Download Students List</h4>
+              <a href="{{url("/Admin/Course/$Round->RoundId/Students/Report")}}" class="btn btn-success"><i class="far fa-file-excel"></i> Xlsx</a>
+            </div>
             <div class="ms-panel-body">
 
               <div class="table-responsive">

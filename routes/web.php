@@ -137,6 +137,7 @@ Route::get('/Trainer/session/task/students/{id}','TrainerController@TaskProgress
 Route::get('/Admin/Courses/{id}','AdminController@CourseProgress');
 Route::get('/Trainer/Course/{id}/Students','TrainerController@CourseStudents');
 Route::get('/Admin/Course/{id}/Students','AdminController@CourseStudents');
+Route::get('/Admin/Course/{id}/Students/Report', 'AdminController@DownloadStudentsReport');
 Route::get('/Trainer/Course/{id}/Attendance','TrainerController@CourseAttendance');
 Route::get('/Admin/Course/{id}/Attendance','AdminController@CourseAttendance');
 Route::get('/Trainer/Course/{id}/Sessions','TrainerController@CourseSessions');
