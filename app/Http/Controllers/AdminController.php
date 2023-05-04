@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\File as FacadesFile;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Color;
@@ -834,6 +835,142 @@ class AdminController extends Controller
                     'Notifications'=>AdminController::Notifications(),
         ]);
     }
+
+    public function UploadStudents(Request $request, int $id)
+    {
+        try {
+            // Get the uploaded file
+            $file = $request->file('excelfile');
+
+            // Get the file path and name
+            $filePath = $file->getRealPath();
+            $filename = $file->getClientOriginalName();
+
+            // Read the data from the uploaded file
+            $spreadsheet = IOFactory::load($filePath);
+            $worksheet = $spreadsheet->getActiveSheet();
+            $data = [];
+            $rows = $worksheet->toArray();
+
+            // return $student;
+
+            // return count($rows);
+
+
+            for ($i = 1; $i < count($rows); $i++) {
+                $rowData = $rows[$i];
+                $stdEnName = $rowData[1];
+                $stdArName = $rowData[2];
+                $stdEmail = $rowData[3];
+                $stdInitPass = $rowData[4];
+                $stdMobile = $rowData[5];
+
+                $student = Students::where('Email', '=', $stdEmail)->first();
+                // return $student;
+                if ($student == null) {
+                    $student = new Students();
+                    $student->FullnameEn = $stdEnName;
+                    $student->FullnameAr = $stdArName;
+                    $student->Email = $stdEmail;
+                    $student->Password = $stdInitPass;
+                    $student->Phone = $stdMobile;
+                    $student->Whatsapp = $stdMobile;
+                    $student->save();
+                }else if(StudentRounds::where([['StudentId','=',$student->StudentId],['RoundId','=',$id]])->first() != null){
+                    continue;
+                }
+                    
+                $StudentRound = new StudentRounds();
+                $StudentRound->StudentId = $student->StudentId;
+                $StudentRound->RoundId = $id;
+                $StudentRound->save();
+
+                $Sessions = Sessions::where([['RoundId', '=', $id]])->get();
+                foreach ($Sessions as $key => $Session) {
+                    $Attendance = new Attendance();
+                    $Attendance->SessionId = $Session->SessionId;
+                    $Attendance->StudentRoundsId = $StudentRound->StudentRoundsId;
+                    $Attendance->save();
+
+                    $Task = new Tasks();
+                    $Task->StudentRoundId = $StudentRound->StudentRoundsId;
+                    $Task->SessionId = $Session->SessionId;
+                    $Task->save();
+
+                    //storing grades to be filled
+                    $Grade = new Grades();
+                    $Grade->TaskId = $Task->TaskId;
+                    $Grade->save();
+                }
+                $RoundContent = RoundContents::where('RoundId', '=', $id)->get();
+                foreach ($RoundContent as $key => $Content) {
+                    $RoundEvaluation = new RoundEvaluations();
+                    $RoundEvaluation->RoundContentId = $Content->RoundContentId;
+                    $RoundEvaluation->StudentRoundId = $StudentRound->StudentRoundsId;
+                    $RoundEvaluation->save();
+
+                    $SeniorEvaluation = new SeniorstepsEvaluations();
+                    $SeniorEvaluation->RoundContentId = $Content->RoundContentId;
+                    $SeniorEvaluation->StudentRoundId = $StudentRound->StudentRoundsId;
+                    $SeniorEvaluation->save();
+
+                    $CenterEvaluation = new CenterEvaluations();
+                    $CenterEvaluation->RoundContentId = $Content->RoundContentId;
+                    $CenterEvaluation->PersonId = $StudentRound->StudentRoundsId;
+                    $CenterEvaluation->PersonType = 'Student';
+                    $CenterEvaluation->save();
+
+                    $StudentEval = new StudentEvaluations();
+                    $StudentEval->StudentRoundId = $StudentRound->StudentRoundsId;
+                    $StudentEval->RoundContentId = $Content->RoundContentId;
+                    $StudentEval->save();
+
+
+                }
+
+                $TrainerRounds = TrainerRounds::where('RoundId', '=', $id)->get();
+                $Round = DB::table('rounds')
+                    ->join('courses', 'courses.CourseId', '=', 'rounds.CourseId')
+                    ->first();
+                $Course = Rounds::find($id);
+
+
+                foreach ($TrainerRounds as $key => $TrainerRound) {
+                    $TrainerCourse = TrainerCourses::where([
+                        ['CourseId', '=', $Course->CourseId],
+                        ['TrainerId', '=', $TrainerRound->TrainerId]
+                    ])->first();
+                    $Exams = Exams::where('TrainerCoursesId', '=', $TrainerCourse->TrainerCoursesId)->get();
+                    foreach ($Exams as $key => $Exam) {
+                        $ExamGrade = new ExamGrades();
+                        $ExamGrade->StudentRoundId = $StudentRound->StudentRoundsId;
+                        $ExamGrade->ExamId = $Exam->ExamId;
+                        $ExamGrade->save();
+                    }
+                    $RoundContentofTrainer = RoundContents::where('RoundId', '=', $id)->get();
+
+                    foreach ($RoundContentofTrainer as $key => $ContentVal) {
+                        $TrainerEval = new TrainerEvaluations();
+                        $TrainerEval->StudentRoundsId = $StudentRound->StudentRoundsId;
+                        $TrainerEval->TrainerRoundId = $TrainerRound->TrainerRoundsId;
+                        $TrainerEval->RoundContentId = $ContentVal->RoundContentId;
+                        $TrainerEval->save();
+                    }
+                }
+
+            }
+
+            // Remove the uploaded file
+            Storage::delete($filePath);
+
+            return Redirect::to("/Admin/Rounds/Edit/$id")->with('success', "Students in the excel file have been added to this round successfully!");
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        
+
+    }
     public function EditRoundData(Request $request)
     {
         if(request()->ajax()){
@@ -918,6 +1055,9 @@ class AdminController extends Controller
     }
     public function AddStudentToRound(int $rid,int $sid)
     {
+        if (StudentRounds::where([['StudentId', '=', $sid], ['RoundId', '=', $rid]])->first() != null) {
+            return Redirect::to("/Admin/Rounds/Edit/$rid")->with('danger', "Student already exists!");
+        }
         $StudentRound = new StudentRounds();
         $StudentRound->StudentId = $sid;
         $StudentRound->RoundId = $rid;

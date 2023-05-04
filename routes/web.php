@@ -59,6 +59,7 @@ Route::get('/Admin/Rounds','AdminController@Rounds');
 Route::get('/Admin/Rounds/Add','AdminController@AddRound');
 Route::get('/Admin/Rounds/Edit','AdminController@EditRoundData');
 Route::get('/Admin/Rounds/Edit/{id}','AdminController@EditRound');
+Route::post('/Admin/Rounds/{id}/Upload','AdminController@UploadStudents');
 Route::get('/Admin/Rounds/Details/{id}','AdminController@RoundDetails');
 Route::get('/Admin/Rounds/FetchTrainers','AdminController@FetchTrainers');
 Route::get('/Admin/Rounds/FetchStudents','AdminController@FetchStudents');

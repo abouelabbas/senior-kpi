@@ -446,43 +446,57 @@
 
                                             <div class="row">
 
-                                                <div class="col-md-6">
+                                                <div class="col-12">
 
                                                     <div class="form-group">
 
-                                                        <div class="row no-gutters">
+                                                        <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="row">
+                                                                        <div class="col-8">
 
-                                                            <div class="col-9">
+                                                                            <input type="text" name="" id="SearchStudentField"
 
-                                                                <input type="text" name="" id="SearchStudentField"
+                                                                                class="form-control"
 
-                                                                    class="form-control"
+                                                                                placeholder="Search by name or phone">
 
-                                                                    placeholder="Search by name or phone">
+                                                                        </div>
 
+                                                                        <div class="col-4">
+
+                                                                            <button type="button" name="" id="SearchStudentBTN"
+
+                                                                                class="btn mt-0 py-2 btn-block btn-dark">Search</button>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 p-3 border">
+                                                                    <form action="{{url("/Admin/Rounds/$RoundSelected->RoundId/Upload")}}" method="post" enctype="multipart/form-data">
+                                                                        @csrf
+                                                                        <div class="mb-3">
+                                                                            <label for="formFile" class="form-label">Assign Using an Excel File</label>
+                                                                            <input class="form-control" type="file" name="excelfile">
+                                                                        </div>
+                                                                        <button type="submit" name="" id="SearchStudentBTN"
+                                                                            class="btn mt-0 py-2 btn-success"><i class="far fa-file-excel"></i> 
+                                                                            Upload
+                                                                        </button>
+                                                                    </form>
+
+                                                                </div>
+
+                                                                <div class="col-6">
+
+                                                                    <ul id="filtered_Students" class="ms-followers ms-list ms-scrollable ps ps--active-x">
+
+                                                                    </ul>
+
+                                                                </div>
                                                             </div>
+                                                            
 
-                                                            <div class="col-3">
-
-                                                                <button type="button" name="" id="SearchStudentBTN"
-
-                                                                    class="btn mt-0 py-2 btn-block btn-dark">Search</button>
-
-                                                            </div>
-
-                                                            <div class="col-12">
-
-                                                                <ul id="filtered_Students" class="ms-followers ms-list ms-scrollable ps ps--active-x">
-
-                                                                </ul>
-
-                                                            </div>
-
-                                                           
-
-
-
-                                                        </div>
 
                                                     </div>
 
