@@ -865,7 +865,7 @@ class AdminController extends Controller
                 $stdInitPass = $rowData[4];
                 $stdMobile = $rowData[5];
 
-                $student = Students::where('Email', '=', $stdEmail)->first();
+                $student = Students::where('Phone', '=', $stdMobile)->first();
                 // return $student;
                 if ($student == null) {
                     $student = new Students();
