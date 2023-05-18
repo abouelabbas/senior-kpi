@@ -852,7 +852,8 @@ class AdminController extends Controller
             $data = [];
             $rows = $worksheet->toArray();
 
-            // return $student;
+            // return $filePath;
+            return $rows;
 
             // return count($rows);
 
