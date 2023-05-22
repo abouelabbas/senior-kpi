@@ -873,7 +873,7 @@ class AdminController extends Controller
                     $student->FullnameEn = $stdEnName;
                     $student->FullnameAr = $stdArName;
                     $student->Email = $stdEmail;
-                    $student->Password = $stdInitPass;
+                    $student->Password = uniqid();
                     $student->Phone = $stdMobile;
                     $student->Whatsapp = $stdMobile;
                     $student->save();
@@ -2275,60 +2275,54 @@ public function StudentResetPassword(Request $request)
     //
     public function UploadTask(Request $request)
     {
-        if($request->hasFile('task')){
-            //$request->ImagePath->storeAs('/public/uploads',$filename);
-            $TaskId = $request->TaskId;
-            // $round = $request->round;
-            $StudentRoundId = $request->id;
+        $TaskId = $request->TaskId;
+        // $round = $request->round;
+        $StudentRoundId = $request->id;
 
-            $StudentRound = StudentRounds::find($StudentRoundId);
-            $Round = Rounds::find($StudentRound->RoundId);
-            $Student = Students::find($StudentRound->StudentId);
+        $StudentRound = StudentRounds::find($StudentRoundId);
+        $Round = Rounds::find($StudentRound->RoundId);
+        $Student = Students::find($StudentRound->StudentId);
 
-            
-            $Task = Tasks::find($TaskId);
-            $Session = Sessions::find($Task->SessionId);
+        $Session = $request->session;
 
-            if($Task->TaskURL){
-                if(file_exists(storage_path("app/public/".$Task->TaskURL))){
-                    unlink(storage_path("app/public/" . $Task->TaskURL));
-                }
-            }
-
-            $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn"."_round_"."$Round->GroupNo"."_session_"."$Session->SessionNumber"."_" .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+        $Task = Tasks::where([
+            ['StudentRoundId', '=', $StudentRoundId],
+            ['SessionId', '=', $Session]
+        ])->first();
+        $Session = Sessions::find($Session);
 
 
-            //storing task
-            // $Task = Tasks::where([
-            //     ['StudentRoundId','=',$StudentRoundId],
-            //     ['SessionId','=',$Session]
-            // ])->first();
-            $Task->TaskURL = $filename;
-            $Task->TaskDate = date("Y-m-d");
-            $Task->IsGrade = 1;
-            $Task->save();
-            // return $Task;
-            
-            
+        //storing task
+        // $Task = Tasks::where([
+        //     ['StudentRoundId','=',$StudentRoundId],
+        //     ['SessionId','=',$Session]
+        // ])->first();
+        $Task->TaskURL = $request->task_link;
+        $Task->TaskNotes = $request->notes;
+        $Task->TaskDate = date("Y-m-d");
+        $Task->IsGrade = 1;
+        $Task->save();
+        // return $Task;
+        
+        
 
-            $Course = Courses::find($Round->CourseId);
-            $ThisSession = Sessions::find($Task->SessionId);
-                $TrainerRounds = TrainerRounds::where('RoundId','=',$StudentRound->RoundId)->get();
-                foreach ($TrainerRounds as $key => $TrainerRound) {
-                    $Notification = new Notifications();
-                    $Notification->Notification = "$Student->FullnameEn has added his task in $Course->CourseNameEn GR$Round->GroupNo Session $ThisSession->SessionNumber";
-                    $Notification->ForId = $TrainerRound->TrainerId;
-                    $Notification->ForType = "Trainer";
-                    $Notification->save();
-                }
+        $Course = Courses::find($Round->CourseId);
+        $ThisSession = Sessions::find($Task->SessionId);
+            $TrainerRounds = TrainerRounds::where('RoundId','=',$StudentRound->RoundId)->get();
+            foreach ($TrainerRounds as $key => $TrainerRound) {
                 $Notification = new Notifications();
                 $Notification->Notification = "$Student->FullnameEn has added his task in $Course->CourseNameEn GR$Round->GroupNo Session $ThisSession->SessionNumber";
-                $Notification->ForType = "Admin";
+                $Notification->ForId = $TrainerRound->TrainerId;
+                $Notification->ForType = "Trainer";
                 $Notification->save();
-                
-           return Redirect::to("/Admin/Course/Student/Details/$StudentRoundId");
-           
-        }
+            }
+            $Notification = new Notifications();
+            $Notification->Notification = "$Student->FullnameEn has added his task in $Course->CourseNameEn GR$Round->GroupNo Session $ThisSession->SessionNumber";
+            $Notification->ForType = "Admin";
+            $Notification->save();
+            
+        return Redirect::to("/Admin/Course/Student/Details/$StudentRoundId");
+
     }
 
     public function CancelSession(int $id)

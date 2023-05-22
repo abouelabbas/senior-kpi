@@ -368,11 +368,7 @@
 
                                                          <td>
                                                            @if($Grade->TaskURL !== null)
-                                                           <a href='{{url("/storage/app/public/$Grade->TaskURL")}}' download class="ms-btn-icon-outline btn-info">
-
-                                                                 <i class="fa fa-download"></i>
-
-                                                               </a>
+                                                           <a href="" data-toggle="modal" data-target="#viewtaskModal{{$Grade->GradeId}}"  class="ms-btn-icon-outline btn-info"><i class="fa fa-download"></i></a>
                                                            @else
                                                            Waiting..
                                                            @endif
@@ -841,26 +837,45 @@
 
           <div class="col-12 p-5">
 
-              <form action="/Admin/TaskUpload" method="POST" id="form-prog" enctype="multipart/form-data">
-              {{ csrf_field() }}
-              <div class="input-group text-center">
-              <input type="hidden" name="TaskId" value="{{$GradeModal->TaskId}}" />
-                <input type="hidden" name="id" value="{{$StudentRound->StudentRoundsId}}" />
-<input type="file" id="uploadFile" name="task"/>
+              <form action="/Admin/TaskUpload" class="form-prog" id="form-prog" method="POST" enctype="multipart/form-data">
+
+                {{ csrf_field() }}
 
 
-                  <input type="submit" value="Upload" class="btn btn-primary m-auto">
+                <input  type="hidden" class="session_id" name="session" value="{{$GradeModal->SessionId}}" />
 
-              </div>
-              <div class="card">
-                <div class="card-body">
-                  <label>Upload precentage : <span id="prog-perc">0%</span></label>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
+                <input  type="hidden" class="sround_id" name="id" value="{{$StudentRound->StudentRoundsId}}" />
+
+                <input  type="hidden" name="round" value="{{$RoundId}}" />
+                <label for="note">Task Link<br/><span class="text-info"> (<i class="fab fa-google-drive"></i> Google Drive - <i class="fab fa-github"></i> Github)</span></label>
+                <input type="text" name="task_link" class="form-control" placeholder="Enter task link">
+  
+
+                <label for="note">Note</label>
+
+                <div class="input-group">
+
+                  <textarea name="notes" id="note" class="form-control" rows="10" placeholder="write note"></textarea>
+
+
+
                 </div>
-              </div>
+
+                <div class="input-group text-center">
+
+                  <input type="submit" value="upload" class="btn btn-success m-auto">
+
+                </div>
+                {{-- <div class="card">
+                  <div class="card-body">
+                    <label>Upload precentage : <span id="prog-perc" class="prog-perc-{{$SessionModal->SessionId}}-{{$StudentRoundId[0]->StudentRoundsId}}">0%</span></label>
+                <div class="progress">
+                  <div class="progress-bar-{{$SessionModal->SessionId}}-{{$StudentRoundId[0]->StudentRoundsId}} bg-primary" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                  </div>
+                </div> --}}
               </form>
+
 
           </div>
 
@@ -875,6 +890,50 @@
   </div>
 
 </div>
+  <div class="modal fade" id="viewtaskModal{{$GradeModal->GradeId}}" tabindex="-1" role="dialog" aria-labelledby="uploadtaskModal">
+
+    <div class="modal-dialog modal-dialog-centered " role="document">
+
+      <div class="modal-content">
+
+
+
+        <div class="modal-body">
+
+
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+
+              aria-hidden="true">&times;</span></button>
+
+          <div class="ms-auth-container row no-gutters">
+
+            <div class="col-12 p-5">
+              <div class="text-center">
+                <a href="{{$GradeModal->TaskURL}}" target="_blank" class="btn btn-primary">View Task</a>
+              </div>
+              <div class="input-group">
+
+                  <textarea name="notes" id="note" disabled class="form-control mt-3 text-left" rows="10" placeholder="write note">
+                    {{$GradeModal->TaskNotes}}
+                  </textarea>
+
+
+
+                </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </div>
 
 <div class="modal fade" id="comment{{$GradeModal->GradeId}}" tabindex="-1" role="dialog" aria-labelledby="NoteModal">
 
