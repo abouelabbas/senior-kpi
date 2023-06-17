@@ -225,6 +225,68 @@ class AdminController extends Controller
 
         return View('Admin.edit-trainer-topics',['Notifications'=>AdminController::Notifications(),'Trainer'=>$Trainer,'Course'=>$Course,'Agenda'=>$Agenda,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'SubAgenda'=>$SubAgenda,'TrainerCoursesId'=>$Trainer->TrainerCoursesId,'TrainerId'=>$Trainer->TrainerId,'CourseId'=>$Course->CourseId]);
     }
+
+    public function CourseTopicsFromSheet(Request $request, int $cid, int $id)
+    {
+        if($request->hasFile("file")){
+            // Validate the uploaded file
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls',
+            ]);
+
+            // Get the uploaded file
+            $file = $request->file('file');
+
+            // Get the file path and name
+            $filePath = $file->getRealPath();
+
+            // Load the data from the uploaded file
+            $spreadsheet = IOFactory::load($filePath);
+
+            // Read data from first table (Worksheet 1)
+            $worksheet1 = $spreadsheet->getSheet(0);
+            $table1 = $worksheet1->toArray();
+            array_shift($table1);
+            for ($i=0; $i < count($table1); $i++) { 
+                $Content = new Contents();
+                $Content->ContentNameEn = $table1[$i][1];
+                $Content->ContentNameAr = $table1[$i][1];
+                $Content->save();
+
+                $TrainerCourses = TrainerCourses::where([['TrainerId','=',$id],['CourseId','=',$cid]])->first();
+
+                //Add TrainerAgenda by fetching Content Id from ($Content)
+                $ContentId = $Content->ContentId;
+                $TrainerAgenda = new TrainerAgenda();
+                $TrainerAgenda->TrainerCoursesId = $TrainerCourses->TrainerCoursesId;
+                $TrainerAgenda->ContentId = $ContentId;
+                $TrainerAgenda->save();
+
+                $table1[$i][] = $TrainerAgenda->TrainerAgendaId;
+            }
+            // Read data from second table (Worksheet 2)
+            $worksheet2 = $spreadsheet->getSheet(1); // Assuming second worksheet is at index 1
+            $table2 = $worksheet2->toArray(); // points
+            array_shift($table2);
+            for ($i = 0; $i < count($table2); $i++) {
+                // add topic
+                $hashNumber = $table2[$i][1];
+                $SubAgendaName = $table2[$i][2];
+                // TrainerAgendaId From Table 1 Tracks
+                $TrainerAgendaId = $table1[$hashNumber-1][2];
+
+                $TrainerSubAgenda = new TrainerSubAgenda();
+                $TrainerSubAgenda->TrainerAgendaId = $TrainerAgendaId;
+                $TrainerSubAgenda->SubAgendaNameEn = $SubAgendaName;
+                $TrainerSubAgenda->SubAgendaNameAr = $SubAgendaName;
+                $TrainerSubAgenda->save();
+
+
+            }
+            return $table1;
+
+        }
+    }
     public function AddTrack(Request $request)
     {
             //Add Content

@@ -26,6 +26,7 @@
                                 aria-expanded="true">
                                 Add
                             </a>
+                            
 
                             <ul class="dropdown-menu">
                                 <li class="ms-dropdown-list">
@@ -46,6 +47,15 @@
                             </ul>
                             {{-- <input type="submit" class="btn btn-success my-2" value="Save"> --}}
                         </div>
+                        <hr/>
+                            <form action="{{url("/Admin/Courses/$CourseId/Topics/Sheet/$TrainerId")}}" method="POST" enctype="multipart/form-data">
+                                {{ csrf_field() }}
+                                <input required type="file" class="form-control" name="file" />
+                                <button type="submit" class="btn btn-success text-white m-2">
+                                    Add from Xlsx <i class="fas fa-file-excel"></i>
+                                </button>
+                            </form>
+                            <hr/>
                         <div class="accordion has-gap ms-accordion-chevron" id="accordionExample4">
                             @foreach ($Agenda as $Ag)
                                 <div class="card">
