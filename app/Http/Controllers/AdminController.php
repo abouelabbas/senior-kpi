@@ -152,7 +152,7 @@ class AdminController extends Controller
         ->where('attendance.IsAttend','=',0)
         ->where("rounds.EndDate", '>=', Carbon::now())
         ->groupBy(["attendance.StudentRoundsId", "students.FullnameEn", "courses.CourseNameEn", "rounds.GroupNo"])
-        ->having('NumberOfAbsence','>=',2)
+        ->having(DB::raw("COUNT(attendance.StudentRoundsId)"),'>=',2)
         ->orderBy('NumberOfAbsence','Desc')
         ->get();
 
