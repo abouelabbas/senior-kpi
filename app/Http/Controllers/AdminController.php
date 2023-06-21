@@ -105,7 +105,15 @@ class AdminController extends Controller
             }
         }
     }
+    public function ignoreSessionAlert(int $id)
+    {
+        $Session = Sessions::where('SessionId', '=', $id)->first();
+        $Session->IsIgnored = 1;
+        $Session->save();
 
+        return redirect()->back()->with("status","Session has been ignored successfully!");
+        
+    }
     public function index()
     {
         $Rounds = Rounds::all()->count();
@@ -117,9 +125,77 @@ class AdminController extends Controller
         $Labs = Labs::all()->count();
         $RecentStudents = DB::table('students')->orderBy('StudentId','Desc')->take(5)->get();
 
+        // Sessions without attendance or without material 3 days ago
+        $SessionsNotSubmitted = DB::table('sessions')
+        ->join('rounds','rounds.RoundId','=','sessions.RoundId')
+        ->join('courses','courses.CourseId','=','rounds.CourseId')
+        ->where('sessions.SessionDate','<=',Carbon::now()->subDays(3))
+        ->where('sessions.IsIgnored','=',0)
+        ->where(function ($query){
+            $query->where('sessions.SessionMaterial','=',null)
+            ->orWhere('sessions.SessionTask','=',null)
+            ->orWhere('sessions.SessionVideo','=',null)
+            ->orWhere('sessions.SessionQuiz','=',null)
+            ->orWhere('sessions.IsDone','=',null);
+        })
+        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->orderBy('sessions.SessionDate','Desc')->get();
+
+        // Students that didn't attend for more than or equal to 2 days
+        $StudentsNotAttended = DB::table('attendance')
+        ->select(["attendance.StudentRoundsId", "students.FullnameEn", "courses.CourseNameEn", "rounds.GroupNo", DB::raw("COUNT(attendance.StudentRoundsId) as NumberOfAbsence")])
+        ->join('sessions','sessions.SessionId','=','attendance.SessionId')
+        ->join('rounds','rounds.RoundId','=','sessions.RoundId')
+        ->join('courses','courses.CourseId','=','rounds.CourseId')
+        ->join('studentrounds','studentrounds.StudentRoundsId','=','attendance.StudentRoundsId')
+        ->join('students','students.StudentId','=','studentrounds.StudentId')
+        ->where('attendance.IsAttend','=',0)
+        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->groupBy(["attendance.StudentRoundsId", "students.FullnameEn", "courses.CourseNameEn", "rounds.GroupNo"])
+        ->having('NumberOfAbsence','>=',2)
+        ->orderBy('NumberOfAbsence','Desc')
+        ->get();
+
+        // students who has tasks of sessions has tasks uploaded 7 days ago
+        $StudentsMissTasks = DB::table('tasks')
+        ->join('sessions','sessions.SessionId','=','tasks.SessionId')
+        ->join('rounds','rounds.RoundId','=','sessions.RoundId')
+        ->join('courses','courses.CourseId','=','rounds.CourseId')
+        ->join('studentrounds','studentrounds.StudentRoundsId','=','tasks.StudentRoundId')
+        ->join('students','students.StudentId','=','studentrounds.StudentId')
+        ->where([
+            ["TaskURL", '=', null],
+            ['sessions.SessionTask','!=',null],
+            ['sessions.SessionDate','<=',Carbon::now()->subDays(7)]  
+        ])
+        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->orderBy('sessions.SessionDate','Desc')
+        ->get();
+
+        // students who has tasks of sessions has tasks uploaded 5 days ago and not graded
+        $StudentsGradingAwaits = DB::table('tasks')
+        ->join('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
+        ->join('rounds', 'rounds.RoundId', '=', 'sessions.RoundId')
+        ->join('courses', 'courses.CourseId', '=', 'rounds.CourseId')
+        ->join('studentrounds', 'studentrounds.StudentRoundsId', '=', 'tasks.StudentRoundId')
+        ->join('students', 'students.StudentId', '=', 'studentrounds.StudentId')
+        ->where([
+            ["TaskURL", '!=', null],
+            ['sessions.SessionTask', '!=', null],
+            ['sessions.SessionDate', '<=', Carbon::now()->subDays(5)],
+            ['tasks.IsGrade', '=', 0]
+        ])
+        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->orderBy('sessions.SessionDate', 'Desc')
+        ->get();
+
         return View('Admin.index',[
             'Recent'=>$RecentStudents,
             'Labs'=>$Labs,'Branches'=>$Branches,
+            'SessionsNeedAction'=>$SessionsNotSubmitted,
+            'StudentsNotAttended'=>$StudentsNotAttended,
+            'StudentsMissTasks'=>$StudentsMissTasks,
+            'StudentsGradingAwaits'=>$StudentsGradingAwaits,
             'Trainers'=>$Trainers,'Rounds'=>$Rounds,'Courses'=>$Courses,'Students'=>$Students,'Running'=>$RunningRounds,
             'ActiveRounds'=>AdminController::ActiveRounds(),'Notifications'=>AdminController::Notifications(),'CountNotifications'=>AdminController::CountNotifications()]);
     }

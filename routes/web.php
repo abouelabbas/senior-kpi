@@ -37,6 +37,7 @@ Route::get('/Logout','AuthenticationController@logout');
 //--------
 //Admin Routes
 Route::get('/Admin','AdminController@Index');
+Route::get('/Admin/Rounds/Session/{id}/Ignore','AdminController@ignoreSessionAlert');
 Route::get('/Admin/Profile/{id}','AdminController@AdminProfile');
 Route::get('/Admin/Profile/Edit/{id}','AdminController@AdminProfileEdit');
 Route::get('/Admin/Courses','AdminController@Courses');

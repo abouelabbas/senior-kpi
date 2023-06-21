@@ -58,6 +58,104 @@
               <div class="col-xl-6 col-md-12">
                   <div class="ms-panel">
                       <div class="ms-panel-header">
+                          <h6>Sessions Missing (Material, Tasks, Quizzes, Video or Attendance) <span class="badge badge-pill badge-primary">+3 days ago</span></h6>
+                      </div>
+                      <div class="ms-panel-body p-0" style="overflow-y:scroll;max-height:500px;">
+                          <div class="table-responsive">
+                              <table class="table table-hover thead-light">
+                                  <thead>
+                                      <tr>
+                                          <th>#</th>
+                                          <th scope="col">Course/Round</th>
+                                          <th scope="col">Session Number</th>
+                                          <th scope="col">Session Date</th>
+                                          <th scope="col">Actions Needed</th>
+                                          <th scope="col">Ignore</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @php
+                                          $i = 1
+                                      @endphp
+                                      @foreach ($SessionsNeedAction as $Session)
+                                          <tr>
+                                          <td>{{$i}}</td>
+                                          <td class="ms-table-f-w"> {{$Session->CourseNameEn}} - {{$Session->GroupNo}} </td>
+                                          <td>{{$Session->SessionNumber}}</td>
+                                          <td>{{$Session->SessionDate}}</td>
+                                          <td>
+                                            @if ($Session->SessionMaterial == null)
+                                                <a href="{{url("/Admin/Course/$Session->RoundId/Sessions")}}" target="_blank" class="btn btn-primary btn-sm mb-2 mb-xl-0">Material</a>
+                                            @endif
+                                            
+                                            @if ($Session->SessionTask == null)
+                                                <a href="{{url("/Admin/Course/$Session->RoundId/Sessions")}}" target="_blank" class="btn btn-secondary btn-sm mb-2 mb-xl-0">Tasks</a>
+                                            @endif
+                                            
+                                            @if ($Session->SessionQuiz == null)
+                                                <a href="{{url("/Admin/Course/$Session->RoundId/Sessions")}}" target="_blank" class="btn btn-success btn-sm mb-2 mb-xl-0">Quizzes</a>
+                                            @endif
+                                            
+                                            @if ($Session->VideoText == null)
+                                                <a href="{{url("/Admin/Course/$Session->RoundId/Sessions")}}" target="_blank" class="btn btn-danger btn-sm mb-2 mb-xl-0">Video</a>
+                                            @endif
+                                            
+                                            @if ($Session->IsDone == null)
+                                                <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/Attendance")}}" target="_blank" class="btn btn-warning btn-sm mb-2 mb-xl-0">Attendance</a>
+                                            @endif
+                                          </td>
+                                          <td>
+                                            <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/Ignore")}}" onclick="return confirm('Are you sure you want to ignore the warning?')" class="btn btn-outline-danger btn-sm mb-2 mb-xl-0">Ignore</a>
+                                          </td>
+                                      </tr>
+                                      @php
+                                          $i++
+                                      @endphp
+                                      @endforeach
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="ms-panel">
+                      <div class="ms-panel-header">
+                          <h6>Tasks-Grading Tracker <span class="badge badge-pill badge-primary">students' tasks awaiting grading +5 days</span></h6>
+                      </div>
+                      <div class="ms-panel-body p-0" style="overflow-y:scroll;max-height:500px;">
+                          <div class="table-responsive">
+                              <table class="table table-hover thead-light">
+                                  <thead>
+                                      <tr>
+                                          <th>#</th>
+                                          <th scope="col">Course/Round</th>
+                                          <th scope="col">Student Name</th>
+                                          <th scope="col">Session Number</th>
+                                          <th scope="col">Session Date</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @php
+                                          $i = 1
+                                      @endphp
+                                      @foreach ($StudentsGradingAwaits as $grading)
+                                          <tr>
+                                          <td>{{$i}}</td>
+                                          <td class="ms-table-f-w"> {{$grading->CourseNameEn}} - {{$grading->GroupNo}} </td>
+                                          <td><a href="{{url("/Admin/Course/Student/Details/$grading->StudentRoundsId")}}" target="_blank"> <i class="fas fa-link"></i> {{$grading->FullnameEn}}</a></td>
+                                          <td>{{$grading->SessionNumber}}</td>
+                                          <td><span class="badge badge-info">{{$grading->SessionDate}}</span></td>
+                                      </tr>
+                                      @php
+                                          $i++
+                                      @endphp
+                                      @endforeach
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                   <div class="ms-panel">
+                      <div class="ms-panel-header">
                           <h6>Last Students</h6>
                       </div>
                       <div class="ms-panel-body p-0">
@@ -94,7 +192,79 @@
               </div>
 
               <div class="col-xl-6 col-md-12">
-                  <div class="ms-panel ms-panel-fh">
+                  <div class="ms-panel">
+                      <div class="ms-panel-header">
+                          <h6>Over-Absence Tracker <span class="badge badge-primary">Students who were absent twice or more in a running course</span></h6>
+                      </div>
+                      <div class="ms-panel-body p-0" style="overflow-y:scroll;max-height:500px;">
+                          <div class="table-responsive">
+                              <table class="table table-hover thead-light">
+                                  <thead>
+                                      <tr>
+                                          <th>#</th>
+                                          <th scope="col">Course/Round</th>
+                                          <th scope="col">Student Nname</th>
+                                          <th scope="col">Number of Absence</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @php
+                                          $i = 1
+                                      @endphp
+                                      @foreach ($StudentsNotAttended as $std)
+                                          <tr>
+                                          <td>{{$i}}</td>
+                                          <td class="ms-table-f-w"> {{$std->CourseNameEn}} - {{$std->GroupNo}} </td>
+                                          <td><a href="{{url("/Admin/Course/Student/Details/$std->StudentRoundsId")}}" target="_blank"> <i class="fas fa-link"></i> {{$std->FullnameEn}}</a></td>
+                                          <td>{{$std->NumberOfAbsence}}</td>
+                                      </tr>
+                                      @php
+                                          $i++
+                                      @endphp
+                                      @endforeach
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="ms-panel">
+                      <div class="ms-panel-header">
+                          <h6>Tasks-Tracker <span class="badge badge-primary">Students who haven't submitted tasks during session week</span></h6>
+                      </div>
+                      <div class="ms-panel-body p-0" style="overflow-y:scroll;max-height:500px;">
+                          <div class="table-responsive">
+                              <table class="table table-hover thead-light">
+                                  <thead>
+                                      <tr>
+                                          <th>#</th>
+                                          <th scope="col">Course/Round</th>
+                                          <th scope="col">Student Name</th>
+                                          <th scope="col">Session Number</th>
+                                          <th scope="col">Session Date</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @php
+                                          $i = 1
+                                      @endphp
+                                      @foreach ($StudentsMissTasks as $stdTask)
+                                          <tr>
+                                          <td>{{$i}}</td>
+                                          <td class="ms-table-f-w"> {{$stdTask->CourseNameEn}} - {{$stdTask->GroupNo}} </td>
+                                          <td><a href="{{url("/Admin/Course/Student/Details/$stdTask->StudentRoundsId")}}" target="_blank"> <i class="fas fa-link"></i> {{$stdTask->FullnameEn}}</a></td>
+                                          <td>{{$stdTask->SessionNumber}}</td>
+                                          <td> <span class="badge badge-warning">{{$stdTask->SessionDate}}</span></td>
+                                      </tr>
+                                      @php
+                                          $i++
+                                      @endphp
+                                      @endforeach
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="ms-panel">
                       <div class="ms-panel-header">
                           <h6>KPI Timeline</h6>
                       </div>
