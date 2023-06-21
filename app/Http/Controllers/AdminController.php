@@ -138,7 +138,7 @@ class AdminController extends Controller
             ->orWhere('sessions.SessionQuiz','=',null)
             ->orWhere('sessions.IsDone','=',null);
         })
-        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->where("rounds.EndDate", '>=', Carbon::now())
         ->orderBy('sessions.SessionDate','Desc')->get();
 
         // Students that didn't attend for more than or equal to 2 days
@@ -150,7 +150,7 @@ class AdminController extends Controller
         ->join('studentrounds','studentrounds.StudentRoundsId','=','attendance.StudentRoundsId')
         ->join('students','students.StudentId','=','studentrounds.StudentId')
         ->where('attendance.IsAttend','=',0)
-        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->where("rounds.EndDate", '>=', Carbon::now())
         ->groupBy(["attendance.StudentRoundsId", "students.FullnameEn", "courses.CourseNameEn", "rounds.GroupNo"])
         ->having('NumberOfAbsence','>=',2)
         ->orderBy('NumberOfAbsence','Desc')
@@ -168,7 +168,7 @@ class AdminController extends Controller
             ['sessions.SessionTask','!=',null],
             ['sessions.SessionDate','<=',Carbon::now()->subDays(7)]  
         ])
-        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->where("rounds.EndDate", '>=', Carbon::now())
         ->orderBy('sessions.SessionDate','Desc')
         ->get();
 
@@ -185,7 +185,7 @@ class AdminController extends Controller
             ['sessions.SessionDate', '<=', Carbon::now()->subDays(5)],
             ['tasks.IsGrade', '=', 0]
         ])
-        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->where("rounds.EndDate", '>=', Carbon::now())
         ->orderBy('sessions.SessionDate', 'Desc')
         ->get();
 
