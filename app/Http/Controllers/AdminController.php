@@ -324,6 +324,9 @@ class AdminController extends Controller
             $table1 = $worksheet1->toArray();
             array_shift($table1);
             for ($i=0; $i < count($table1); $i++) { 
+                if($table1[$i][0] == null){
+                    break;
+                }
                 $Content = new Contents();
                 $Content->ContentNameEn = $table1[$i][1];
                 $Content->ContentNameAr = $table1[$i][1];
@@ -339,12 +342,17 @@ class AdminController extends Controller
                 $TrainerAgenda->save();
 
                 $table1[$i][] = $TrainerAgenda->TrainerAgendaId;
+
             }
             // Read data from second table (Worksheet 2)
             $worksheet2 = $spreadsheet->getSheet(1); // Assuming second worksheet is at index 1
             $table2 = $worksheet2->toArray(); // points
             array_shift($table2);
+            // return $table2;
             for ($i = 0; $i < count($table2); $i++) {
+                if($table2[$i][0] == null){
+                    break;
+                }
                 // add topic
                 $hashNumber = $table2[$i][1];
                 $SubAgendaName = $table2[$i][2];
@@ -359,7 +367,7 @@ class AdminController extends Controller
 
 
             }
-            return $table1;
+            return redirect()->back();
 
         }
     }
