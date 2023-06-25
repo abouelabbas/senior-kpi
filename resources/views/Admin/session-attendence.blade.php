@@ -10,9 +10,9 @@
 
                     <li class="breadcrumb-item"><a href="/Admin"><i class="material-icons">home</i> Home</a></li>
 
-                    <li class="breadcrumb-item"><a href="/Admin/Rounds"> Rounds</a></li>
+                    <li class="breadcrumb-item"><a href="{{url("/Admin/Courses/$Round->RoundId")}}"> {{$Course->CourseNameEn}} - GR{{$Round->GroupNo}}</a></li>
 
-                <li class="breadcrumb-item"><a href="/Admin/Rounds/{{$Round->RoundId}}/Attendance"> Sessions</a></li>
+                <li class="breadcrumb-item"><a href="{{url("/Admin/Rounds/$Round->RoundId/Attendance")}}"> Session Attendance</a></li>
 
                     <li class="breadcrumb-item active" aria-current="page">Session Attendence</li>
 
@@ -58,7 +58,8 @@
 
                      <div class="d-flex mb-2 justify-content-end">
 
-                        <input type="button" id="save-student"  value="Save" class="btn btn-primary">
+                        <input type="button" id="save-student"  value="Save" class="btn btn-primary">&nbsp; &nbsp; 
+                        <a href="{{url("/Admin/Session/$Session->SessionId/AllAttend")}}" class="btn btn-info"> <i class="fas fa-check text-white"></i> Attend All</a> &nbsp; &nbsp;
 
 
 
@@ -121,6 +122,27 @@
                               </label>
 
                               <span> attended </span>
+
+                            </span>
+                             <span class="d-inline-block mr-2">
+
+                              <label class="ms-checkbox-wrap ms-checkbox-success">
+
+                                <input  
+
+                                @if ($Attend->IsAttend == 2)
+
+                                    checked
+
+                                @endif
+
+                              type="radio" value="2" name="attendence{{$i}}">
+
+                                <i class="ms-checkbox-check"></i>
+
+                              </label>
+
+                              <span> attended online </span>
 
                             </span>
 

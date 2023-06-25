@@ -131,6 +131,7 @@ class AdminController extends Controller
         ->join('courses','courses.CourseId','=','rounds.CourseId')
         ->where('sessions.SessionDate','<=',Carbon::now()->subDays(3))
         ->where('sessions.IsIgnored','=',0)
+        ->where('Done', '=', 1)
         ->where(function ($query){
             $query->where('sessions.SessionMaterial','=',null)
             ->orWhere('sessions.SessionTask','=',null)
@@ -150,6 +151,7 @@ class AdminController extends Controller
         ->join('studentrounds','studentrounds.StudentRoundsId','=','attendance.StudentRoundsId')
         ->join('students','students.StudentId','=','studentrounds.StudentId')
         ->where('attendance.IsAttend','=',0)
+        ->where('Done', '=', 1)
         ->where("rounds.EndDate", '>=', Carbon::now())
         ->groupBy(["attendance.StudentRoundsId", "students.FullnameEn", "courses.CourseNameEn", "rounds.GroupNo"])
         ->having(DB::raw("COUNT(attendance.StudentRoundsId)"),'>=',2)
@@ -168,6 +170,7 @@ class AdminController extends Controller
             ['sessions.SessionTask','!=',null],
             ['sessions.SessionDate','<=',Carbon::now()->subDays(7)]  
         ])
+        ->where('Done', '=', 1)
         ->where("rounds.EndDate", '>=', Carbon::now())
         ->orderBy('sessions.SessionDate','Desc')
         ->get();
@@ -185,6 +188,7 @@ class AdminController extends Controller
             ['sessions.SessionDate', '<=', Carbon::now()->subDays(5)],
             ['tasks.IsGrade', '=', 0]
         ])
+        ->where('Done', '=', 1)
         ->where("rounds.EndDate", '>=', Carbon::now())
         ->orderBy('sessions.SessionDate', 'Desc')
         ->get();
@@ -305,7 +309,7 @@ class AdminController extends Controller
     public function CourseTopicsFromSheet(Request $request, int $cid, int $id)
     {
         try {
-            //code...
+            DB::beginTransaction();
             
             if($request->hasFile("file")){
                 // Validate the uploaded file
@@ -370,10 +374,13 @@ class AdminController extends Controller
 
 
                 }
+
+                DB::commit();
                 return redirect()->back();
 
             }
         } catch (\Throwable $th) {
+            DB::rollBack();
             throw $th;
         }
     }
@@ -986,6 +993,28 @@ class AdminController extends Controller
                     'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),
                     'Notifications'=>AdminController::Notifications(),
         ]);
+    }
+
+    // Auto Attendance (Attend All)
+    function AttendAll(int $id) {
+        $Attendance = Attendance::where('SessionId', '=', $id)->update(['IsAttend'=> 1]);
+        return redirect()->back();
+    }
+    // Set and Clear Session->HasTask
+    function ClrSessionHasTask(int $id) {
+        $Session = Sessions::find($id);
+        $Session->HasTask = 0;
+        $Session->save();
+
+        return redirect()->back()->with("status", "Session $Session->SessionNumber has no task now!");
+    }
+
+    function SetSessionHasTask(int $id) {
+        $Session = Sessions::find($id);
+        $Session->HasTask = 1;
+        $Session->save();
+
+        return redirect()->back()->with("status", "Session $Session->SessionNumber has task now!");
     }
 
     public function UploadStudents(Request $request, int $id)
@@ -1806,7 +1835,8 @@ public function ConfirmCancelStudentRegisteration(int $id)
             ->setCellValue('B1', 'Full Name')
             ->setCellValue('C1', 'Email')
             ->setCellValue('D1', 'Phone')
-            ->setCellValue('E1', 'Password');
+            ->setCellValue('E1', 'Password')
+            ->setCellValue('F1', 'Created Date');
 
         $style = [
             'fill' => [
@@ -1830,19 +1860,20 @@ public function ConfirmCancelStudentRegisteration(int $id)
 
         // Set the width of column A
         $worksheet->getColumnDimension('A')->setWidth(10);
-        for ($col = 'B'; $col !== 'F'; $col++) {
+        for ($col = 'B'; $col !== 'G'; $col++) {
             $worksheet->getColumnDimension($col)->setWidth(40);
         }
 
         // Set the height of row 1
         $worksheet->getRowDimension(1)->setRowHeight(30);
-        $worksheet->getStyle('A1:E1')->applyFromArray($style);
+        $worksheet->getStyle('A1:F1')->applyFromArray($style);
         foreach ($RoundStudents as $key => $Student) {
             $worksheet->setCellValue('A' . ($key + 2), $key + 2)
                 ->setCellValue('B' . ($key + 2), $Student->FullnameEn)
                 ->setCellValue('C' . ($key + 2), $Student->Email)
                 ->setCellValue('D' . ($key + 2), $Student->Phone)
-                ->setCellValue('E' . ($key + 2), $Student->Password);
+                ->setCellValue('E' . ($key + 2), $Student->Password)
+                ->setCellValue('F' . ($key + 2), $Student->JoinDate);
         }
 
         $writer = new Xlsx($spreadsheet);
@@ -1877,7 +1908,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
             ['RoundId','=',$StudentRound->RoundId],
             ['IsCancelled','=',null]
         ])
-        ->where('IsAttend','=',1)->count();
+        ->whereIn('IsAttend',[1,2])->count();
         $Count = $Attendance->count();
         $Course = Rounds::where('RoundId','=',$StudentRound->RoundId)->first();
         $CourseId = $Course->CourseId;
@@ -2331,9 +2362,10 @@ public function SeniorEvaluation(int $id)
         ->where('SessionId','=',$id)->get();
         $countAllStudents = $Attendance->count();
         $countAttendedStudents = Attendance::where([
-            ['IsAttend','=',1],
             ['SessionId','=',$id]
-        ])->count();
+        ])
+        ->whereIn('IsAttend',[1,2])
+        ->count();
         
         if($countAllStudents > 0){
             $AttendanceKPI = ($countAttendedStudents/$countAllStudents)*100;
@@ -2479,19 +2511,48 @@ public function StudentResetPassword(Request $request)
 
     public function CancelSession(int $id)
     {
-        $Session = Sessions::find($id);
-        $Session->IsCancelled = 1;
-        $Session->save();
+        try {
+            DB::beginTransaction();
+            $Session = Sessions::find($id);
+            $Session->IsCancelled = 1;
+            // Shifting Session Numbers after the cancelled session
+            $RoundId = $Session->RoundId;
+            $Sessions = Sessions::where([['RoundId', '=', $RoundId], ['SessionNumber', '>', $Session->SessionNumber]])->get();
+            foreach ($Sessions as $key => $ses) {
+                $ses->SessionNumber = $ses->SessionNumber - 1;
+                $ses->save();
+            }
+            $Session->save();
+            DB::commit();
+            return redirect()->back()->with('cancelsession', "Session $Session->SessionNumber is cancelled successfully");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+
         
-        return redirect()->back()->with('cancelsession',"Session $Session->SessionNumber is cancelled successfully");
+
     }
     public function UndoCancelSession(int $id)
     {
-        $Session = Sessions::find($id);
-        $Session->IsCancelled = null;
-        $Session->save();
-        
-        return redirect()->back()->with('cancelsession',"Session $Session->SessionNumber is reactivated successfully");
+        try {
+            DB::beginTransaction();
+            $Session = Sessions::find($id);
+            $Session->IsCancelled = null;
+            // Shifting Session Numbers after the cancelled session
+            $RoundId = $Session->RoundId;
+            $Sessions = Sessions::where([['RoundId', '=', $RoundId], ['SessionNumber', '>=', $Session->SessionNumber],["SessionId", "!=", $Session->SessionId]])->get();
+            foreach ($Sessions as $key => $ses) {
+                $ses->SessionNumber = $ses->SessionNumber + 1;
+                $ses->save();
+            }
+            $Session->save();
+            DB::commit();    
+            return redirect()->back()->with('cancelsession',"Session $Session->SessionNumber is reactivated successfully");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
     public function TaskProgress(int $id)
     {

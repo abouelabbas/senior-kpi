@@ -8,7 +8,7 @@
 
               <li class="breadcrumb-item"><a href="/Admin"><i class="material-icons">home</i> Home</a></li>
 
-              <li class="breadcrumb-item active" aria-current="page">My Courses</li>
+              <li class="breadcrumb-item active" aria-current="page">{{$Round->CourseNameEn}} G{{$Round->GroupNo}}</li>
 
             </ol>
 

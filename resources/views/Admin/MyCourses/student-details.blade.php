@@ -8,11 +8,11 @@
 
           <li class="breadcrumb-item"><a href="/Admin"><i class="material-icons">home</i> Home</a></li>
 
-        <li class="breadcrumb-item active" aria-current="page"><a href="/Admin/Courses/{{$RoundId}}">My Courses</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="{{url("/Admin/Courses/$RoundId")}}">{{$Course->CourseNameEn}} - GR{{$Course->GroupNo}}</a></li>
 
-          <li class="breadcrumb-item active" aria-current="page"><a href="/Admin/Course/{{$RoundId}}/Students">Students</a></li>
+          <li class="breadcrumb-item active" aria-current="page"><a href="{{url("/Admin/Course/$RoundId/Students")}}">Students</a></li>
 
-          <li class="breadcrumb-item active" aria-current="page">Students Details </li>
+          <li class="breadcrumb-item active" aria-current="page">{{$Student->FullnameEn}}</li>
 
         </ol>
 
@@ -119,6 +119,12 @@
                                     <i class="fas fa-times    "></i>
 
                                 <span> Absent </span>
+
+                                @elseif($Session->IsAttend === 2)
+
+                                    <i class="fas fa-check    "></i>
+
+                                <span> Attended Online </span>
 
                                 @else
 

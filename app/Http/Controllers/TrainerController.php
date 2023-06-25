@@ -596,8 +596,10 @@ $Notification->save();
             $attend = DB::table('attendance')
             ->join('sessions','sessions.sessionId','=','attendance.sessionId')->where([
                 ['StudentRoundsId','=',$StudentRoundId],
-                ['IsAttend','=',1],['IsCancelled','=',null]
-            ])->count();
+                ['IsCancelled','=',null]
+            ])
+            ->whereIn('IsAttend', [1,2])
+            ->count();
             if($all !== 0){
 $percentage = ($attend/$all)*100;
             }else{

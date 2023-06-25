@@ -74,7 +74,7 @@
 
                           <td>
 
-                              <span data-toggle="tooltip" data-placement="top" title="14/10/2019">
+                              <span data-toggle="tooltip" data-placement="top" title="{{$Session->SessionDate}}">
 
     
 
@@ -104,6 +104,8 @@
                             Upload
 
                           </a>
+
+
                           @if ($Session->SessionMaterial !== null || $Session->MaterialText !== null)
                           {{-- <a href="http://kpi.seniorsteps.net/storage/app/public/{{$Session->SessionMaterial}}" class="btn btn-square btn-outline-success has-icon" >
 
@@ -208,6 +210,8 @@
                         @if($Session->IsCancelled == 1)
                         <i class="fa fa-times"></i>
                         @else
+                        @if($Session->HasTask == 0)
+                        @else
                         <a href="#" class="btn btn-square btn-outline-primary has-icon" data-toggle="modal" data-target="#TaskModal{{$Session->SessionId}}" >
 
                             @if ($Session->SessionTask !== null || $Session->TaskText !== null)
@@ -221,7 +225,8 @@
                           @endif Upload
 
                           </a>
-                          @if ($Session->SessionTask !== null || $Session->TaskText !== null)
+                          @endif
+                          @if ($Session->HasTask && ($Session->SessionTask !== null || $Session->TaskText !== null))
                           {{-- <a href='{{url("/storage/app/public/$Session->SessionTask")}}' class="btn btn-square btn-outline-primary has-icon" >
 
 
@@ -251,6 +256,14 @@
                           Check progress
 
                         </a>
+                        @else
+                                                  <a href="{{url("/Admin/$Session->SessionId/SetTask")}}" class="btn btn-square btn-outline-primary has-icon" >
+
+                           
+                            <i class="fa fa-check"></i>
+                             Has Task ?
+
+                          </a>
                           @endif
                           @endif
                         </td>
@@ -550,7 +563,7 @@
                           <div class="input-group text-center">
 
                               <input type="submit" value="upload" class="btn btn-success m-auto">                       
-
+                              <a href="{{url("/Admin/$SessionModal->SessionId/IgnoreTast")}}" class="btn btn-primary m-auto">Doen't have a Task</a>
                           </div>
 
                       </div>
