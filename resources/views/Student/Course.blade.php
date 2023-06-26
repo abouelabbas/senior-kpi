@@ -240,7 +240,7 @@
 
                       data-target="#viewtaskModal{{$Session->SessionId}}">
 
-                  <i class="fa fa-eye"></i> View solution
+                  <i class="fa fa-eye"></i> View My Solution
 
                   </a>
                   @else

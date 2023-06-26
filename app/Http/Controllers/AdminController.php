@@ -192,7 +192,7 @@ class AdminController extends Controller
             ->orWhere([['sessions.IsDone','=',null],['sessions.IgnoreAttendance', '=', 0]]);
         })
         ->where('sessions.IsIgnored','=',0)
-        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->where("rounds.EndDate", '>=', Carbon::now())
         ->orderBy('sessions.SessionDate','ASC')->get();
 
         // Students that didn't attend for more than or equal to 2 days

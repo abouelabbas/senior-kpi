@@ -257,7 +257,7 @@
 
                         </a>
                         @else
-                        @if(($Session->SessionTask !== null || $Session->TaskText !== null))
+                        {{-- @if(($Session->SessionTask !== null || $Session->TaskText !== null)) --}}
                             <a href="{{url("/Admin/$Session->SessionId/SetTask")}}" class="btn btn-square btn-outline-primary has-icon" >
 
                            
@@ -265,7 +265,7 @@
                             Undo Cancel Task
 
                           </a>
-                          @endif
+                          {{-- @endif --}}
                           @endif
                           @endif
                         </td>
