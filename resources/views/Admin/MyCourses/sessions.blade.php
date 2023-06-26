@@ -257,13 +257,15 @@
 
                         </a>
                         @else
-                                                  <a href="{{url("/Admin/$Session->SessionId/SetTask")}}" class="btn btn-square btn-outline-primary has-icon" >
+                        @if(($Session->SessionTask !== null || $Session->TaskText !== null))
+                            <a href="{{url("/Admin/$Session->SessionId/SetTask")}}" class="btn btn-square btn-outline-primary has-icon" >
 
                            
                             <i class="fa fa-check"></i>
-                             Has Task ?
+                            Has Task ?
 
                           </a>
+                          @endif
                           @endif
                           @endif
                         </td>
