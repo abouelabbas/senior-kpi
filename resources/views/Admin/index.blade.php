@@ -84,28 +84,47 @@
                                           <td>{{$Session->SessionNumber}}</td>
                                           <td>{{$Session->SessionDate}}</td>
                                           <td>
-                                            @if ($Session->SessionMaterial == null)
+                                            @if ($Session->SessionMaterial == null && $Session->IgnoreMaterial == 0)
                                                 <a href="{{url("/Admin/Course/$Session->RoundId/Sessions")}}" target="_blank" class="btn btn-primary btn-sm mb-2 mb-xl-0">Material</a>
                                             @endif
                                             
-                                            @if ($Session->SessionTask == null)
+                                            @if ($Session->SessionTask == null && $Session->IgnoreTask == 0)
                                                 <a href="{{url("/Admin/Course/$Session->RoundId/Sessions")}}" target="_blank" class="btn btn-secondary btn-sm mb-2 mb-xl-0">Tasks</a>
                                             @endif
                                             
-                                            @if ($Session->SessionQuiz == null)
+                                            @if ($Session->SessionQuiz == null && $Session->IgnoreQuiz == 0)
                                                 <a href="{{url("/Admin/Course/$Session->RoundId/Sessions")}}" target="_blank" class="btn btn-success btn-sm mb-2 mb-xl-0">Quizzes</a>
                                             @endif
                                             
-                                            @if ($Session->VideoText == null)
+                                            @if ($Session->VideoText == null && $Session->IgnoreVideo == 0)
                                                 <a href="{{url("/Admin/Course/$Session->RoundId/Sessions")}}" target="_blank" class="btn btn-danger btn-sm mb-2 mb-xl-0">Video</a>
                                             @endif
                                             
-                                            @if ($Session->IsDone == null)
+                                            @if ($Session->IsDone == null && $Session->IgnoreAttendance == 0)
                                                 <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/Attendance")}}" target="_blank" class="btn btn-warning btn-sm mb-2 mb-xl-0">Attendance</a>
                                             @endif
                                           </td>
                                           <td>
-                                            <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/Ignore")}}" onclick="return confirm('Are you sure you want to ignore the warning?')" class="btn btn-outline-danger btn-sm mb-2 mb-xl-0">Ignore</a>
+                                            <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/Ignore")}}" onclick="return confirm('Are you sure you want to ignore the warning?')" class="btn btn-outline-danger btn-sm mb-2 mb-xl-0">Ignore All</a>
+                                            @if ($Session->SessionMaterial == null && $Session->IgnoreMaterial == 0)
+                                                <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/IgnoreMaterial")}}" onclick="return confirm('Are you sure you want to ignore the warning?')" class="btn btn-outline-danger btn-sm mb-2 mb-xl-0">Ignore Material</a>
+                                            @endif
+                                            
+                                            @if ($Session->SessionTask == null && $Session->IgnoreTask == 0)
+                                                <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/IgnoreTask")}}" onclick="return confirm('Are you sure you want to ignore the warning?')" class="btn btn-outline-danger btn-sm mb-2 mb-xl-0">Ignore Task</a>
+                                            @endif
+                                            
+                                            @if ($Session->SessionQuiz == null && $Session->IgnoreQuiz == 0)
+                                                <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/IgnoreQuiz")}}" onclick="return confirm('Are you sure you want to ignore the warning?')" class="btn btn-outline-danger btn-sm mb-2 mb-xl-0">Ignore Quiz</a>
+                                            @endif
+                                            
+                                            @if ($Session->VideoText == null && $Session->IgnoreVideo == 0)
+                                                <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/IgnoreVideo")}}" onclick="return confirm('Are you sure you want to ignore the warning?')" class="btn btn-outline-danger btn-sm mb-2 mb-xl-0">Ignore Video</a>
+                                            @endif
+                                            
+                                            @if ($Session->IsDone == null && $Session->IgnoreAttendance == 0)
+                                                <a href="{{url("/Admin/Rounds/Session/$Session->SessionId/IgnoreAttendance")}}" onclick="return confirm('Are you sure you want to ignore the warning?')" class="btn btn-outline-danger btn-sm mb-2 mb-xl-0">Ignore Attendance</a>
+                                            @endif
                                           </td>
                                       </tr>
                                       @php

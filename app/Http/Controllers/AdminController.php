@@ -114,6 +114,59 @@ class AdminController extends Controller
         return redirect()->back()->with("status","Session has been ignored successfully!");
         
     }
+
+    public function ignoreMaterialSessionAlert(int $id)
+    {
+        $Session = Sessions::where('SessionId', '=', $id)->first();
+        $Session->IgnoreMaterial = 1;
+        $Session->save();
+
+        return redirect()->back()->with("status", "Session Material has been ignored successfully!");
+
+    }
+
+    public function ignoreTaskSessionAlert(int $id)
+    {
+        $Session = Sessions::where('SessionId', '=', $id)->first();
+        $Session->IgnoreTask = 1;
+        $Session->save();
+
+        return redirect()->back()->with("status", "Session Task has been ignored successfully!");
+
+    }
+
+    public function ignoreVideoSessionAlert(int $id)
+    {
+        $Session = Sessions::where('SessionId', '=', $id)->first();
+        $Session->IgnoreVideo = 1;
+        $Session->save();
+
+        return redirect()->back()->with("status", "Session Video has been ignored successfully!");
+
+    }
+
+    public function ignoreQuizSessionAlert(int $id)
+    {
+        $Session = Sessions::where('SessionId', '=', $id)->first();
+        $Session->IgnoreQuiz = 1;
+        $Session->save();
+
+        return redirect()->back()->with("status", "Session Quiz has been ignored successfully!");
+
+    }
+
+    public function ignoreAttendanceSessionAlert(int $id)
+    {
+        $Session = Sessions::where('SessionId', '=', $id)->first();
+        $Session->IgnoreAttendance = 1;
+        $Session->save();
+
+        return redirect()->back()->with("status", "Session Attendance has been ignored successfully!");
+
+    }
+
+
+
     public function index()
     {
         $Rounds = Rounds::all()->count();
@@ -130,17 +183,17 @@ class AdminController extends Controller
         ->join('rounds','rounds.RoundId','=','sessions.RoundId')
         ->join('courses','courses.CourseId','=','rounds.CourseId')
         ->where('sessions.SessionDate','<=',Carbon::now()->subDays(3))
-        ->where('sessions.IsIgnored','=',0)
         ->where('Done', '=', 1)
         ->where(function ($query){
-            $query->where('sessions.SessionMaterial','=',null)
-            ->orWhere('sessions.SessionTask','=',null)
-            ->orWhere('sessions.SessionVideo','=',null)
-            ->orWhere('sessions.SessionQuiz','=',null)
-            ->orWhere('sessions.IsDone','=',null);
+            $query->where([['sessions.SessionMaterial','=',null],['sessions.IgnoreMaterial','=',0]])
+            ->orWhere([['sessions.SessionTask','=',null],['sessions.IgnoreTask','=',0]])
+            ->orWhere([['sessions.VideoText','=',null],['sessions.IgnoreVideo','=',0]])
+            ->orWhere([['sessions.SessionQuiz','=',null],['sessions.IgnoreQuiz','=',0]])
+            ->orWhere([['sessions.IsDone','=',null],['sessions.IgnoreAttendance', '=', 0]]);
         })
-        ->where("rounds.EndDate", '>=', Carbon::now())
-        ->orderBy('sessions.SessionDate','Desc')->get();
+        ->where('sessions.IsIgnored','=',0)
+        // ->where("rounds.EndDate", '>=', Carbon::now())
+        ->orderBy('sessions.SessionDate','ASC')->get();
 
         // Students that didn't attend for more than or equal to 2 days
         $StudentsNotAttended = DB::table('attendance')
@@ -155,7 +208,7 @@ class AdminController extends Controller
         ->where("rounds.EndDate", '>=', Carbon::now())
         ->groupBy(["attendance.StudentRoundsId", "students.FullnameEn", "courses.CourseNameEn", "rounds.GroupNo"])
         ->having(DB::raw("COUNT(attendance.StudentRoundsId)"),'>=',2)
-        ->orderBy('NumberOfAbsence','Desc')
+        ->orderBy('NumberOfAbsence','ASC')
         ->get();
 
         // students who has tasks of sessions has tasks uploaded 7 days ago
@@ -172,7 +225,7 @@ class AdminController extends Controller
         ])
         ->where('Done', '=', 1)
         ->where("rounds.EndDate", '>=', Carbon::now())
-        ->orderBy('sessions.SessionDate','Desc')
+        ->orderBy('sessions.SessionDate','ASC')
         ->get();
 
         // students who has tasks of sessions has tasks uploaded 5 days ago and not graded
@@ -190,7 +243,7 @@ class AdminController extends Controller
         ])
         ->where('Done', '=', 1)
         ->where("rounds.EndDate", '>=', Carbon::now())
-        ->orderBy('sessions.SessionDate', 'Desc')
+        ->orderBy('sessions.SessionDate', 'ASC')
         ->get();
 
         return View('Admin.index',[
@@ -1041,6 +1094,9 @@ class AdminController extends Controller
 
             for ($i = 1; $i < count($rows); $i++) {
                 $rowData = $rows[$i];
+                if($rowData[1] == null){
+                        continue;
+                }
                 $stdEnName = $rowData[1];
                 $stdArName = $rowData[2];
                 $stdEmail = $rowData[3];
@@ -1152,6 +1208,32 @@ class AdminController extends Controller
         }
         
 
+    }
+
+    function DoneTrack(int $id) {
+        
+        try {
+            DB::beginTransaction();
+
+            $RoundContent = RoundContents::find($id);
+            $RoundContent->Done = 1;
+            $RoundContent->save();
+
+            $RoundSubContents = RoundSubContents::where('RoundContentId', '=', $id)->get();
+            foreach ($RoundSubContents as $key => $RoundSubContent) {
+                $RoundSubContent->DoneExample = 1;
+                $RoundSubContent->DoneTask = 1;
+                $RoundSubContent->PointDone = 1;
+                $RoundSubContent->save();
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
+
+        return redirect()->back()->with("status", "Track $RoundContent->ContentNameEn has been done!");
     }
     public function EditRoundData(Request $request)
     {

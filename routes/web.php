@@ -37,7 +37,12 @@ Route::get('/Logout','AuthenticationController@logout');
 //--------
 //Admin Routes
 Route::get('/Admin','AdminController@Index');
-Route::get('/Admin/Rounds/Session/{id}/Ignore','AdminController@ignoreSessionAlert');
+Route::get('/Admin/Rounds/Session/{id}/Ignore', 'AdminController@ignoreSessionAlert');
+Route::get('/Admin/Rounds/Session/{id}/IgnoreMaterial', 'AdminController@ignoreMaterialSessionAlert');
+Route::get('/Admin/Rounds/Session/{id}/IgnoreTask', 'AdminController@ignoreTaskSessionAlert');
+Route::get('/Admin/Rounds/Session/{id}/IgnoreQuiz', 'AdminController@ignoreQuizSessionAlert');
+Route::get('/Admin/Rounds/Session/{id}/IgnoreVideo', 'AdminController@ignoreVideoSessionAlert');
+Route::get('/Admin/Rounds/Session/{id}/IgnoreAttendance','AdminController@ignoreAttendanceSessionAlert');
 Route::get('/Admin/Profile/{id}','AdminController@AdminProfile');
 Route::get('/Admin/Profile/Edit/{id}','AdminController@AdminProfileEdit');
 Route::get('/Admin/Courses','AdminController@Courses');
@@ -139,6 +144,7 @@ Route::get('/Trainer/session/task/students/{id}','TrainerController@TaskProgress
 
 //other face
 Route::get('/Admin/Courses/{id}','AdminController@CourseProgress');
+Route::get('/Admin/Done/Track/{id}','AdminController@DoneTrack');
 Route::get('/Trainer/Course/{id}/Students','TrainerController@CourseStudents');
 Route::get('/Admin/Course/{id}/Students','AdminController@CourseStudents');
 Route::get('/Admin/Course/{id}/Students/Report', 'AdminController@DownloadStudentsReport');

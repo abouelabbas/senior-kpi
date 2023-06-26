@@ -20,17 +20,24 @@
                             <div class="accordion has-gap ms-accordion-chevron" id="accordionExample4">
                               @foreach ($Topics as $Topic)
                                   <div class="card">
-                                    <div class="card-header" data-toggle="collapse" role="button"
+                                    <div class="card-header"
+                                    @if($Topic->Done == 1)
+                                    style="background-color: #2ecc71; color: #fff;"
+                                    @endif
+                                    
+                                    data-toggle="collapse" role="button"
                                   data-target="#HTML{{$Topic->RoundContentId}}" aria-expanded="false" aria-controls="collapseTen">
-                                        <span class="has-icon"> 
-                                            <i class="fas fa-code"></i> {{$Topic->ContentNameEn}} 
+                                        
+                                        <span class="has-icon @if($Topic->Done) text-white @endif"> 
+                                          <i class="fas fa-code"></i> {{$Topic->ContentNameEn}} 
                                         </span>
                                     </div>
-
+                                    
                                     <div id="HTML{{$Topic->RoundContentId}}" class="collapse" data-parent="#accordionExample4">
                                         <div class="card-body">
                                             <!--  -->
                                             <div class="d-flex justify-content-end">
+                                              <a href="{{url("/Admin/Done/Track/$Topic->RoundContentId")}}" class="btn btn-success m-2">Track Done</a>
                                                 <a href="#" class="btn btn-dark m-2 has-chevron"data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
                                                      Add
                                                 </a>
@@ -66,7 +73,7 @@
                                                             $i = 1
                                                         @endphp
                                                         @foreach ($SubTopics as $SubTopic)
-                                                        {{-- @if ($SubTopic->RoundContentId == $Topic->RoundContentId) --}}
+                                                        @if ($SubTopic->RoundContentId == $Topic->RoundContentId)
                                                         <tr>
                                                         <td>{{$i}}</td>
                                                             <td>
@@ -96,6 +103,7 @@
                                                           <td> <a href="#" data-toggle="modal" data-target="#editTopic{{$SubTopic->RoundSubContentsId}}" class="ms-btn-icon btn-dark"><i class="fas fa-pencil-alt    "></i></a> </td>
    
                                                           </tr>
+                                                          @endif
                                                           @php
                                                               $i++
                                                           @endphp
