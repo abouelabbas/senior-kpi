@@ -217,7 +217,7 @@
                       </td>
 
                       <td>
-                      
+                      @if($Session->HasTask)
                         <a href="#" class="@if ($Session->SessionTask === null && $Session->TaskText === null)disabled
 
                           @endif btn btn-square btn-outline-info has-icon" data-toggle="modal"
@@ -243,6 +243,9 @@
                   <i class="fa fa-eye"></i> View solution
 
                   </a>
+                  @else
+                  <i class="fa fa-times"></i> No Task Assigned for this session
+                  @endif
                       </td>
 
                     </tr>

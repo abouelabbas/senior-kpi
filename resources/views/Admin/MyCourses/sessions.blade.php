@@ -262,7 +262,7 @@
 
                            
                             <i class="fa fa-check"></i>
-                            Has Task ?
+                            Undo Cancel Task
 
                           </a>
                           @endif
@@ -565,7 +565,7 @@
                           <div class="input-group text-center">
 
                               <input type="submit" value="upload" class="btn btn-success m-auto">                       
-                              <a href="{{url("/Admin/$SessionModal->SessionId/IgnoreTast")}}" class="btn btn-primary m-auto">Doen't have a Task</a>
+                              <a href="{{url("/Admin/$SessionModal->SessionId/IgnoreTast")}}" class="btn btn-primary m-auto">Cancel Task</a>
                           </div>
 
                       </div>
