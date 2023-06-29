@@ -51,11 +51,12 @@
 
                     <th> Attendence</th>
 
+                    <th>Solve Home Tasks</th>
+
                     <th>  Time Respect </th>
 
                     <th>Lecture Practice</th>
 
-                    <th>Solve Home Tasks</th>
 
                     <th>Interaction</th>
 
@@ -125,7 +126,37 @@
 
                             </td>
 
-                           
+                                                      <td>
+
+                            <div
+
+                            class="progress-circle solve"
+
+                            data-value="0"
+
+                            data-size="50"
+
+                            data-thickness="3"
+
+                            data-animation-start-value="1.0"
+
+                            data-fill="{
+
+                              &quot;color&quot;: &quot;red&quot;
+
+                            }"
+
+                            data-reverse="true">
+
+                            <div class="percent solveper">
+
+                                0%
+
+                            </div>
+
+                          </div>
+
+                            </td>
 
                           <td>
 
@@ -193,37 +224,7 @@
 
                             </td>
 
-                           <td>
 
-                            <div
-
-                            class="progress-circle solve"
-
-                            data-value="0"
-
-                            data-size="50"
-
-                            data-thickness="3"
-
-                            data-animation-start-value="1.0"
-
-                            data-fill="{
-
-                              &quot;color&quot;: &quot;red&quot;
-
-                            }"
-
-                            data-reverse="true">
-
-                            <div class="percent solveper">
-
-                                0%
-
-                            </div>
-
-                          </div>
-
-                            </td>
 
                           <td>
 
