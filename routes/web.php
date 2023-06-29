@@ -82,6 +82,7 @@ Route::get('/Admin/Students/Profile/{id}','AdminController@StudentProfile');
 Route::get('/Admin/Session/Submit/Attendance','AdminController@SubmitAttendance');
 Route::get('/Admin/Session/Cancel/{id}','AdminController@CancelSession');
 Route::get('/Admin/Session/{id}/AllAttend','AdminController@AttendAll');
+Route::get('/Admin/Session/{id}/Attendance/Reset','AdminController@ResetAttendance');
 Route::get('/Admin/Session/Cancel/{id}/Undo','AdminController@UndoCancelSession');
 Route::get('/Admin/Course/Student/CancelRegisteration/{id}','AdminController@CancelStudentRegisteration');
 Route::get('/Admin/Course/Student/CancelRegisteration/Confirm/{id}','AdminController@ConfirmCancelStudentRegisteration');

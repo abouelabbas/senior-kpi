@@ -60,6 +60,7 @@
 
                         <input type="button" id="save-student"  value="Save" class="btn btn-primary">&nbsp; &nbsp; 
                         <a href="{{url("/Admin/Session/$Session->SessionId/AllAttend")}}" class="btn btn-info"> <i class="fas fa-check text-white"></i> Attend All</a> &nbsp; &nbsp;
+                        <a href="{{url("/Admin/Session/$Session->SessionId/Attendance/Reset")}}" class="btn btn-info"> Reset Attendance</a> &nbsp; &nbsp;
 
 
 

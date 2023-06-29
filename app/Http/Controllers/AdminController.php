@@ -1053,6 +1053,14 @@ class AdminController extends Controller
         $Attendance = Attendance::where('SessionId', '=', $id)->update(['IsAttend'=> 1]);
         return redirect()->back();
     }
+
+    function ResetAttendance(int $id) {
+        $Attendance = Attendance::where('SessionId', '=', $id)->update(['IsAttend'=> null]);
+        $Session = Sessions::find($id);
+        $Session->IsDone = null;
+        $Session->save();
+        return redirect()->back();
+    }
     // Set and Clear Session->HasTask
     function ClrSessionHasTask(int $id) {
         $Session = Sessions::find($id);
@@ -1221,8 +1229,8 @@ class AdminController extends Controller
 
             $RoundSubContents = RoundSubContents::where('RoundContentId', '=', $id)->get();
             foreach ($RoundSubContents as $key => $RoundSubContent) {
-                $RoundSubContent->DoneExample = 1;
-                $RoundSubContent->DoneTask = 1;
+                // $RoundSubContent->DoneExample = 1;
+                // $RoundSubContent->DoneTask = 1;
                 $RoundSubContent->PointDone = 1;
                 $RoundSubContent->save();
             }
