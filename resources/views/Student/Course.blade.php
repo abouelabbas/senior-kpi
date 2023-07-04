@@ -115,6 +115,9 @@
             <div class="ms-panel-header">
 
               <h6>Course Content </h6>
+              <div class="alert alert-info mt-3" role="alert">
+                <b> New Update! </b> Tasks may have deadline feature now, check the task deadline from the <i>"Trainer Task"</i>Window in each session. After deadline date you will not be able to upload your solution.
+              </div>
 
             </div>
 
@@ -218,6 +221,7 @@
 
                       <td>
                       @if($Session->HasTask)
+                      
                         <a href="#" class="@if ($Session->SessionTask === null && $Session->TaskText === null)disabled
 
                           @endif btn btn-square btn-outline-info has-icon" data-toggle="modal"
@@ -227,7 +231,13 @@
                           <i class="fa fa-eye"></i> Trainer task
 
                         </a>
-
+                      @if($Session->TaskDeadline >= now() 
+                      || $Session->TaskDeadline === null 
+                      || (
+                        $Session->SecondaryDeadline >= now() 
+                        && $Session->SecondaryDeadline !== null
+                        ))
+                      
                         <a href="#" class="btn btn-square btn-outline-info has-icon" data-toggle="modal"
 
                       data-target="#uploadtaskModal{{$Session->SessionId}}">
@@ -235,6 +245,7 @@
                           <i class="fa fa-upload"></i> Upload solution
 
                         </a>
+                      @endif
                         {{-- {{url("/storage/app/public/$Session->TaskURL")}} --}}
                     <a href="{{$Session->TaskURL}}" class="btn btn-square btn-outline-info has-icon" data-toggle="modal"
 
@@ -563,8 +574,8 @@
                 <div class="col-8">
 
                   @if ($SessionModal->TaskText)
-
-                      <p>{{$SessionModal->TaskText}}</p> 
+                      <p>Task Notes:</p>
+                      <p class="border border-1 p-3">{{$SessionModal->TaskText}}</p> 
 
                       @else 
 
@@ -575,7 +586,9 @@
                   <br>
 
                       @if ($SessionModal->SessionTask)
-
+                      <div class="badge badge-pill badge-warning">Task Deadline</div> : 
+                      {{date_format(date_create($SessionModal->TaskDeadline), "d M, Y,  H:i:s")}}
+                      <br>
                       <a href="{{$SessionModal->SessionTask}}" target="_blank" class="btn btn-dark" data-toggle="tooltip" data-placement="top"
 
                         title="Open Task Link">

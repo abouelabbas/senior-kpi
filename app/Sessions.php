@@ -12,6 +12,6 @@ class Sessions extends Model
     protected $dates = [
         'StartDate',
     ];
-    protected $fillable = ['IsIgnored','IsDone','SessionNumber','SessionMaterial','SessionVideo','SessionTask','SessionQuiz','RoundId','QuizText','MaterialText','VideoText','TaskText','SessionDate','Notes'];
+    protected $fillable = ['TaskDeadline','IsIgnored','IsDone','SessionNumber','SessionMaterial','SessionVideo','SessionTask','SessionQuiz','RoundId','QuizText','MaterialText','VideoText','TaskText','SessionDate','Notes'];
 
 }

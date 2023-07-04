@@ -10,6 +10,7 @@ use App\Contents;
 use App\Courses;
 use App\ExamGrades;
 use App\Exams;
+use App\Exceptions;
 use App\Grades;
 use App\Labs;
 use App\Notifications;
@@ -23,6 +24,7 @@ use App\Sessions;
 use App\StudentEvaluations;
 use App\StudentRounds;
 use App\Students;
+use App\TaskHistory;
 use App\Tasks;
 use App\TrainerAgenda;
 use App\TrainerCourses;
@@ -1975,6 +1977,76 @@ public function ConfirmCancelStudentRegisteration(int $id)
         return $response;
     }
 
+    public function DownloadStudentsExceptionReport(int $id)
+    {
+        $RoundStudents = DB::table('studentrounds')
+            ->join('students', 'students.StudentId', '=', 'studentrounds.StudentId')
+            ->leftJoin('exceptions', 'exceptions.StudentId', '=', 'studentrounds.StudentId')
+            ->where('studentrounds.RoundId', '=', $id)
+            ->get();
+        $Round = DB::table('rounds')
+            ->join('courses', 'courses.CourseId', '=', 'rounds.CourseId')
+            ->where('rounds.RoundId', '=', $id)
+            ->first();
+
+        $spreadsheet = new Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+        $worksheet->setCellValue('A1', '#')
+            ->setCellValue('B1', 'Full Name')
+            ->setCellValue('C1', 'Email')
+            ->setCellValue('D1', 'Phone')
+            ->setCellValue('E1', 'Password')
+            ->setCellValue('F1', 'Created Date')
+            ->setCellValue('G1', 'Exception');
+
+        $style = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => Color::COLOR_DARKBLUE,
+                ],
+                'size' => 12
+            ],
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_WHITE,
+                ],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ]
+
+        ];
+
+        // Set the width of column A
+        $worksheet->getColumnDimension('A')->setWidth(10);
+        for ($col = 'B'; $col !== 'H'; $col++) {
+            $worksheet->getColumnDimension($col)->setWidth(40);
+        }
+
+        // Set the height of row 1
+        $worksheet->getRowDimension(1)->setRowHeight(30);
+        $worksheet->getStyle('A1:G1')->applyFromArray($style);
+        foreach ($RoundStudents as $key => $Student) {
+            $worksheet->setCellValue('A' . ($key + 2), $key + 2)
+                ->setCellValue('B' . ($key + 2), $Student->FullnameEn)
+                ->setCellValue('C' . ($key + 2), $Student->Email)
+                ->setCellValue('D' . ($key + 2), $Student->Phone)
+                ->setCellValue('E' . ($key + 2), $Student->Password)
+                ->setCellValue('F' . ($key + 2), $Student->JoinDate)
+                ->setCellValue('G' . ($key + 2), $Student->ExceptionNotes);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save(public_path($Round->CourseNameEn . '_G' . $Round->GroupNo . '_Exceptions.xlsx'));
+
+        $pathToFile = public_path($Round->CourseNameEn . '_G' . $Round->GroupNo . '_Exceptions.xlsx');
+        $response = response()->download($pathToFile, $Round->CourseNameEn . '_G' . $Round->GroupNo . '_Exceptions.xlsx')->deleteFileAfterSend();
+
+        return $response;
+    }
+
     public function StudentDetails(int $id)
     {
         $StudentRound = StudentRounds::find($id);
@@ -2418,6 +2490,7 @@ public function SeniorEvaluation(int $id)
         }else{
             $Session = Sessions::find($request->SessionId);
             $Session->TaskText = $request->TaskText;
+            $Session->TaskDeadline = $request->TaskDeadline;
             $Session->IsDone = 1;
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
@@ -2573,8 +2646,18 @@ public function StudentResetPassword(Request $request)
         // ])->first();
         $Task->TaskURL = $request->task_link;
         $Task->TaskNotes = $request->notes;
-        $Task->TaskDate = date("Y-m-d");
-        $Task->IsGrade = 1;
+        $Task->TaskDate = now();
+        $Task->IsGrade = 0;
+
+        $History = new TaskHistory();
+        $History->TaskId = $Task->TaskId;
+        $History->TaskURL = $Task->TaskURL;
+        $History->TaskNotes = $Task->TaskNotes;
+        $History->TaskDate = $Task->TaskDate;
+        $History->IsGraded = 0;
+        
+        $History->save();
+
         $Task->save();
         // return $Task;
         
@@ -2597,6 +2680,82 @@ public function StudentResetPassword(Request $request)
             
         return Redirect::to("/Admin/Course/Student/Details/$StudentRoundId");
 
+    }
+    function ReadExceptions(Request $request) {
+        
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->exception as $key => $ex) {
+                $studentRoundId = $ex[0];
+                $studentRound = StudentRounds::find($studentRoundId);
+
+                $exception = $ex[1];
+                if ($exception != null) {
+                    $exceptionEntry = Exceptions::where([["StudentId", '=', $studentRound->StudentId], ["RoundId",'=', $request->RoundId]])->first();
+                    if ($exceptionEntry) {
+                        $exceptionEntry->ExceptionNotes = $exception;
+                        $exceptionEntry->save();
+                    } else {
+                        $exceptionEntry = new Exceptions();
+                        $exceptionEntry->StudentId = $studentRound->StudentId;
+                        $exceptionEntry->RoundId = $request->RoundId;
+                        $exceptionEntry->ExceptionNotes = $exception;
+                        $exceptionEntry->save();
+                    }
+                }
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+        
+
+        return redirect()->back()->with('status', "Exceptions has been added successfully");
+    }
+    function Exceptions(int $id) {
+        $Round = Rounds::find($id);
+        $Course = Courses::find($Round->CourseId);
+        $StudentRounds = StudentRounds::where('RoundId','=',$id)->get();
+        $Exceptions = DB::table('studentrounds')
+        ->join('students','students.StudentId','=','studentrounds.StudentId')
+        ->leftJoin('exceptions','exceptions.StudentId','=','studentrounds.StudentId')
+        ->where('studentrounds.RoundId','=',$id)
+        ->get();
+        
+        return View('Admin.attendance-ex',
+        ['ActiveRounds'=>AdminController::ActiveRounds(),
+        'CountNotifications'=>AdminController::CountNotifications(),
+        'Notifications'=>AdminController::Notifications(),
+        'Round'=>$Round,
+        'Course'=>$Course,
+        'StudentRounds'=>$StudentRounds,
+        'Students'=>$Exceptions
+        ]);
+    }
+
+    function TaskHistory(int $id) {
+        $Task = Tasks::find($id);
+        $History = TaskHistory::where('TaskId','=',$id)->orderBy("TaskDate","DESC")->get();
+        $Session = Sessions::find($Task->SessionId);
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        $StudentRound = StudentRounds::find($Task->StudentRoundId);
+        $Student = Students::find($StudentRound->StudentId);
+        return View('Admin.task-history',
+        ['ActiveRounds'=>AdminController::ActiveRounds(),
+        'CountNotifications'=>AdminController::CountNotifications(),
+        'Notifications'=>AdminController::Notifications(),
+         'Task'=>$Task,
+            'History'=>$History,
+            'Round'=>$Round,
+            'Course'=>$Course,
+            'StudentRound'=>$StudentRound,
+            'Student'=>$Student,
+            'Session'=>$Session,
+        ]);
     }
 
     public function CancelSession(int $id)

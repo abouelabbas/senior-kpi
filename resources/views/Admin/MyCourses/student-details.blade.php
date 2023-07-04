@@ -8,7 +8,7 @@
 
           <li class="breadcrumb-item"><a href="/Admin"><i class="material-icons">home</i> Home</a></li>
 
-        <li class="breadcrumb-item active" aria-current="page"><a href="{{url("/Admin/Courses/$RoundId")}}">{{$Course->CourseNameEn}} - GR{{$Course->GroupNo}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="{{url("/Admin/Courses/$RoundId")}}">{{$CourseS->CourseNameEn}} - GR{{$Course->GroupNo}}</a></li>
 
           <li class="breadcrumb-item active" aria-current="page"><a href="{{url("/Admin/Course/$RoundId/Students")}}">Students</a></li>
 
@@ -17,6 +17,8 @@
         </ol>
 
       </nav>
+
+
 
       <div class="ms-panel">
 
@@ -112,6 +114,13 @@
                                     <i class="fas fa-check    "></i>
 
                                 <span> Attended </span>
+                                
+                                @elseif($Session->IsAttend === 2)
+
+                                    <i class="fas fa-check    "></i>
+
+                                <span> Attended Online </span>
+
                                 @elseif($Session->IsDone == 0)
                             <span> Not set </span>
                                 @elseif($Session->IsAttend === 0)
@@ -119,12 +128,6 @@
                                     <i class="fas fa-times    "></i>
 
                                 <span> Absent </span>
-
-                                @elseif($Session->IsAttend === 2)
-
-                                    <i class="fas fa-check    "></i>
-
-                                <span> Attended Online </span>
 
                                 @else
 
@@ -186,11 +189,11 @@
 
                                               <ul>
 
-                                                <li><i class="fas fa-circle    "></i>  Total sessions = {{$Count}} </li>
+                                                <li><i class="fas fa-circle"></i>  Total sessions = {{$Count}} </li>
 
-                                                <li><i class="fas fa-circle    "></i> Total sessions run = {{$Run}} </li>
+                                                <li><i class="fas fa-circle"></i> Total sessions run = {{$Run}} </li>
 
-                                                <li><i class="fas fa-circle    "></i> Total sessions absent = {{$NotAttend}} </li>
+                                                <li><i class="fas fa-circle"></i> Total sessions absent = {{$NotAttend}} </li>
 
                                               </ul>
 
@@ -313,6 +316,7 @@
                                 <thead>
 
                                   <th>#</th>
+                                  <th><i class="fas fa-history"></i></th>
 
                                   <th>Session No</th>
 
@@ -343,6 +347,9 @@
                                                        <form action="">
 
                                                        <td>{{$i}}</td>
+                                                       <td>
+                                                        <a href="{{url("/Admin/Submission/History/$Grade->TaskId")}}" class="btn btn-info"><i class="fas fa-history"></i> History</a>
+                                                       </td>
 
                                                          <td>
 
@@ -389,7 +396,7 @@
                                                            
                                                           <textarea style="display:none;" class="form-control comment q-changable" data-id="{{$i}}" placeholder="ex: Great work!">{{$Grade->TaskComment}}</textarea>
                                                           @endif
-                                                          
+
                                                          </td>
 
                                                        </form>
@@ -1118,6 +1125,7 @@ $('.comment-add').click(function(){
   $('.comment[data-id='+$(this).attr('data-id')+']').val($('.comment-box[data-id='+$(this).attr('data-id')+']').val());
   $('.comment[data-id='+$(this).attr('data-id')+']').change();
   // $(this).closest( ".modal" ).modal('hide');
+  debugger;
 });
 </script>
 @endsection

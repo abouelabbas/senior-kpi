@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\TaskHistory;
 use Illuminate\Http\Request;
 use App\TrainerRounds;
 use Illuminate\Support\Facades\DB;
@@ -298,6 +299,8 @@ class TrainerController extends Controller
         }else{
             $Session = Sessions::find($request->SessionId);
             $Session->TaskText = $request->TaskText;
+            $Session->TaskDeadline = $request->TaskDeadline;
+
             $Course = DB::table('rounds')
             ->join('courses','courses.CourseId','=','rounds.CourseId')
             ->where('RoundId','=',$Session->RoundId)->first();
@@ -536,27 +539,38 @@ class TrainerController extends Controller
                 ->join('studentrounds','studentrounds.StudentRoundsId','=','tasks.StudentRoundId')
                 ->join('students','students.StudentId','=','studentrounds.StudentId')
                 ->where('GradeId','=',$request->GradeId)->first();
-if($grade->QuizGrade == $request->QuizVal && $grade->TaskGrade == $request->TaskGrade){
+                
+                if($grade->QuizGrade == $request->QuizVal && $grade->TaskGrade == $request->TaskGrade){
 
-    
-}else{
-    if($request->QuizVal !== null || $request->TaskGrade !== null){
-        $Notification = new Notifications();
-       $Notification->Notification = "Your result in your task has been released";
-$Notification->NotificationLink = "/Student/Attendance/$task->StudentRoundId";
-$Notification->ForId = $task->StudentId;
-$Notification->ForType = "Student";
-$Notification->save();
-    
-}
-}
+                    
+                }else{
+                    if($request->QuizVal !== null || $request->TaskGrade !== null){
+                        $Notification = new Notifications();
+                    $Notification->Notification = "Your result in your task has been released";
+                    $Notification->NotificationLink = "/Student/Attendance/$task->StudentRoundId";
+                    $Notification->ForId = $task->StudentId;
+                    $Notification->ForType = "Student";
+                    $Notification->save();
+                        
+                    }
+                }
 
                $grade->TaskId = $request->id;
                $Task = Tasks::find($grade->TaskId);
+               $History = TaskHistory::where('TaskId','=',$request->id)->orderBy('TaskDate', 'DESC')->first();
+               
                 $Task->TaskComment = $request->comment;
+                $Task->IsGrade = 1;
+
                 $Task->save();
                $grade->QuizGrade=$request->QuizVal;
                $grade->TaskGrade=$request->TaskGrade;
+                if ($History) {
+                    $History->IsGraded = 1;
+                    $History->TaskComment = $request->comment;
+                    $History->TaskGrade = $request->TaskGrade? $request->TaskGrade : null;
+                    $History->save();
+                }
                 $grade->save();
                 
             }
@@ -575,7 +589,7 @@ $Notification->save();
             // }
 
 
-            return $request->TaskGrade;
+            return $request->comment;
         }
     }
 
@@ -1107,7 +1121,14 @@ if($dataPercentage){
         $Task->TaskURL = $request->task_link;
         $Task->TaskNotes = $request->notes;
         $Task->TaskDate = date("Y-m-d");
-        $Task->IsGrade = 1;
+        $Task->IsGrade = 0;
+        $History = new TaskHistory();
+        $History->TaskId = $Task->TaskId;
+        $History->TaskURL = $Task->TaskURL;
+        $History->TaskNotes = $Task->TaskNotes;
+        $History->TaskDate = $Task->TaskDate;
+        $History->IsGraded = 0;
+        $History->save();
         $Task->save();
         // return $Task;
         
@@ -1129,7 +1150,31 @@ if($dataPercentage){
             $Notification->save();
            return Redirect::to("/Course/Student/Details/$StudentRoundId");
     }
-
+    function TaskHistory(int $id)
+    {
+        $Task = Tasks::find($id);
+        $History = TaskHistory::where('TaskId', '=', $id)->orderBy("TaskDate", "DESC")->get();
+        $Session = Sessions::find($Task->SessionId);
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        $StudentRound = StudentRounds::find($Task->StudentRoundId);
+        $Student = Students::find($StudentRound->StudentId);
+        return View(
+            'Trainer.task-history',
+            [
+                'ActiveRounds' => AdminController::ActiveRounds(),
+                'CountNotifications' => AdminController::CountNotifications(),
+                'Notifications' => AdminController::Notifications(),
+                'Task' => $Task,
+                'History' => $History,
+                'Round' => $Round,
+                'Course' => $Course,
+                'StudentRound' => $StudentRound,
+                'Student' => $Student,
+                'Session' => $Session,
+            ]
+        );
+    }
     public function TaskProgress(int $id)
     {
         $Session = Sessions::find($id);

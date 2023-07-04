@@ -148,7 +148,7 @@ $('.q-changable').change(function(){
         success:function(data) {
 
            //alert("Success");
-
+            // alert(data);
         },
 
         error: function (request, status, error) {

@@ -174,11 +174,16 @@ Route::get('/StudentEvaluation','TrainerController@StudentEvaluation');
 Route::get('/CenterEvaluations','TrainerController@CenterEval');
 Route::get('/PercentageAttendance','TrainerController@PercentageAttendance');
 Route::get('/Trainer/CenterEvaluation/{id}','TrainerController@CenterEvaluation');
+Route::get('/Admin/Submission/History/{id}', 'AdminController@TaskHistory');
+Route::get('/Admin/Exceptions/{id}', 'AdminController@Exceptions');
+Route::post('/Admin/Exceptions/Submission/{id}', 'AdminController@ReadExceptions');
+Route::get('/Trainer/Submission/History/{id}', 'TrainerController@TaskHistory');
 Route::get('/Admin/CenterEvaluation/{id}','AdminController@CenterEvaluationMain');
 Route::get('/Admin/CenterEvaluation/Details/{id}','AdminController@CenterEvaluation');
 Route::get('/Admin/SeniorEvaluation/Details/{id}','AdminController@SeniorEvaluation');
 Route::get('/Admin/TrainerEvaluation/Details/{id}','AdminController@TrainerEvaluation');
 Route::get('/Admin/CourseEvaluation/{id}','AdminController@CourseEvaluation');
+Route::get('/Admin/Exceptions/Report/{id}','AdminController@DownloadStudentsExceptionReport');
 Route::get('/Trainer/Evaluations/{id}','TrainerController@AttendanceEvaluations');
 Route::get('/Admin/Evaluations/{id}','AdminController@AttendanceEvaluations');
 
