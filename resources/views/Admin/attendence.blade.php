@@ -57,6 +57,7 @@
                         <div class="d-flex w-100  justify-content-end">
 
                             <a href="#" class="btn btn-success m-0 mb-2"  data-toggle="modal" data-target="#addSession"> <i class="fas fa-plus"></i> Add new session</a> &nbsp; &nbsp;
+                            <a href="{{url("/Admin/Exceptions/$Round->RoundId")}}" class="btn btn-info m-0 mb-2"> Students Exceptions</a> &nbsp; &nbsp;
 
                             <a href="/Admin/Rounds/{{$Round->RoundId}}/StopRound" class="btn btn-danger m-0 mb-2" > <i class="fas fa-times" style="color:#fff;"></i> Stop round</a>
 
