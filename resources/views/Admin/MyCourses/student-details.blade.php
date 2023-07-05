@@ -122,7 +122,7 @@
                                 <span> Attended Online </span>
 
                                 @elseif($Session->IsDone == 0)
-                            <span> Not set </span>
+                                  <span> Not set </span>
                                 @elseif($Session->IsAttend === 0)
 
                                     <i class="fas fa-times    "></i>
@@ -131,7 +131,7 @@
 
                                 @else
 
-                                Not set
+                                Not set {{ $Session->IsAttend }}
 
                                 @endif
 
