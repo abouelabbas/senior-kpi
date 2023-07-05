@@ -591,9 +591,11 @@
                   <br>
 
                       @if ($SessionModal->SessionTask)
+                      @if($SessionModal->TaskDeadline != null)
                       <div class="badge badge-pill badge-warning">Task Deadline</div> : 
                       {{date_format(date_create($SessionModal->TaskDeadline), "d M, Y,  H:i:s")}}
                       <br>
+                      @endif
                       <a href="{{$SessionModal->SessionTask}}" target="_blank" class="btn btn-dark" data-toggle="tooltip" data-placement="top"
 
                         title="Open Task Link">

@@ -595,11 +595,19 @@
           <div class="col-12 p-5">
 
               <label for="note">Task Link<br/><span class="text-info"> (<i class="fab fa-google-drive"></i> Google Drive - <i class="fab fa-github"></i> Github)</span></label>
-              <input type="text" name="task_link" class="form-control" placeholder="Enter task link">
+              <input type="text" name="task_link" 
+              @if($SessionModal->SessionTask != null)
+                value="{{$SessionModal->SessionTask}}"
+                @endif 
+              class="form-control" placeholder="Enter task link">
 
                                       <br/>
               <label for="note">Task Deadline</label>
-              <input type="datetime-local" name="TaskDeadline" class="form-control" placeholder="Enter task deadline">
+              <input type="datetime-local" 
+              @if($SessionModal->TaskDeadline != null)
+                value="{{date_format(date_create($SessionModal->TaskDeadline),'Y-m-d\TH:i')}}"
+                @endif 
+              name="TaskDeadline" class="form-control" placeholder="Enter task deadline">
                       <br/>
 
                           <label for="note">Note</label>
@@ -607,7 +615,7 @@
 
               <div class="input-group">
 
-                  <textarea name="TaskText" id="note" class="form-control" rows="10" placeholder="write note"></textarea>
+                  <textarea name="TaskText" id="note" class="form-control" rows="10" placeholder="write note">{{$SessionModal->TaskText}}</textarea>
 
                  
 
