@@ -219,7 +219,12 @@
 
                       </td>
 
-                      <td>
+                      <td 
+                      @if($Session->IsCancelled == 1)
+                      class="bg-danger text-white"
+                      @endif
+                      >
+                        @if($Session->IsCancelled == 0)
                       @if($Session->HasTask)
                       
                         <a href="#" class="@if ($Session->SessionTask === null && $Session->TaskText === null)disabled
@@ -257,6 +262,10 @@
                   @else
                   <i class="fa fa-times"></i> No Task Assigned for this session
                   @endif
+              @else
+                  <i class="fa fa-times"></i> Cancelled Session
+
+              @endif
                       </td>
 
                     </tr>
