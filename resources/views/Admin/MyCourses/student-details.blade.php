@@ -131,7 +131,7 @@
 
                                 @else
 
-                                Not set {{ $Session->IsAttend }}
+                                Not set
 
                                 @endif
 
