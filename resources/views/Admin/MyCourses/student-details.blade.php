@@ -115,9 +115,9 @@
 
                                 <span> Attended </span>
                                 
-                                @elseif($Session->IsAttend === 2)
+                                @elseif($Session->IsAttend == 2)
 
-                                    <i class="fas fa-check    "></i>
+                                    <i class="fas fa-check"></i>
 
                                 <span> Attended Online </span>
 
