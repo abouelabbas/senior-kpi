@@ -219,11 +219,7 @@
 
                       </td>
 
-                      <td 
-                      @if($Session->IsCancelled == 1)
-                      class="bg-danger text-white"
-                      @endif
-                      >
+                      <td>
                         @if($Session->IsCancelled == 0)
                       @if($Session->HasTask)
                       
