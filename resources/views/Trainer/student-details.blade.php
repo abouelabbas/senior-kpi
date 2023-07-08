@@ -100,11 +100,22 @@
                                 <i class="fas fa-check    "></i>
 
                             <span> Attended </span>
-                              @elseif($Session->IsAttend === 2)
+                              @elseif($Session->IsAttend == 2)
 
-                                  <i class="fas fa-check    "></i>
+                                    <i class="fas fa-check"></i>
 
-                              <span> Attended Online </span>
+                                <span> Attended Online </span>
+                                @elseif($Session->IsAttend == 3)
+
+                                    <i class="fas fa-minus"></i>
+
+                                <span> Pre-join </span>
+                                 @elseif($Session->IsAttend == 4)
+
+                                    <i class="fas fa-minus"></i>
+
+                                <span> Skipped </span>
+
                             @elseif($Session->IsDone == 0)
                             <span> Not set </span>
                             @elseif($Session->IsAttend == 0)
@@ -173,13 +184,26 @@
 
                       <ul>
 
-                        <li><i class="fas fa-circle    "></i>  Total sessions = {{$Count}} </li>
+                        <li><i class="fas fa-circle"></i>  Total sessions = {{$Count}} </li>
 
-                        <li><i class="fas fa-circle    "></i> Total sessions run = {{$Run}} </li>
+                                                <li><i class="fas fa-circle"></i> Total sessions run = {{$Run}} </li>
+                                                <li><i class="fas fa-circle"></i> Total sessions Attended = {{$IsAttend}} </li>
+                                                <li><i class="fas fa-circle"></i> Total sessions Attended Online = {{$IsOnline}} </li>
+                                                <li><i class="fas fa-circle"></i> Total sessions Attended Offline = {{$IsAttend - $IsOnline}} </li>
 
-                        <li><i class="fas fa-circle    "></i> Total sessions absent = {{$NotAttend}} </li>
-                        <li style="color:red;"><i class="fas fa-circle    "></i> Total sessions cancelled = {{$CountCancelled}} </li>
 
+                                                <li><i class="fas fa-circle"></i> Total sessions prejoined = {{$IsPreJoined}} </li>
+                                                <li><i class="fas fa-circle"></i> Total sessions Skipped = {{$Run - $IsPreJoined - $IsAttend - $NotAttend}} </li>
+
+                                                <li><i class="fas fa-circle"></i> Total sessions absent = {{$NotAttend}} </li>
+                                                <hr/>
+                                                <li class="text-info"><i class="fas fa-circle    "></i> Total tasks required = {{$Run - $SessionWithoutTask}} </li>
+
+                                                <hr/>
+                                                <li class="text-warning"><i class="fas fa-circle    "></i> Total sessions skipped = {{$Run - $IsPreJoined - $IsAttend - $NotAttend}} </li>
+                                                <hr/>
+                                                <li style="color:red;"><i class="fas fa-circle    "></i> Total cancelled sessions = {{$Cancelled}} </li>
+                                                <hr/>
                       </ul>
 
 

@@ -102,15 +102,23 @@
                             <span style="color:#fff!important;">
                                 Cancelled
                                 </span>
+                                @elseif($Attend->IsAttend == 4)
+                          <i class="fas fa-minus    "></i> Skipped
+
+                            @elseif ($Attend->IsAttend == 3)
+
+                                    <i class="fas fa-minus    "></i> Pre-join
                             @elseif ($Attend->IsAttend == 1)
 
-                                  <i class="fas fa-check    "></i>
+                                    <i class="fas fa-check    "></i> On-site
+                                  @elseif($Attend->IsAttend == 2)
+                                    <i class="fas fa-check    "></i> Online
                                   @elseif($Attend->IsDone == 0)
-                            <span> Not set </span>
+                                    <span> Not set </span>
 
                                   @else
 
-                                  <i class="fas fa-times    "></i>
+                                  <i class="fas fa-times    "></i> Absent
 
                                   @endif
 
@@ -159,11 +167,20 @@
                     <li><i class="fas fa-circle    "></i>  Total sessions  = {{$AllAttend}} </li>
                       <li><i class="fas fa-circle    "></i>  Total sessions run = {{$Run}} </li>
 
-                      <li><i class="fas fa-circle    "></i> Total sessions attend = {{$IsAttend}} </li>
+                      <li><i class="fas fa-circle    "></i> Total sessions pre-join = {{$preJoin}} </li>
+                      <li><i class="fas fa-circle    "></i> Total sessions attend = {{$IsAttend - $preJoin}} </li>
+                      <li><i class="fas fa-circle    "></i> Total sessions attend (offline) = {{$IsAttend - $preJoin - $IsOnline}} </li>
+                      <li><i class="fas fa-circle    "></i> Total sessions attend (online) = {{$IsOnline}} </li>
 
                       <li><i class="fas fa-circle    "></i> Total sessions absent = {{$Run - $IsAttend}} </li>
-                      <li style="color:red;"><i class="fas fa-circle    "></i> Total cancelled sessions = {{$Cancelled}} </li>
+                      <hr/>
+                      <li class="text-info"><i class="fas fa-circle    "></i> Total tasks required = {{$Run - $SessionWithoutTask}} </li>
 
+                      <hr/>
+                      <li class="text-warning"><i class="fas fa-circle    "></i> Total sessions skipped = {{$IsSkipped}} </li>
+                      <hr/>
+                      <li style="color:red;"><i class="fas fa-circle    "></i> Total cancelled sessions = {{$Cancelled}} </li>
+                      <hr/>
                     </ul>
 
                     <div class="progress-rounded progress-round-tiny ">
@@ -172,7 +189,7 @@
 
                               @if ($Run != 0)
 
-                              {{number_format(($IsAttend/$Run)*100,1)}}%
+                              {{number_format((($IsAttend-$preJoin)/($Run-$preJoin))*100,1)}}%
 
                               @else
 
@@ -200,7 +217,7 @@
 
                               @if ($Run != 0)
 
-                              {{($IsAttend/$Run)*100}}
+                              {{(($IsAttend-$preJoin)/($Run-$preJoin))*100}}
 
                               @else
 
@@ -223,8 +240,68 @@
                           </svg>
 
                         </div>
+                        
 
                         <h3 class="text-center">total attendance kpi</h3>
+                        <hr/>
+<div class="progress-rounded progress-round-tiny ">
+
+                          <div class="progress-value">
+
+                              @if ($Run != 0)
+
+                              {{number_format((($Run-$SessionWithoutTask)/($Run))*100,1)}}%
+
+                              @else
+
+                              0
+
+                              @endif
+
+                            </div>
+
+                            <svg>
+
+                              <circle class="progress-cicle bg-success"
+
+                              cx="65"
+
+                              cy="65"
+
+                              r="57"
+
+                              stroke-width="4"
+
+                              fill="none"
+
+                              aria-valuenow="
+
+                              @if ($Run != 0)
+
+                              {{(($Run-$SessionWithoutTask)/($Run))*100}}
+
+                              @else
+
+                              0
+
+                              @endif
+
+                              "
+
+                              aria-orientation="vertical"
+
+                              aria-valuemin="0"
+
+                              aria-valuemax="100"
+
+                              role="slider">
+
+                            </circle>
+
+                          </svg>
+
+                        </div>
+                      <h3 class="text-center">total Tasks Required</h3>
 
                    </div>
 

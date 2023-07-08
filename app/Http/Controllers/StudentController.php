@@ -180,6 +180,7 @@ class StudentController extends Controller
         //---
 
         //$StudentRoundId = $id;
+        $StudentRound = StudentRounds::find($id);
 
         $Attendance = DB::table('attendance')
         ->join('sessions','sessions.SessionId','=','attendance.SessionId')
@@ -197,9 +198,25 @@ class StudentController extends Controller
         ->where([['StudentRoundsId','=',$id],['IsCancelled','=',1]])->count();
         $IsAttend = Attendance::where([
             ['StudentRoundsId','=',$id],
-            ['IsAttend','=','1'],
+            ['IsAttend','!=','0'],
+            ['IsAttend','!=','4'],
         ])->count();
-
+        $IsOnline = Attendance::where([
+            ['StudentRoundsId', '=', $id],
+            ['IsAttend', '=', '2'],
+        ])->count();
+        $IsSkipped = Attendance::where([
+            ['StudentRoundsId', '=', $id],
+            ['IsAttend', '=', '4'],
+        ])->count();
+        $preJoin = Attendance::where([
+            ['StudentRoundsId','=',$id],
+            ['IsAttend','=','3'],
+        ])->count();
+        $SessionWithoutTask = Sessions::where([
+            ['RoundId','=',$StudentRound->RoundId],
+            ['HasTask','=',0]
+        ])->count();
         $Grades = DB::table("grades")
         ->join('tasks','tasks.TaskId','=','grades.TaskId')
         ->join('sessions','sessions.SessionId','=','tasks.SessionId')
@@ -219,7 +236,11 @@ class StudentController extends Controller
             'StudentRounds'=>$StudentRounds,
             'Attendance'=>$Attendance,
             'AllAttend'=>$AllAttend,
-            'IsAttend'=>$IsAttend,
+            'IsAttend' => $IsAttend,
+            'preJoin'=>$preJoin,
+            'IsOnline'=>$IsOnline,
+            'IsSkipped'=>$IsSkipped,
+            'SessionWithoutTask'=>$SessionWithoutTask,
             'Grades'=>$Grades,
             'ExamGrades'=>$ExamGrades,
             'StudentEvaluations'=>$StudentEvaluations,

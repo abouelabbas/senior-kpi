@@ -1063,6 +1063,15 @@ class AdminController extends Controller
         $Session->save();
         return redirect()->back();
     }
+
+    function SkipAttendance(int $id)
+    {
+        $Attendance = Attendance::where('SessionId', '=', $id)->update(['IsAttend' => 4]);
+        $Session = Sessions::find($id);
+        $Session->IsDone = 1;
+        $Session->save();
+        return redirect()->back();
+    }
     // Set and Clear Session->HasTask
     function ClrSessionHasTask(int $id) {
         $Session = Sessions::find($id);
@@ -2071,6 +2080,29 @@ public function ConfirmCancelStudentRegisteration(int $id)
             ['IsCancelled','=',null]
         ])
         ->whereIn('IsAttend',[1,2])->count();
+        $IsOnline = DB::table("attendance")
+            ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([
+                ['StudentRoundsId', '=', $id],
+                ['RoundId', '=', $StudentRound->RoundId],
+                ['IsCancelled', '=', null],
+                ['IsAttend','=',2]
+            ])->count();
+        $IsPreJoined = DB::table("attendance")
+            ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([
+                ['StudentRoundsId', '=', $id],
+                ['RoundId', '=', $StudentRound->RoundId],
+                ['IsCancelled', '=', null],
+                ['IsAttend', '=', 3]
+            ])->count();
+        $Cancelled = DB::table("attendance")
+            ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([['StudentRoundsId', '=', $id], ['IsCancelled', '=', 1]])->count();
+        $SessionWithoutTask = Sessions::where([
+            ['RoundId', '=', $StudentRound->RoundId],
+            ['HasTask', '=', 0]
+        ])->count();
         $Count = $Attendance->count();
         $Course = Rounds::where('RoundId','=',$StudentRound->RoundId)->first();
         $CourseId = $Course->CourseId;
@@ -2099,11 +2131,15 @@ public function ConfirmCancelStudentRegisteration(int $id)
             'Attendance'=>$Attendance,
             'IsAttend'=>$IsAttend,
             'NotAttend'=>$NotAttend,
+            'IsOnline'=>$IsOnline,
+            'SessionWithoutTask'=>$SessionWithoutTask,
+            'Cancelled'=>$Cancelled,
             'Count'=>$Count,
             'Run'=>$Run,
             'Grades'=>$Grades,
             'CourseS'=>$CourseS,
             'RoundId'=>$StudentRound->RoundId,
+            'IsPreJoined'=> $IsPreJoined,
             'Course'=>$Course,
             'Student'=>$Student,
             // 'Exams'=>$Exams,

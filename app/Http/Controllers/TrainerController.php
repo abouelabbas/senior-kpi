@@ -455,71 +455,94 @@ class TrainerController extends Controller
         $StudentRound = StudentRounds::find($id);
         $Student = Students::find($StudentRound->StudentId);
         $AttendanceStatement = DB::table("attendance")
-        ->join('sessions','sessions.SessionId','=','attendance.SessionId')
-        ->where([
-            ['StudentRoundsId','=',$id],
-            ['RoundId','=',$StudentRound->RoundId]
-        ])->orderBy('sessions.SessionId');
+            ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([
+                ['StudentRoundsId', '=', $id],
+                ['RoundId', '=', $StudentRound->RoundId],
+
+
+            ]);
         $Attendance = $AttendanceStatement->get();
         //$IsAttend = $
-        $Run = $AttendanceStatement->where([['IsDone','=',1],
-        ['IsCancelled','=',null]])->count();
-
-        $NotAttend = $AttendanceStatement->where([['IsAttend','=',0],
-        ['IsCancelled','=',null]])->count();
+        $Run = $AttendanceStatement->where([['IsDone', '=', 1], ['IsCancelled', '=', null]])->count();
+        $NotAttend = $AttendanceStatement->where([['IsAttend', '=', 0], ['IsCancelled', '=', null]])->count();
         $IsAttend = DB::table("attendance")
-        ->join('sessions','sessions.SessionId','=','attendance.SessionId')
-        ->where([
-            ['StudentRoundsId','=',$id],
-            ['RoundId','=',$StudentRound->RoundId],
-            ['IsCancelled','=',null]
-        ])
-        ->where('IsAttend','=',1)->count();
-        $Count = $Attendance
-        ->count();
-        $CountCancelled = $Attendance
-        ->where('IsCancelled','=',1)
-        ->count();
-        $Course = Rounds::where('RoundId','=',$StudentRound->RoundId)->first();
+            ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([
+                ['StudentRoundsId', '=', $id],
+                ['RoundId', '=', $StudentRound->RoundId],
+                ['IsCancelled', '=', null]
+            ])
+            ->whereIn('IsAttend', [1, 2])->count();
+        $IsOnline = DB::table("attendance")
+            ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([
+                ['StudentRoundsId', '=', $id],
+                ['RoundId', '=', $StudentRound->RoundId],
+                ['IsCancelled', '=', null],
+                ['IsAttend', '=', 2]
+            ])->count();
+        $IsPreJoined = DB::table("attendance")
+            ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([
+                ['StudentRoundsId', '=', $id],
+                ['RoundId', '=', $StudentRound->RoundId],
+                ['IsCancelled', '=', null],
+                ['IsAttend', '=', 3]
+            ])->count();
+        $Cancelled = DB::table("attendance")
+            ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([['StudentRoundsId', '=', $id], ['IsCancelled', '=', 1]])->count();
+        $SessionWithoutTask = Sessions::where([
+            ['RoundId', '=', $StudentRound->RoundId],
+            ['HasTask', '=', 0]
+        ])->count();
+        $Count = $Attendance->count();
+        $Course = Rounds::where('RoundId', '=', $StudentRound->RoundId)->first();
         $CourseId = $Course->CourseId;
+        $CourseS = Courses::find($CourseId);
         $Grades = DB::table("grades")
-        ->join('tasks','tasks.TaskId','=','grades.TaskId')
-        ->join('sessions','sessions.SessionId','=','tasks.SessionId')
-        ->where([
-            ['tasks.StudentRoundId','=',$id],
-            ['RoundId','=',$StudentRound->RoundId]
-        ])->get();
+            ->join('tasks', 'tasks.TaskId', '=', 'grades.TaskId')
+            ->join('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
+            ->where([
+                ['tasks.StudentRoundId', '=', $id],
+                ['RoundId', '=', $StudentRound->RoundId]
+            ])->get();
         //
         //--Exams
         // $Exams = Exams::where([
         //     ['CourseId','=',$CourseId]
         // ])->get();
         $ExamGrades = DB::table('examgrades')
-        ->join('exams','exams.ExamId','=','examgrades.ExamId')
-        ->where('StudentRoundId','=',$id)->get();
+            ->join('exams', 'exams.ExamId', '=', 'examgrades.ExamId')
+            ->where('StudentRoundId', '=', $id)->get();
 
         $StudentEvaluations = DB::table('studentevaluation')
-        ->join('roundcontent','roundcontent.RoundContentId','=','studentevaluation.RoundContentId')
-        ->where('StudentRoundId','=',$id)->get();
-
+            ->join('roundcontent', 'roundcontent.RoundContentId', '=', 'studentevaluation.RoundContentId')
+            ->where('StudentRoundId', '=', $id)->get();
 
         return View('Trainer.student-details',[
             'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),
             'Attendance'=>$Attendance,
             'IsAttend'=>$IsAttend,
             'NotAttend'=>$NotAttend,
+            'IsOnline'=>$IsOnline,
+            'SessionWithoutTask'=>$SessionWithoutTask,
+            'Cancelled'=>$Cancelled,
             'Count'=>$Count,
             'Run'=>$Run,
-            'Student'=>$Student,
             'Grades'=>$Grades,
+            'CourseS'=>$CourseS,
             'RoundId'=>$StudentRound->RoundId,
+            'IsPreJoined'=> $IsPreJoined,
+            'Course'=>$Course,
+            'Student'=>$Student,
             // 'Exams'=>$Exams,
             'ExamGrades'=>$ExamGrades,
             'StudentRound'=>$StudentRound,
             'StudentEvaluations'=>$StudentEvaluations,
-            'ActiveRounds'=>AdminController::ActiveRounds(),
-            'Notifications'=>TrainerController::Notifications(),'CountNotifications'=>TrainerController::CountNotifications(),
-            'CountCancelled'=>$CountCancelled,
+            'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),
+            'Notifications'=>AdminController::Notifications(),
             ]);
     }
 

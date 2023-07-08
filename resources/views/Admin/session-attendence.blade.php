@@ -61,6 +61,7 @@
                         <input type="button" id="save-student"  value="Save" class="btn btn-primary">&nbsp; &nbsp; 
                         <a href="{{url("/Admin/Session/$Session->SessionId/AllAttend")}}" class="btn btn-info"> <i class="fas fa-check text-white"></i> Attend All</a> &nbsp; &nbsp;
                         <a href="{{url("/Admin/Session/$Session->SessionId/Attendance/Reset")}}" class="btn btn-info"> Reset Attendance</a> &nbsp; &nbsp;
+                        <a href="{{url("/Admin/Session/$Session->SessionId/Attendance/Skip")}}" class="btn btn-info"> Skip Attendance</a> &nbsp; &nbsp;
 
 
 
@@ -144,6 +145,28 @@
                               </label>
 
                               <span> attended online </span>
+
+                            </span>
+
+                            <span class="d-inline-block mr-2">
+
+                              <label class="ms-checkbox-wrap ms-checkbox-success">
+
+                                <input  
+
+                                @if ($Attend->IsAttend == 3)
+
+                                    checked
+
+                                @endif
+
+                              type="radio" value="3" name="attendence{{$i}}">
+
+                                <i class="ms-checkbox-check"></i>
+
+                              </label>
+
+                              <span> Pre-join </span>
 
                             </span>
 
