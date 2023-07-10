@@ -130,7 +130,7 @@
                                     <i class="fas fa-minus"></i>
 
                                 <span> Skipped </span>
-                                @elseif($Session->IsAttend === 0)
+                                @elseif($Session->IsAttend == 0)
 
                                     <i class="fas fa-times    "></i>
 
