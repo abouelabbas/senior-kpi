@@ -193,12 +193,13 @@
 
 
                                                 <li><i class="fas fa-circle"></i> Total sessions prejoined = {{$IsPreJoined}} </li>
-                                                <li><i class="fas fa-circle"></i> Total sessions Skipped = {{$Run - $IsPreJoined - $IsAttend - $NotAttend}} </li>
+                                                <li><i class="fas fa-circle"></i> Total sessions attendance Skipped = {{$Run - $IsPreJoined - $IsAttend - $NotAttend}} </li>
 
                                                 <li><i class="fas fa-circle"></i> Total sessions absent = {{$NotAttend}} </li>
                                                 <hr/>
                                                 <li class="text-info"><i class="fas fa-circle    "></i> Total tasks required = {{$Run - $SessionWithoutTask}} </li>
 
+                                                <li class="text-info"><i class="fas fa-circle    "></i> Total tasks solved = {{$SolvedTasks}} </li>
                                                 <hr/>
                                                 <li class="text-warning"><i class="fas fa-circle    "></i> Total sessions skipped = {{$Run - $IsPreJoined - $IsAttend - $NotAttend}} </li>
                                                 <hr/>
@@ -212,7 +213,7 @@
 
                     </div>
 
-                    <div class="w-100 d-flex justify-content-center">
+                    <div class="w-100 text-center justify-content-center">
 
                             <div class="progress-rounded progress-round-tiny">
 
@@ -271,6 +272,66 @@
                               </svg>
 
                             </div>
+                            <h3>Attendance %</h3>
+                                                    <hr>
+                                                    <div class="progress-rounded progress-round-tiny">
+
+                                                      <div class="progress-value">
+
+                                                        @if ($Count !== 0 && $Run !== 0)
+
+                                                            {{number_format(($SolvedTasks/($Run - $SessionWithoutTask))*100,0)}}
+
+                                                        @else
+
+                                                            0
+
+                                                        @endif
+
+                                                        %</div>
+
+                                                        <svg>
+
+                                                          <circle class="progress-cicle bg-success"
+
+                                                          cx="65"
+
+                                                          cy="65"
+
+                                                          r="57"
+
+                                                          stroke-width="4"
+
+                                                          fill="none"
+
+                                                          aria-valuenow="
+
+                                                          @if ($Count !== 0 && $Run !== 0)
+
+                                                          {{number_format(($SolvedTasks/($Run - $SessionWithoutTask))*100,0)}}
+
+                                                          @else
+
+                                                              0
+
+                                                          @endif
+
+                                                          "
+
+                                                          aria-orientation="vertical"
+
+                                                          aria-valuemin="0"
+
+                                                          aria-valuemax="100"
+
+                                                          role="slider">
+
+                                                        </circle>
+
+                                                      </svg>
+
+                                                    </div>
+                                                    <h3>Tasks Done %</h3>
 
                           </div>
 

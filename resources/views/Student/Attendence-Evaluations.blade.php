@@ -177,7 +177,7 @@
                       <li class="text-info"><i class="fas fa-circle    "></i> Total tasks required = {{$Run - $SessionWithoutTask}} </li>
 
                       <hr/>
-                      <li class="text-warning"><i class="fas fa-circle    "></i> Total sessions skipped = {{$IsSkipped}} </li>
+                      <li class="text-warning"><i class="fas fa-circle    "></i> Total sessions attendance skipped = {{$IsSkipped}} </li>
                       <hr/>
                       <li style="color:red;"><i class="fas fa-circle    "></i> Total cancelled sessions = {{$Cancelled}} </li>
                       <hr/>

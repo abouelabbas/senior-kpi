@@ -482,6 +482,10 @@ class TrainerController extends Controller
                 ['IsCancelled', '=', null],
                 ['IsAttend', '=', 2]
             ])->count();
+        $SolvedTasks = Tasks::where([
+            ['StudentRoundId', '=', $id],
+            ['TaskURL', '!=', null]
+        ])->count();
         $IsPreJoined = DB::table("attendance")
             ->join('sessions', 'sessions.SessionId', '=', 'attendance.SessionId')
             ->where([
@@ -522,27 +526,30 @@ class TrainerController extends Controller
             ->where('StudentRoundId', '=', $id)->get();
 
         return View('Trainer.student-details',[
-            'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),
-            'Attendance'=>$Attendance,
-            'IsAttend'=>$IsAttend,
-            'NotAttend'=>$NotAttend,
-            'IsOnline'=>$IsOnline,
-            'SessionWithoutTask'=>$SessionWithoutTask,
-            'Cancelled'=>$Cancelled,
-            'Count'=>$Count,
-            'Run'=>$Run,
-            'Grades'=>$Grades,
-            'CourseS'=>$CourseS,
-            'RoundId'=>$StudentRound->RoundId,
-            'IsPreJoined'=> $IsPreJoined,
-            'Course'=>$Course,
-            'Student'=>$Student,
+            'TrainerRounds' => TrainerController::TrainerRounds(),
+            'HistoryRounds' => TrainerController::HistoryRounds(),
+            'Attendance' => $Attendance,
+            'IsAttend' => $IsAttend,
+            'NotAttend' => $NotAttend,
+            'IsOnline' => $IsOnline,
+            'SolvedTasks'=>$SolvedTasks,
+            'SessionWithoutTask' => $SessionWithoutTask,
+            'Cancelled' => $Cancelled,
+            'Count' => $Count,
+            'Run' => $Run,
+            'Grades' => $Grades,
+            'CourseS' => $CourseS,
+            'RoundId' => $StudentRound->RoundId,
+            'IsPreJoined' => $IsPreJoined,
+            'Course' => $Course,
+            'Student' => $Student,
             // 'Exams'=>$Exams,
-            'ExamGrades'=>$ExamGrades,
-            'StudentRound'=>$StudentRound,
-            'StudentEvaluations'=>$StudentEvaluations,
-            'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),
-            'Notifications'=>AdminController::Notifications(),
+            'ExamGrades' => $ExamGrades,
+            'StudentRound' => $StudentRound,
+            'StudentEvaluations' => $StudentEvaluations,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'CountNotifications' => AdminController::CountNotifications(),
+            'Notifications' => AdminController::Notifications(),
             ]);
     }
 
@@ -642,11 +649,13 @@ $percentage = ($attend/$all)*100;
             }else{
                 $percentage = 0;
             }
-            $SessionsDone = Sessions::where([['IsDone','=','1'],['RoundId','=',$StudentRound->RoundId]])->count();
+            $SessionsDone = Sessions::where([['IsDone','=','1'],['RoundId','=',$StudentRound->RoundId],['IsCancelled','=',null]])->count();
             $TasksDone = Tasks::where([['StudentRoundId','=',$StudentRoundId],['TaskURL','!=',null]])->count();
             $dataPercentage = StudentEvaluations::where('StudentRoundId','=',$StudentRoundId)
             ->selectRaw('count(TimeRespect) as RowCount,sum(TimeRespect) as TimeRespect, sum(Lecture_Practice) as Lecture_Practice,sum(Solve_Home_Tasks) as Solve_Home_Tasks, sum(Student_Interaction) as Student_Interaction, sum(Student_Attitude) as Student_Attitude, sum(Student_Focus) as Student_Focus , sum(Understand_Speed) as Understand_Speed')
             ->first();
+            $NoTask = Sessions::where([['HasTask','=',0],['RoundId','=',$StudentRound->RoundId]])->count();
+
             // return "abdalla";
             // return count($dataPercentage);
 
@@ -725,6 +734,7 @@ if($dataPercentage){
                     'Understand_Speed'=>$Understand_Speed,
                     'SessionsDone'=>$SessionsDone,
                     'TasksDone'=>$TasksDone,
+                    'NoTask'=>$NoTask
                 ];
     
                 return $data;

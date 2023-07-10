@@ -517,11 +517,11 @@
 
           thistr.find('div.understand').circleProgress({value: parseFloat(data.Understand_Speed).toFixed(0)/100});
           if( data.SessionsDone) {
-            thistr.find('div.solveper').text(data.TasksDone + " / " + data.SessionsDone);
+            thistr.find('div.solveper').text(data.TasksDone + " / " + (data.SessionsDone - data.NoTask));
 
 // thistr.find('div.attendance').attr('data-value',(parseFloat(data).toFixed(0)/100);
 
-            thistr.find('div.solve').circleProgress({value: parseFloat((data.TasksDone/data.SessionsDone)*100).toFixed(0)/100});
+            thistr.find('div.solve').circleProgress({value: parseFloat((data.TasksDone/(data.SessionsDone-data.NoTask))*100).toFixed(0)/100});
           }else{
             thistr.find('div.solveper').text(0);
 

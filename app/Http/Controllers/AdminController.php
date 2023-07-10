@@ -2103,6 +2103,10 @@ public function ConfirmCancelStudentRegisteration(int $id)
             ['RoundId', '=', $StudentRound->RoundId],
             ['HasTask', '=', 0]
         ])->count();
+        $SolvedTasks = Tasks::where([
+            ['StudentRoundId', '=', $id],
+            ['TaskURL','!=',null]
+        ])->count();
         $Count = $Attendance->count();
         $Course = Rounds::where('RoundId','=',$StudentRound->RoundId)->first();
         $CourseId = $Course->CourseId;
@@ -2132,6 +2136,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
             'IsAttend'=>$IsAttend,
             'NotAttend'=>$NotAttend,
             'IsOnline'=>$IsOnline,
+            'SolvedTasks'=>$SolvedTasks,
             'SessionWithoutTask'=>$SessionWithoutTask,
             'Cancelled'=>$Cancelled,
             'Count'=>$Count,
