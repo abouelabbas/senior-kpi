@@ -115,14 +115,14 @@
                                     <i class="fas fa-minus"></i>
 
                                 <span> Skipped </span>
-
-                            @elseif($Session->IsDone == 0)
-                            <span> Not set </span>
-                            @elseif($Session->IsAttend == 0)
+                            @elseif($Session->IsAttend == 0 && $Session->IsAttend !== null)
 
                                 <i class="fas fa-times    "></i>
 
                             <span> Absent </span>
+                            @elseif($Session->IsDone == 0)
+                            <span> Not set </span>
+
 
                             @else
 

@@ -130,7 +130,7 @@
                                     <i class="fas fa-minus"></i>
 
                                 <span> Skipped </span>
-                                @elseif($Session->IsAttend == 0)
+                                @elseif($Session->IsAttend == 0 && $Session->IsAttend !== null)
 
                                     <i class="fas fa-times    "></i>
 
@@ -427,8 +427,9 @@
 
                                     @foreach ($Grades as $Grade)
 
-                                    <tr>
-
+                                    
+                                            @if($Grade->IsCancelled != 1 && $Grade->HasTask == 1)
+                                            <tr>
                                                        <form action="">
 
                                                        <td>{{$i}}</td>
@@ -485,8 +486,22 @@
                                                          </td>
 
                                                        </form>
+                                                       </tr>
+                                                       @else
+                                                       <tr>
+                                                       @if($Grade->IsCancelled == 1)
+                                                       <td class="bg-danger text-white text-center">{{$i}}</td>
 
-                                                     </tr>
+                                                       <td colspan="6" class="bg-danger text-white text-center">Cancelled Session</td>
+                                                       @else
+                                                       <td class="bg-warning text-white text-center">{{$i}}</td>
+
+                                                       <td colspan="6" class="bg-warning text-white text-center">Session doesn't have task</td>
+                                                       </tr>
+                                                       @endif
+                                                       @endif
+
+                                                     
 
                                                      @php
 
