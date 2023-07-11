@@ -447,8 +447,13 @@
                                                                       Course Topics
 
                                                                   </a>
+                                                                  <a href="{{url("/Admin/Courses/$Course->CourseId/Exams/$Trainer->TrainerId")}}" class="btn mx-1 btn-info">
 
-                                                                <a href=""  data-toggle="modal" data-target="#addexam{{$Course->CourseId}}" class="btn btn-info">
+                                                                      Course Exams
+
+                                                                  </a>
+
+                                                                <a href=""  data-toggle="modal" data-target="#addexam{{$Course->CourseId}}" class="btn m-1 btn-info">
 
                                                                     Add exam
 

@@ -343,6 +343,26 @@ class AdminController extends Controller
 
         return Redirect::to('/Admin/Courses')->with('statusDel',"Course $Course->CourseNameEn has been deleted!");
     }
+
+    function CourseExams(int $cid, int $id) {
+        $TrainerCourse = TrainerCourses::where([['TrainerId', '=', $id], ['CourseId', '=', $cid]])->first();
+        $Trainer = Trainers::find($id);
+        $Course = Courses::find($cid);
+        $Exams = Exams::where('TrainerCoursesId','=',$TrainerCourse->TrainerCoursesId)->get();
+
+        return View('Admin.edit-trainer-exams', 
+        ['Notifications' => AdminController::Notifications(), 
+        'Trainer' => $Trainer, 
+        'Course' => $Course, 
+        'Exams' => $Exams, 
+        'ActiveRounds' => AdminController::ActiveRounds(), 
+        'CountNotifications' => AdminController::CountNotifications(), 
+        'TrainerCoursesId' => $Trainer->TrainerCoursesId, 
+        'TrainerId' => $Trainer->TrainerId, 
+        'CourseId' => $Course->CourseId
+    ]);
+
+    }
     public function CourseTopics(int $cid, int $id)
     {
         // $Course = Courses::find($cid);
@@ -764,7 +784,38 @@ class AdminController extends Controller
         }
 
         //return $StudentRounds;
-        return Redirect::to("/Admin/Trainers/EditProfile/$request->TrainerId")->with('success',"Exam : $request->ExamNameEn has been added successfully!");
+        return redirect()->back()->with('success',"Exam : $request->ExamNameEn has been added successfully!");
+
+    }
+
+    public function DeleteExam(int $id)
+    {
+
+        $ExamGrades = ExamGrades::where('ExamId','=',$id)->delete();
+        $Exam = Exams::find($id)->delete();
+
+
+        //return $StudentRounds;
+        return redirect()->back();
+
+    }
+    public function EditExam(Request $request)
+    {
+        $TrainerCourse = TrainerCourses::where([
+            ['TrainerId', '=', $request->TrainerId],
+            ['CourseId', '=', $request->CourseId]
+        ])->first();
+
+        $Exam = Exams::find($request->ExamId);
+        $Exam->TrainerCoursesId = $TrainerCourse->TrainerCoursesId;
+        $Exam->ExamNameEn = $request->ExamNameEn;
+        $Exam->ExamNameAr = $request->ExamNameAr;
+        $Exam->save();
+
+
+        
+        //return $StudentRounds;
+        return redirect()->back()->with('success', "Exam : $request->ExamNameEn has been updated successfully!");
 
     }
 
@@ -1229,6 +1280,31 @@ class AdminController extends Controller
 
     }
 
+    function UndoDoneTrack(int $id) {
+
+        try {
+            DB::beginTransaction();
+
+            $RoundContent = RoundContents::find($id);
+            $RoundContent->Done = 0;
+            $RoundContent->save();
+
+            $RoundSubContents = RoundSubContents::where('RoundContentId', '=', $id)->get();
+            foreach ($RoundSubContents as $key => $RoundSubContent) {
+                // $RoundSubContent->DoneExample = 1;
+                // $RoundSubContent->DoneTask = 1;
+                $RoundSubContent->PointDone = 0;
+                $RoundSubContent->save();
+            }
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
+
+        return redirect()->back()->with("status", "Track $RoundContent->ContentNameEn has been done!");
+    }
     function DoneTrack(int $id) {
         
         try {
@@ -2599,7 +2675,20 @@ public function SeniorEvaluation(int $id)
             return $request->TaskGrade;
         }
     }
+    function ExamFile(Request $request)
+    {   
+        if ($request->hasFile('exam_file')) {
+            $file = $request->exam_file;
+            $name = time() . $file->getClientOriginalName();
+            $file->move(public_path('uploads'), $name);
 
+            $Exam = ExamGrades::find($request->exam);
+            $Exam->File = $name;
+            $Exam->save();
+
+            return redirect()->back()->with('added', 'File has been uploaded successfully!');
+        }
+    }
     public function ResetPassword(Request $request)
     {
         $id = $request->TrainerId;

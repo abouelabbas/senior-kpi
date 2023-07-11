@@ -38,6 +38,7 @@
                                             <!--  -->
                                             <div class="d-flex justify-content-end">
                                               <a href="{{url("/Admin/Done/Track/$Topic->RoundContentId")}}" class="btn btn-success m-2">Track Done</a>
+                                              <a href="{{url("/Admin/Done/Track/$Topic->RoundContentId/Undo")}}" class="btn btn-danger m-2">Track Reset</a>
                                                 <a href="#" class="btn btn-dark m-2 has-chevron"data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
                                                      Add
                                                 </a>

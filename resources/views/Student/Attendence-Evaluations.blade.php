@@ -449,7 +449,8 @@
                                 <th>Exam Grade </th>
 
                                 <th>Evaluation </th>
-
+                                <th>Exam Notes</th>
+                                <th>Extra File</th>
                                
 
                               </thead>
@@ -541,8 +542,14 @@
                                     @endif
 
                                      </td>
-
-                                  
+                                     <td>{{$Exam->ExamNotes}}</td>
+                                     <td>
+                                        @if ($Exam->File)
+    
+                                            <a href="{{ asset('uploads/'.$Exam->File) }}" download
+                                                class="btn btn-info"><i class="fas fa-download"></i> Download</a>
+                                          @endif
+                                     </td>
 
                                     </tr>
 

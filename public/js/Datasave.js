@@ -181,6 +181,8 @@ $('#saveExam').click(function(){
 
     var ExamGradesId = $(this).find('input.grade-value').attr('data-exam');
 
+    var ExamNotes = $(this).find('.examnotes').val();
+
     $.ajax({
 
         type:'GET',
@@ -194,6 +196,8 @@ $('#saveExam').click(function(){
             Evaluation:Evaluation,
 
             ExamGradesId:ExamGradesId,
+
+            ExamNotes: ExamNotes,
 
         },
 

@@ -553,6 +553,20 @@ class TrainerController extends Controller
             ]);
     }
 
+    function ExamFile(Request $request)
+    {
+        if ($request->hasFile('exam_file')) {
+            $file = $request->exam_file;
+            $name = time() . $file->getClientOriginalName();
+            $file->move(public_path('uploads'), $name);
+
+            $Exam = ExamGrades::find($request->exam);
+            $Exam->File = $name;
+            $Exam->save();
+
+            return redirect()->back()->with('added', 'File has been uploaded successfully!');
+        }
+    }
     //
     //  test
     //
@@ -752,6 +766,7 @@ if($dataPercentage){
             $ExamGradesId = $request->ExamGradesId;
             $Evaluation = $request->Evaluation;
             $ExamGrade = ExamGrades::find($ExamGradesId);
+            $ExamGrade->ExamNotes = $request->ExamNotes;
             $GradeSt = DB::table('examgrades')
             ->join('studentrounds','studentrounds.StudentRoundsId','=','examgrades.StudentRoundId')
             ->join('students','students.StudentId','=','studentrounds.StudentId')
