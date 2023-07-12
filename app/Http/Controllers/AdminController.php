@@ -407,11 +407,13 @@ class AdminController extends Controller
 
     function RoundExams(int $id)
     {
-        $Trainer = TrainerRounds::where('RoundId','=',$id)->first();
+        $TrainerRound = TrainerRounds::where('RoundId','=',$id)->first();
+        $Trainer = Trainers::find($TrainerRound->TrainerId);
+        // return $Trainer;
         $Round = Rounds::find($id);
         $TrainerCourse = TrainerCourses::where([['TrainerId', '=', $Trainer->TrainerId], ['CourseId', '=', $Round->CourseId]])->first();
 
-        $Trainer = Trainers::find($id);
+        // $Trainer = Trainers::find($id);
         $Course = Courses::find($Round->CourseId);
         $Exams = Exams::where('TrainerCoursesId', '=', $TrainerCourse->TrainerCoursesId)->get();
 
@@ -427,7 +429,7 @@ class AdminController extends Controller
                 'ActiveRounds' => AdminController::ActiveRounds(),
                 'CountNotifications' => AdminController::CountNotifications(),
                 // 'TrainerCoursesId' => $Trainer->TrainerCoursesId,
-                'TrainerId' => $Trainer->TrainerId,
+                // 'TrainerId' => $Trainer->TrainerId,
                 'CourseId' => $Course->CourseId
             ]
         );
