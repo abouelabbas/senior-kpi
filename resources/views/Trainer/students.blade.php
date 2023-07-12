@@ -29,6 +29,8 @@
             <div class="ms-panel-header">
 
               <h6>Students List </h6>
+              <a href="{{url("/Admin/Course/$Round->RoundId/Round/Exams")}}" class="btn btn-primary"> Exams</a>
+
 
             </div>
 
