@@ -16,7 +16,7 @@
 
                 <div class="ms-panel">
                     <div class="ms-panel-header">
-                        <h5>Topics </h5>
+                        <h5>Exams </h5>
                         <h6>{{$Trainer->FullnameEn}} - {{$Course->CourseNameEn}} </h6>
                     </div>
                     <div class="ms-panel-body">

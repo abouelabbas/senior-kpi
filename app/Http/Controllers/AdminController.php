@@ -265,6 +265,20 @@ class AdminController extends Controller
         $Courses = Courses::all();
         return View('Admin.course',['Courses'=>$Courses,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'Notifications'=>AdminController::Notifications()]);
     }
+
+    function ExamMarks(Request $request) {
+        foreach ($request->Grades as $key => $Grade) {
+            $ExamGrade = ExamGrades::find($Grade);
+            $ExamGrade->Grade = $request->ExamGrade[$key];
+            $ExamGrade->Evaluation = $request->Evaluation[$key];
+            $ExamGrade->ExamNotes = $request->ExamNotes[$key];
+            $ExamGrade->File = $request->ExamFile[$key];
+            $ExamGrade->save();
+
+        }
+
+        return redirect()->back();
+    }
     public function AddCourse(Request $request)
     {
         Courses::create($request->toArray());
@@ -361,6 +375,62 @@ class AdminController extends Controller
         'TrainerId' => $Trainer->TrainerId, 
         'CourseId' => $Course->CourseId
     ]);
+
+    }
+
+    function StudentRoundExams(int $rid, int $id) {
+        $Round = Rounds::find($rid);
+        $ExamGrades = DB::table('examgrades')
+        ->where([['ExamId','=',$id],['RoundId','=',$rid]])
+        ->join('studentrounds','studentrounds.StudentRoundsId','=','examgrades.StudentRoundId')
+        ->join('students','students.StudentId','=','studentrounds.StudentId')
+        ->get();
+
+        $Exam = Exams::find($id);
+        $TrainerCourse = TrainerCourses::find($Exam->TrainerCoursesId);
+        $Course = Courses::find($TrainerCourse->CourseId);
+        $Trainer = Trainers::find($TrainerCourse->TrainerId);
+        return View(
+            'Admin.edit-exam-grade',
+            [
+                'Notifications' => AdminController::Notifications(),
+                'ExamGrades' => $ExamGrades,
+                'Exam'=>$Exam,
+                'Trainer'=>$Trainer,
+                'Course'=>$Course,
+                'Round'=>$Round,
+                'ActiveRounds' => AdminController::ActiveRounds(),
+                'CountNotifications' => AdminController::CountNotifications(),
+            ]
+        );
+    }
+
+    function RoundExams(int $id)
+    {
+        $Trainer = TrainerRounds::where('RoundId','=',$id)->first();
+        $Round = Rounds::find($id);
+        $TrainerCourse = TrainerCourses::where([['TrainerId', '=', $Trainer->TrainerId], ['CourseId', '=', $Round->CourseId]])->first();
+
+        $Trainer = Trainers::find($id);
+        $Course = Courses::find($Round->CourseId);
+        $Exams = Exams::where('TrainerCoursesId', '=', $TrainerCourse->TrainerCoursesId)->get();
+
+        
+        return View(
+            'Admin.edit-exams',
+            [
+                'Notifications' => AdminController::Notifications(),
+                'Trainer' => $Trainer,
+                'Course' => $Course,
+                'Exams' => $Exams,
+                'Round'=>$Round,
+                'ActiveRounds' => AdminController::ActiveRounds(),
+                'CountNotifications' => AdminController::CountNotifications(),
+                'TrainerCoursesId' => $Trainer->TrainerCoursesId,
+                'TrainerId' => $Trainer->TrainerId,
+                'CourseId' => $Course->CourseId
+            ]
+        );
 
     }
     public function CourseTopics(int $cid, int $id)

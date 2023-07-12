@@ -36,6 +36,7 @@
             <div class="mx-4 mt-3">
               <h4 class="mb-0">Download Students List</h4>
               <a href="{{url("/Admin/Course/$Round->RoundId/Students/Report")}}" class="btn btn-success"><i class="far fa-file-excel"></i> Xlsx</a>
+              <a href="{{url("/Admin/Course/$Round->RoundId/Round/Exams")}}" class="btn btn-primary"> Exams</a>
             </div>
             <div class="ms-panel-body">
 

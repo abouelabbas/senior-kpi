@@ -50,6 +50,8 @@ Route::get('/Admin/Courses/Edit/{id}','AdminController@EditCourse');
 Route::get('/Admin/Courses/CourseDetails/{id}','AdminController@CourseDetails');
 Route::get('/Admin/Courses/{cid}/Topics/{id}', 'AdminController@CourseTopics');
 Route::get('/Admin/Courses/{cid}/Exams/{id}', 'AdminController@CourseExams');
+Route::get('/Admin/Course/{id}/Round/Exams', 'AdminController@RoundExams');
+Route::get('/Admin/{rid}/Exams/{id}/Grades', 'AdminController@StudentRoundExams');
 Route::post('/Admin/Courses/{cid}/Topics/Sheet/{id}','AdminController@CourseTopicsFromSheet');
 Route::get('/Admin/Courses/Topic/Sub/{sid}/{cid}/{id}','AdminController@deleteSubAgenda');
 Route::get('/Admin/Courses/Topics/FetchSubAgenda','AdminController@FetchSubAgenda');
@@ -95,6 +97,7 @@ Route::get('/session/task/students/{id}','AdminController@TaskProgress');
 //Admin-POST Routes
 Route::post('/Admin/Profile/Edit','AdminController@AdminProfileEditSubmit');
 Route::post('/Admin/AddCourse','AdminController@AddCourse');
+Route::post('/Admin/Exams/Grade/Submit','AdminController@ExamMarks');
 Route::post('/Admin/CoursePostEdit','AdminController@CoursePostEdit');
 Route::post('/Admin/Courses/Add/Trainer','AdminController@AddCourseTrainers');
 Route::post('/Admin/DeleteCourse','AdminController@DeleteCourse');
@@ -171,8 +174,8 @@ Route::get('/Admin/Course/DoneTopics/Delete/{RoundSubContentsId}/{RoundId}','Adm
 Route::get('/test','TrainerController@test');
 Route::get('/sessionProg','TrainerController@sessionProg');
 Route::get('/Session/{id}/Progress/File','AdminController@SessionProgressZip');
-Route::post('/Admin/ExamFile','AdminController@ExamFile');
-Route::post('/Trainer/ExamFile','TrainerController@ExamFile');
+// Route::post('/Admin/ExamFile','AdminController@ExamFile');
+// Route::post('/Trainer/ExamFile','TrainerController@ExamFile');
 Route::post('/Admin/TaskUpload','AdminController@UploadTask');
 Route::post('/Trainer/TaskUpload','TrainerController@UploadTask');
 Route::get('/ExamGrade','TrainerController@ExamGrade');
