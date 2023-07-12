@@ -756,6 +756,38 @@ if($dataPercentage){
         }
     }
 
+    function RoundExams(int $id)
+    {
+        $TrainerRound = TrainerRounds::where('RoundId', '=', $id)->first();
+        $Trainer = Trainers::find($TrainerRound->TrainerId);
+        // return $Trainer;
+        $Round = Rounds::find($id);
+        $TrainerCourse = TrainerCourses::where([['TrainerId', '=', $Trainer->TrainerId], ['CourseId', '=', $Round->CourseId]])->first();
+
+        // $Trainer = Trainers::find($id);
+        $Course = Courses::find($Round->CourseId);
+        $Exams = Exams::where('TrainerCoursesId', '=', $TrainerCourse->TrainerCoursesId)->get();
+
+
+        return View(
+            'Trainer.edit-exams',
+            [
+                'Notifications' => AdminController::Notifications(),
+                'Trainer' => $Trainer,
+                'Course' => $Course,
+                'Exams' => $Exams,
+                'Round' => $Round,
+                'TrainerRounds' => TrainerController::TrainerRounds(),
+                'HistoryRounds' => TrainerController::HistoryRounds(),
+                'CountNotifications' => AdminController::CountNotifications(),
+                // 'TrainerCoursesId' => $Trainer->TrainerCoursesId,
+                // 'TrainerId' => $Trainer->TrainerId,
+                'CourseId' => $Course->CourseId
+            ]
+        );
+
+    }
+
     //
     // student details > exam grade table mapping with (ajax)
     //
@@ -1211,7 +1243,7 @@ if($dataPercentage){
         return View(
             'Trainer.task-history',
             [
-                'ActiveRounds' => AdminController::ActiveRounds(),
+                'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),
                 'CountNotifications' => AdminController::CountNotifications(),
                 'Notifications' => AdminController::Notifications(),
                 'Task' => $Task,
@@ -1221,6 +1253,37 @@ if($dataPercentage){
                 'StudentRound' => $StudentRound,
                 'Student' => $Student,
                 'Session' => $Session,
+            ]
+        );
+    }
+
+
+    function StudentRoundExams(int $rid, int $id)
+    {
+        $Round = Rounds::find($rid);
+        $ExamGrades = DB::table('examgrades')
+            ->where([['ExamId', '=', $id], ['RoundId', '=', $rid]])
+            ->join('studentrounds', 'studentrounds.StudentRoundsId', '=', 'examgrades.StudentRoundId')
+            ->join('students', 'students.StudentId', '=', 'studentrounds.StudentId')
+            ->get();
+
+        $Exam = Exams::find($id);
+        $TrainerCourse = TrainerCourses::find($Exam->TrainerCoursesId);
+        $Course = Courses::find($TrainerCourse->CourseId);
+        $Trainer = Trainers::find($TrainerCourse->TrainerId);
+        return View(
+            'Trainer.edit-exam-grade',
+            [
+                'TrainerRounds' => TrainerController::TrainerRounds(),
+                'HistoryRounds' => TrainerController::HistoryRounds(),
+
+                'Notifications' => AdminController::Notifications(),
+                'ExamGrades' => $ExamGrades,
+                'Exam' => $Exam,
+                'Trainer' => $Trainer,
+                'Course' => $Course,
+                'Round' => $Round,
+                'CountNotifications' => AdminController::CountNotifications(),
             ]
         );
     }
@@ -1236,7 +1299,8 @@ if($dataPercentage){
         ->where('SessionId','=',$id)->get();
         
         return View('Trainer.session-prog',
-        ['TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),
+        [
+        'TrainerRounds'=>TrainerController::TrainerRounds(),'HistoryRounds'=>TrainerController::HistoryRounds(),
         'CountNotifications'=>AdminController::CountNotifications(),
         'Notifications'=>AdminController::Notifications(),
         'SessionId'=>$id,
@@ -1246,6 +1310,24 @@ if($dataPercentage){
         'Session'=>$Session
         ]);
     }
+
+
+
+    function ExamMarks(Request $request)
+    {
+        foreach ($request->Grades as $key => $Grade) {
+            $ExamGrade = ExamGrades::find($Grade);
+            $ExamGrade->Grade = $request->ExamGrade[$key];
+            $ExamGrade->Evaluation = $request->Evaluation[$key];
+            $ExamGrade->ExamNotes = $request->ExamNotes[$key];
+            $ExamGrade->File = $request->ExamFile[$key];
+            $ExamGrade->save();
+
+        }
+
+        return redirect()->back();
+    }
+
 
     public function sessionProg(Request $request)
     {

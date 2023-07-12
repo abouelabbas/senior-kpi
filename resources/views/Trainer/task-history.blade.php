@@ -1,4 +1,4 @@
-@extends('Layouts.adminkpi',['ActiveRounds'=>$ActiveRounds])
+@extends('Layouts/trainerkpi',['TrainerRounds'=>$TrainerRounds,'HistoryRounds'=>$HistoryRounds])
 
 @section('content')
 
