@@ -426,7 +426,7 @@ class AdminController extends Controller
                 'Round'=>$Round,
                 'ActiveRounds' => AdminController::ActiveRounds(),
                 'CountNotifications' => AdminController::CountNotifications(),
-                'TrainerCoursesId' => $Trainer->TrainerCoursesId,
+                // 'TrainerCoursesId' => $Trainer->TrainerCoursesId,
                 'TrainerId' => $Trainer->TrainerId,
                 'CourseId' => $Course->CourseId
             ]
