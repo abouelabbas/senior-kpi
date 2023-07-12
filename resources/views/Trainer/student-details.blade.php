@@ -367,7 +367,7 @@
 
               <div class="row">
 
-                  <div class="col-md-6">
+                  <div class="col-12">
 
                       <div class="d-flex justify-content-end">
 
@@ -504,7 +504,7 @@
 
                   </div>
 
-                  <div class="col-md-6">
+                  <div class="col-12">
 
                       <div class="d-flex justify-content-end">
 
@@ -686,77 +686,8 @@
                                                         <textarea style="resize: auto" name="examnotes" class="examnotes form-control" id="">{{ $ExamGrade->ExamNotes }}</textarea>
                                                     </td>
                                                     <td>
-                                                      @if ($ExamGrade->File)
-                                                        
-                                                        <a href="{{ asset('uploads/'.$ExamGrade->File) }}" download
-                                                            class="btn btn-info"><i class="fas fa-download"></i> Download</a>
-                                                      @endif
-                                                        <a href="#" data-toggle="modal"
-                                                            data-target="#uploadfile{{ $ExamGrade->ExamGradesId }}"
-                                                            class="btn btn-dark"><i class="fas fa-upload"></i> Upload</a>
-                                                        <div class="modal fade" id="uploadfile{{ $ExamGrade->ExamGradesId }}"
-                                                            tabindex="-1" role="dialog" aria-labelledby="NoteModal">
-
-                                                            <div class="modal-dialog modal-dialog-centered "
-                                                                role="document">
-
-                                                                <div class="modal-content">
-
-
-
-                                                                    <div class="modal-body">
-
-
-
-                                                                        <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close"><span
-                                                                                aria-hidden="true">&times;</span></button>
-
-                                                                        <div class="ms-auth-container row no-gutters">
-
-                                                                            <div class="col-12 p-5">
-
-                                                                                <form action="/Admin/ExamFile"
-                                                                                    method="POST"
-                                                                                    enctype="multipart/form-data">
-
-                                                                                    {{ csrf_field() }}
-
-
-                                                                                    <input type="hidden"
-                                                                                        class="session_id" name="exam"
-                                                                                        value="{{ $ExamGrade->ExamGradesId }}" />
-
-                                                                                    <label for="note">Exam File</label>
-                                                                                    <input type="file" name="exam_file" class="form-control">
-
-
-                                                                                    <div class="input-group text-center">
-
-                                                                                        <input type="submit"
-                                                                                            formaction="/Trainer/ExamFile"
-                                                                                            formmethod="POST"
-                                                                                            formenctype="multipart/form-data"
-                                                                                            value="upload"
-                                                                                            class="btn btn-success m-auto">
-
-                                                                                    </div>
-                                                                                </form>
-
-
-                                                                            </div>
-
-                                                                        </div>
-
-                                                                    </div>
-
-
-
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
+                                                        <textarea style="resize: auto" name="examfile" class="examfile form-control" id="">{{ $ExamGrade->File }}</textarea>
+                                                    
                                                     </td>
 
 

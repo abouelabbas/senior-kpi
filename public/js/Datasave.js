@@ -181,39 +181,37 @@ $('#saveExam').click(function(){
 
     var ExamGradesId = $(this).find('input.grade-value').attr('data-exam');
 
-    var ExamNotes = $(this).find('.examnotes').val();
+    var ExamNotes = $(this)
+      .find(".examnotes")
+      .val();
+    var ExamFile = $(this)
+      .find(".examfile")
+      .val();
 
     $.ajax({
+      type: "GET",
 
-        type:'GET',
+      url: "/ExamGrade",
 
-        url:'/ExamGrade',
+      data: {
+        Grade: Grade,
 
-        data:{
+        Evaluation: Evaluation,
 
-            Grade:Grade,
+        ExamGradesId: ExamGradesId,
 
-            Evaluation:Evaluation,
+        ExamNotes: ExamNotes,
+        ExamFile:ExamFile,
+      },
 
-            ExamGradesId:ExamGradesId,
+      success: function(data) {
+        //alert(data);
+      },
 
-            ExamNotes: ExamNotes,
-
-        },
-
-        success:function(data) {
-
-           //alert(data);
-
-        },
-
-        error: function (request, status, error) {
-
-            alert(request.responseText);
-
-        }
-
-     });
+      error: function(request, status, error) {
+        alert(request.responseText);
+      },
+    });
 
 });
 

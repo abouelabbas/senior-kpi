@@ -659,11 +659,11 @@ class TrainerController extends Controller
             ->whereIn('IsAttend', [1,2])
             ->count();
             if($all !== 0){
-$percentage = ($attend/$all)*100;
+                $percentage = ($attend/$all)*100;
             }else{
                 $percentage = 0;
             }
-            $SessionsDone = Sessions::where([['IsDone','=','1'],['RoundId','=',$StudentRound->RoundId],['IsCancelled','=',null]])->count();
+            $SessionsDone = Sessions::where([['SessionDate','<',now()],['RoundId','=',$StudentRound->RoundId],['IsCancelled','=',null]])->count();
             $TasksDone = Tasks::where([['StudentRoundId','=',$StudentRoundId],['TaskURL','!=',null]])->count();
             $dataPercentage = StudentEvaluations::where('StudentRoundId','=',$StudentRoundId)
             ->selectRaw('count(TimeRespect) as RowCount,sum(TimeRespect) as TimeRespect, sum(Lecture_Practice) as Lecture_Practice,sum(Solve_Home_Tasks) as Solve_Home_Tasks, sum(Student_Interaction) as Student_Interaction, sum(Student_Attitude) as Student_Attitude, sum(Student_Focus) as Student_Focus , sum(Understand_Speed) as Understand_Speed')
@@ -767,6 +767,7 @@ if($dataPercentage){
             $Evaluation = $request->Evaluation;
             $ExamGrade = ExamGrades::find($ExamGradesId);
             $ExamGrade->ExamNotes = $request->ExamNotes;
+            $ExamGrade->File = $request->ExamFile;
             $GradeSt = DB::table('examgrades')
             ->join('studentrounds','studentrounds.StudentRoundsId','=','examgrades.StudentRoundId')
             ->join('students','students.StudentId','=','studentrounds.StudentId')
