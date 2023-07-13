@@ -29,7 +29,8 @@
                                 Add
                             </a> --}}
                             {{-- <a href="{{url("/Admin/Course/$Round->RoundId/Students/Report")}}" class="btn btn-success"><i class="far fa-file-excel"></i> Xlsx</a> &nbsp;&nbsp; --}}
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save</button> &nbsp;&nbsp;
+                            <a href="{{url("/Admin/Round/$Round->RoundId/Exam/Report/$Exam->ExamId")}}" class="btn btn-success">Excel Sheet</a>
 
                     </div>
                             

@@ -160,6 +160,7 @@ Route::get('/Admin/Done/Track/{id}/Undo','AdminController@UndoDoneTrack');
 Route::get('/Trainer/Course/{id}/Students','TrainerController@CourseStudents');
 Route::get('/Admin/Course/{id}/Students','AdminController@CourseStudents');
 Route::get('/Admin/Course/{id}/Students/Report', 'AdminController@DownloadStudentsReport');
+Route::get('/Admin/Round/{rid}/Exam/Report/{id}', 'AdminController@DownloadExamsReport');
 Route::get('/Admin/{id}/IgnoreTast', 'AdminController@ClrSessionHasTask');
 Route::get('/Admin/{id}/SetTask', 'AdminController@SetSessionHasTask');
 Route::get('/Trainer/Course/{id}/Attendance','TrainerController@CourseAttendance');

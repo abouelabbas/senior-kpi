@@ -2134,6 +2134,84 @@ public function ConfirmCancelStudentRegisteration(int $id)
         return $response;
     }
 
+        public function DownloadExamsReport(int $rid, int $id)
+    {
+        $Round = Rounds::find($rid);
+        $Exam = Exams::find($id);
+
+        $ExamGrades = DB::table('examgrades')
+        ->where([
+            ['RoundId','=',$rid],
+            ['ExamId','=',$id]
+            ])
+        ->leftjoin('studentrounds','examgrades.StudentRoundId','=','studentrounds.StudentRoundsId')
+        ->leftjoin('students','students.StudentId','=','studentrounds.StudentId')   
+        ->get();
+
+        // return $ExamGrades;
+
+        $spreadsheet = new Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+        $worksheet->setCellValue('A1', '#')
+            ->setCellValue('B1', 'Full Name')
+            ->setCellValue('C1', 'Phone')
+            ->setCellValue('D1', 'Exam Name')
+            ->setCellValue('E1', 'Grade')
+            ->setCellValue('F1', 'Evaluation')
+            ->setCellValue('G1', 'Notes')
+            ->setCellValue('H1', 'Extra File');
+
+        $style = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => Color::COLOR_DARKBLUE,
+                ],
+                'size' => 12
+            ],
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_WHITE,
+                ],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ]
+
+        ];
+
+        // Set the width of column A
+        $worksheet->getColumnDimension('A')->setWidth(10);
+        for ($col = 'B'; $col !== 'I'; $col++) {
+            $worksheet->getColumnDimension($col)->setWidth(40);
+        }
+
+        // Set the height of row 1
+        $worksheet->getRowDimension(1)->setRowHeight(30);
+        $worksheet->getStyle('A1:H1')->applyFromArray($style);
+
+     
+        foreach ($ExamGrades as $key => $Grade) {
+            $worksheet->setCellValue('A' . ($key + 2), $key + 2)
+                ->setCellValue('B' . ($key + 2), $Grade->FullnameEn)
+                ->setCellValue('C' . ($key + 2), $Grade->Phone)
+                ->setCellValue('D' . ($key + 2), $Exam->ExamNameEn)
+                ->setCellValue('E' . ($key + 2), $Grade->Grade)
+                ->setCellValue('F' . ($key + 2), $Grade->Evaluation)
+                ->setCellValue('G' . ($key + 2), $Grade->ExamNotes)
+                ->setCellValue('H' . ($key + 2), $Grade->File);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save(public_path('Exam_'.$Exam->ExamNameEn.'_Report_Round'.$Round->GroupNo.'.xlsx'));
+
+        $pathToFile = public_path('Exam_'.$Exam->ExamNameEn.'_Report_Round'.$Round->GroupNo.'.xlsx');
+        $response = response()->download($pathToFile, 'Exam_'.$Exam->ExamNameEn.'_Report_Round'.$Round->GroupNo.'.xlsx')->deleteFileAfterSend();
+
+        return $response;
+    }
+
     public function DownloadStudentsExceptionReport(int $id)
     {
         $RoundStudents = DB::table('studentrounds')
