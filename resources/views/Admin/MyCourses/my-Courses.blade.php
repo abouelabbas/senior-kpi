@@ -47,6 +47,7 @@
                     <th></th>
 
                     <th></th>
+                    <th></th>
 
                   </thead>
 
@@ -105,6 +106,16 @@
                       <a href="/Admin/Course/{{$Round->RoundId}}/DoneTopics" class="text-info">
 
                        <i class="fas fa-thumbs-up"></i> Done Topics
+
+                      </a>
+
+                    </td>
+
+                    <td>
+
+                      <a href="{{url("/Admin/Round/$Round->RoundId/Extra")}}" class="text-info">
+
+                       <i class="fas fa-plus"></i> Extra Content
 
                       </a>
 
