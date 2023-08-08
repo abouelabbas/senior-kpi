@@ -156,7 +156,7 @@
     <li> <a href="/Student/Extra/{{$StudentRound->StudentRoundsId}}" class="bg-danger text-white">
       
       <span class="badge badge-pill badge-dark text-white">new!</span><br>
-      Round Extra Content </a></li>
+      Extra Resources </a></li>
 
                       
 
