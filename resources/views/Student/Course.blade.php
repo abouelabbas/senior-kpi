@@ -274,6 +274,15 @@
                   <i class="fa fa-upload"></i> Upload Session Practice
 
                   </a>
+                  @if($Session->PracticeURL != null)
+                  <a href="{{url($Session->PracticeURL)}}" class="btn btn-square btn-outline-info has-icon" data-toggle="modal"
+
+                      data-target="#practiceUploadModal{{$Session->SessionId}}">
+
+                  <i class="fa fa-eye"></i> View Session Practice
+
+                  </a>
+                  @endif
                       </td>
 
                     </tr>
