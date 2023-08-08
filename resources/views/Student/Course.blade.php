@@ -140,6 +140,7 @@
                     <th>Quizes</th>
 
                     <th>Tasks</th>
+                    <th>Practice</th>
 
                   </thead>
 
@@ -262,6 +263,17 @@
                   <i class="fa fa-times"></i> Cancelled Session
 
               @endif
+                      </td>
+                      <td>
+
+                        
+                    <a href="{{$Session->PracticeURL}}" class="btn btn-square btn-outline-info has-icon" data-toggle="modal"
+
+                      data-target="#practiceUploadModal{{$Session->SessionId}}">
+
+                  <i class="fa fa-upload"></i> Upload Session Practice
+
+                  </a>
                       </td>
 
                     </tr>
@@ -791,6 +803,81 @@
     </div>
 
   </div>
+
+
+<div class="modal fade" id="practiceUploadModal{{$SessionModal->SessionId}}" tabindex="-1" role="dialog" aria-labelledby="uploadtaskModal">
+
+    <div class="modal-dialog modal-dialog-centered " role="document">
+
+      <div class="modal-content">
+
+
+
+        <div class="modal-body">
+
+
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+
+              aria-hidden="true">&times;</span></button>
+
+          <div class="ms-auth-container row no-gutters">
+
+            <div class="col-12 p-5">
+
+              <form action="/Student/UploadPractice" class="form-prog" id="form-prog" method="POST" enctype="multipart/form-data">
+
+                {{ csrf_field() }}
+
+
+                <input  type="hidden" class="session_id" name="session" value="{{$SessionModal->SessionId}}" />
+
+                <input  type="hidden" class="sround_id" name="id" value="{{$StudentRoundId[0]->StudentRoundsId}}" />
+
+                <input  type="hidden" name="round" value="{{$round}}" />
+                <label for="note">PracticeLink<br/><span class="text-info"> (<i class="fab fa-google-drive"></i> Google Drive - <i class="fab fa-github"></i> Github)</span></label>
+                <input type="text" value="{{$SessionModal->PracticeURL}}" name="practice_link" class="form-control" placeholder="Enter practice link">
+  
+
+                <label for="note">Note</label>
+
+                <div class="input-group">
+
+                  <textarea name="notes" id="note" class="form-control" rows="10" placeholder="write note">{{$SessionModal->PracticeNotes}}</textarea>
+
+
+
+                </div>
+
+                <div class="input-group text-center">
+
+                  <input type="submit" value="upload" class="btn btn-success m-auto">
+
+                </div>
+                {{-- <div class="card">
+                  <div class="card-body">
+                    <label>Upload precentage : <span id="prog-perc" class="prog-perc-{{$SessionModal->SessionId}}-{{$StudentRoundId[0]->StudentRoundsId}}">0%</span></label>
+                <div class="progress">
+                  <div class="progress-bar-{{$SessionModal->SessionId}}-{{$StudentRoundId[0]->StudentRoundsId}} bg-primary" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                  </div>
+                </div> --}}
+              </form>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </div>
+
 
   <div class="modal fade" id="viewtaskModal{{$SessionModal->SessionId}}" tabindex="-1" role="dialog" aria-labelledby="uploadtaskModal">
 

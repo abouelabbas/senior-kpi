@@ -100,6 +100,42 @@ $('.changable').change(function(){
 });
 
 
+$(".p-changable").change(function() {
+    debugger;
+  $("#prog > tbody  > tr").each(function() {
+    if($(this).find("input.taskid").val() != ""){
+        var id = $(this)
+          .find("input.taskid")
+          .val(); 
+      var comment = $(this)
+        .find("textarea.comment")
+        .val();
+
+      $.ajax({
+        type: "GET",
+
+        url: "/sessionPracticeProg",
+
+        data: {
+          id: id,
+          comment: comment,
+        },
+
+        success: function(data) {
+          //console.log(data)
+        },
+
+        error: function(request, status, error) {
+          console.log(request.responseText);
+        },
+      });
+    }
+    
+  });
+
+  //alert("تم حفظ البيانات");
+  //window.location.reload();
+});
 
 
 //Grades table mapping

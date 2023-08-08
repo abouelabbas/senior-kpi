@@ -1346,6 +1346,137 @@ if($dataPercentage){
         }
 
     }
+
+    public function sessionPracticeProg(Request $request)
+    {
+        if ($request->ajax()) {
+
+            if($request->comment != null){
+                $Task = Tasks::find($request->id);
+                $Task->PracticeComment = $request->comment;
+                $Task->save();
+            }
+    
+            return "$request->comment - $request->id";
+
+        }
+
+    }
+
+    public function PracticeProgress(int $id)
+    {
+        $Session = Sessions::find($id);
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        $tasks = DB::table('tasks')
+            ->join('studentrounds', 'studentrounds.StudentRoundsId', '=', 'tasks.StudentRoundId')
+            ->join('students', 'studentrounds.StudentId', '=', 'students.StudentId')
+            ->join('grades', 'grades.TaskId', '=', 'tasks.TaskId')
+            ->where('SessionId', '=', $id)->get();
+
+        return View(
+            'Trainer.session-practice-prog',
+            [
+                'TrainerRounds' => TrainerController::TrainerRounds(),
+                'HistoryRounds' => TrainerController::HistoryRounds(),
+                'CountNotifications' => AdminController::CountNotifications(),
+                'Notifications' => AdminController::Notifications(),
+                'SessionId' => $id,
+                'Tasks' => $tasks,
+                'Round' => $Round,
+                'Course' => $Course,
+                'Session' => $Session
+            ]
+        );
+    }
+    public function SessionPracticeProgressZip(int $id)
+    {
+        $Session = $Session = Sessions::find($id);
+        $Round = Rounds::find($Session->RoundId);
+        $tasks = DB::table('tasks')
+            ->join('studentrounds', 'studentrounds.StudentRoundsId', '=', 'tasks.StudentRoundId')
+            ->join('students', 'studentrounds.StudentId', '=', 'students.StudentId')
+            ->join('grades', 'grades.TaskId', '=', 'tasks.TaskId')
+            ->where('SessionId', '=', $id)->get();
+        $spreadsheet = new Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+        $worksheet->setCellValue('A1', '#')
+            ->setCellValue('B1', 'Full Name')
+            ->setCellValue('C1', 'State')
+            ->setCellValue('D1', 'Practice Link')
+            ->setCellValue('E1', 'Practice Student Notes')
+            ->setCellValue('F1', 'Practice Given Comments');
+
+        $style = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => Color::COLOR_DARKBLUE,
+                ],
+                'size' => 12
+            ],
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_WHITE,
+                ],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ]
+
+        ];
+
+        $notsubstyle = [
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_DARKRED,
+                ],
+            ]
+
+        ];
+        $substyle = [
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_DARKGREEN,
+                ],
+            ]
+
+        ];
+
+        // Set the width of column A
+        $worksheet->getColumnDimension('A')->setWidth(10);
+        for ($col = 'B'; $col !== 'D'; $col++) {
+            $worksheet->getColumnDimension($col)->setWidth(40);
+        }
+        for ($col = 'D'; $col !== 'G'; $col++) {
+            $worksheet->getColumnDimension($col)->setWidth(80);
+        }
+
+        // Set the height of row 1
+        $worksheet->getRowDimension(1)->setRowHeight(30);
+        $worksheet->getStyle('A1:F1')->applyFromArray($style);
+        foreach ($tasks as $key => $task) {
+            $worksheet->setCellValue('A' . ($key + 2), $key + 2)
+                ->setCellValue('B' . ($key + 2), $task->FullnameEn)
+                ->setCellValue('C' . ($key + 2), $task->PracticeURL == null ? "Not Submitted" : "Submitted")
+                ->setCellValue('D' . ($key + 2), $task->PracticeURL)
+                ->setCellValue('E' . ($key + 2), $task->PracticeNotes)
+                ->setCellValue('F' . ($key + 2), $task->PracticeComment);
+
+            $worksheet->getStyle('C' . ($key + 2))->applyFromArray(($task->PracticeURL == null) ? $notsubstyle : $substyle);
+
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $pathToFile = public_path('Session_Practice__Round' . $Round->GroupNo . '_Session' . $Session->SessionNumber . '.xlsx');
+        $writer->save($pathToFile);
+
+        $response = response()->download($pathToFile, 'Session_Practice__Round' . $Round->GroupNo . '_Session' . $Session->SessionNumber . '.xlsx')->deleteFileAfterSend();
+
+        return $response;
+    }
+
     public function SessionProgressZip(int $id)
     {
         $Session = $Session = Sessions::find($id);

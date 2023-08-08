@@ -285,6 +285,43 @@
                   </div>
                   <div class="ms-panel">
                       <div class="ms-panel-header">
+                          <h6>Practice-Tracker <span class="badge badge-primary">Students who haven't submitted session practice during session week</span></h6>
+                      </div>
+                      <div class="ms-panel-body p-0" style="overflow-y:scroll;max-height:500px;">
+                          <div class="table-responsive">
+                              <table class="table table-hover thead-light">
+                                  <thead>
+                                      <tr>
+                                          <th>#</th>
+                                          <th scope="col">Course/Round</th>
+                                          <th scope="col">Student Name</th>
+                                          <th scope="col">Session Number</th>
+                                          <th scope="col">Session Date</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @php
+                                          $i = 1
+                                      @endphp
+                                      @foreach ($StudentsMissPractice as $stdPrac)
+                                          <tr>
+                                          <td>{{$i}}</td>
+                                          <td class="ms-table-f-w"> {{$stdPrac->CourseNameEn}} - {{$stdPrac->GroupNo}} </td>
+                                          <td><a href="{{url("/Admin/Course/Student/Details/$stdPrac->StudentRoundsId")}}" target="_blank"> <i class="fas fa-link"></i> {{$stdPrac->FullnameEn}}</a></td>
+                                          <td>{{$stdPrac->SessionNumber}}</td>
+                                          <td> <span class="badge badge-warning">{{$stdPrac->SessionDate}}</span></td>
+                                      </tr>
+                                      @php
+                                          $i++
+                                      @endphp
+                                      @endforeach
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="ms-panel">
+                      <div class="ms-panel-header">
                           <h6>KPI Timeline</h6>
                       </div>
                       <div class="ms-panel-body" style="overflow-y:scroll;max-height:500px;">

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\ExtraContent;
 use Illuminate\Http\Request;
 use App\StudentRounds;
 use Illuminate\Support\Facades\DB;
@@ -94,6 +95,25 @@ class StudentController extends Controller
             'Rounds'=>$Rounds,'Running'=>$RunningRounds,'Courses'=>$Courses,'Students'=>$Students,'Trainers'=>$Trainers,
             'Branches'=>$Branches,'Labs'=>$Labs,'RecentStudents'=>$RecentStudents,
             'Notifications'=>StudentController::Notifications(),'CountNotifications'=>StudentController::CountNotifications(),'StudentRounds'=>$StudentRounds]);
+    }
+
+    public function ExtraContent(int $id) {
+        $StudentRounds = StudentController::StudentRounds();
+
+        $StudentRound = StudentRounds::find($id);
+        $Round = Rounds::find($StudentRound->RoundId);
+        $Content = ExtraContent::where('RoundId', '=', $Round->RoundId)->get();
+        $Course = Courses::find($Round->CourseId);
+
+
+        return View('Student.extracontent', [
+            'Content' => $Content,
+            'Round' => $Round,
+            'Course' => $Course,
+            'Notifications'=>StudentController::Notifications(),'CountNotifications'=>StudentController::CountNotifications()
+            ,'StudentRounds'=>$StudentRounds
+
+        ]);
     }
 
     //
@@ -377,6 +397,54 @@ class StudentController extends Controller
            
         // }
         
+    }
+    public function UploadPractice(Request $request)
+    {
+        // if($request->hasFile('task')){
+        //$request->ImagePath->storeAs('/public/uploads',$filename);
+        $TaskId = $request->TaskId;
+        // $round = $request->round;
+        $StudentRoundId = $request->id;
+
+        $StudentRound = StudentRounds::find($StudentRoundId);
+        $Round = Rounds::find($StudentRound->RoundId);
+        $Student = Students::find($StudentRound->StudentId);
+
+        $Session = $request->session;
+
+        $Task = Tasks::where([
+            ['StudentRoundId', '=', $StudentRoundId],
+            ['SessionId', '=', $Session]
+        ])->first();
+
+        // if($Task->TaskURL){
+        //     if(file_exists(storage_path("app/public/".$Task->TaskURL))){
+        //         unlink(storage_path("app/public/" . $Task->TaskURL));
+        //     }
+        // }
+        $Session = Sessions::find($Task->SessionId);
+        // $filename = $request->task->storeAs('/public/uploads/round'. $StudentRound->RoundId .'/session'.$Task->SessionId ,"$Student->FullnameEn"."_round_"."$Round->GroupNo"."_session_"."$Session->SessionNumber"."_" .$request->file('task')->getClientOriginalName() ,['disk' => 'public']);
+
+
+
+        //storing task
+        // $Task = Tasks::where([
+        //     ['StudentRoundId','=',$StudentRoundId],
+        //     ['SessionId','=',$Session]
+        // ])->first();
+        $Task->PracticeURL = $request->practice_link;
+        $Task->PracticeNotes = $request->notes;
+        // $Task->TaskDate = date("Y-m-d");
+        // $Task->IsGrade = 1;
+        $Task->save();
+        // return $Task;
+
+
+
+        return Redirect::to("/Student/Course/$Round->RoundId");
+
+        // }
+
     }
 
     //trainer center evaluations

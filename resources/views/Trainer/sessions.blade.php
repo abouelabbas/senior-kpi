@@ -58,6 +58,7 @@
         <th class="text-left">Quiz</th>
 
         <th class="text-left">Task</th>
+        <th class="text-left">Practice</th>
 
         
 
@@ -259,6 +260,20 @@
               @endif
               @endif
             </td>
+                                    <td>
+                          @if ($Session->SessionDate < date('Y-m-d'))
+                            <a href='{{url("Trainer/Session/Practice/Students/$Session->SessionId")}}' class="btn btn-square btn-outline-primary has-icon" >
+
+
+
+                            <i class="fa fa-cog"></i> 
+
+
+                          Practice progress
+
+                        </a>
+                          @endif
+                        </td>
 
           </tr>
 

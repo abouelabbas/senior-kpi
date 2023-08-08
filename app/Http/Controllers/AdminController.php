@@ -11,6 +11,7 @@ use App\Courses;
 use App\ExamGrades;
 use App\Exams;
 use App\Exceptions;
+use App\ExtraContent;
 use App\Grades;
 use App\Labs;
 use App\Notifications;
@@ -230,6 +231,21 @@ class AdminController extends Controller
         ->orderBy('sessions.SessionDate','ASC')
         ->get();
 
+        $StudentsMissPractice = DB::table('tasks')
+            ->join('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
+            ->join('rounds', 'rounds.RoundId', '=', 'sessions.RoundId')
+            ->join('courses', 'courses.CourseId', '=', 'rounds.CourseId')
+            ->join('studentrounds', 'studentrounds.StudentRoundsId', '=', 'tasks.StudentRoundId')
+            ->join('students', 'students.StudentId', '=', 'studentrounds.StudentId')
+            ->where([
+                ["PracticeURL", '=', null],
+                ['sessions.SessionDate', '<=', Carbon::now()->subDays(7)]
+            ])
+            ->where('Done', '=', 1)
+            ->where("rounds.EndDate", '>=', Carbon::now())
+            ->orderBy('sessions.SessionDate', 'ASC')
+            ->get();
+
         // students who has tasks of sessions has tasks uploaded 5 days ago and not graded
         $StudentsGradingAwaits = DB::table('tasks')
         ->join('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
@@ -254,9 +270,91 @@ class AdminController extends Controller
             'SessionsNeedAction'=>$SessionsNotSubmitted,
             'StudentsNotAttended'=>$StudentsNotAttended,
             'StudentsMissTasks'=>$StudentsMissTasks,
+            'StudentsMissPractice'=>$StudentsMissPractice,
             'StudentsGradingAwaits'=>$StudentsGradingAwaits,
             'Trainers'=>$Trainers,'Rounds'=>$Rounds,'Courses'=>$Courses,'Students'=>$Students,'Running'=>$RunningRounds,
             'ActiveRounds'=>AdminController::ActiveRounds(),'Notifications'=>AdminController::Notifications(),'CountNotifications'=>AdminController::CountNotifications()]);
+    }
+
+
+    // ExtraContent
+    public function ExtraContentIndex(int $id) {
+        $Content = ExtraContent::where('RoundId', '=', $id)->get();
+        $Round = Rounds::find($id);
+        $Course = Courses::find($Round->CourseId);
+
+
+        return View('Admin.MyCourses.extracontent', [
+            'Content' => $Content,
+            'Round' => $Round,
+            'Course' => $Course,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]);
+    
+    }
+
+    public function AddExtraContent(int $id) {
+        $Round = Rounds::find($id);
+        $Course = Courses::find($Round->CourseId);
+
+        return View('Admin.MyCourses.extracontent-create', [
+            'Round' => $Round,
+            'Course' => $Course,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]); 
+    }
+    public function EditExtraContent(int $id)
+    {
+        $Content = ExtraContent::find($id);
+        $Round = Rounds::find($Content->RoundId);
+        $Course = Courses::find($Round->CourseId);
+
+        return View('Admin.MyCourses.extracontent-edit', [
+            'Content'=>$Content,
+            'Round' => $Round,
+            'Course' => $Course,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]);
+    }
+
+    public function DeleteExtraContent(int $id)
+    {
+        $Content = ExtraContent::find($id);
+        $Content->delete();
+
+        return redirect()->back()->with('status', 'Content has been deleted successfully!');
+    }
+
+    public function CreateExtraContent(Request $request)
+    {
+        $Round = Rounds::find($request->RoundId);
+        $ExtraContent = new ExtraContent();
+        $ExtraContent->ContentName = $request->ContentName;
+        $ExtraContent->RoundId = $request->RoundId;
+        $ExtraContent->ContentURL = $request->ContentURL;
+        $ExtraContent->Level = $request->Level;
+        $ExtraContent->Type = $request->Type;
+        $ExtraContent->save();
+
+        return redirect()->to("/Admin/Round/$Round->RoundId/Extra")->with('status', 'Content has been created successfully!');
+    }
+
+    public function UpdateExtraContent(Request $request)
+    {
+        $ExtraContent = ExtraContent::find($request->ContentId);
+        $ExtraContent->ContentName = $request->ContentName;
+        $ExtraContent->ContentURL = $request->ContentURL;
+        $ExtraContent->Level = $request->Level;
+        $ExtraContent->Type = $request->Type;
+        $ExtraContent->save();
+
+        return redirect()->to("/Admin/Round/$ExtraContent->RoundId/Extra")->with('status', 'Content has been updated successfully!');
     }
 
     //Admin courses handling
@@ -3106,6 +3204,32 @@ public function StudentResetPassword(Request $request)
         ]);
     }
 
+    public function PracticeProgress(int $id)
+    {
+        $Session = Sessions::find($id);
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        $tasks = DB::table('tasks')
+            ->join('studentrounds', 'studentrounds.StudentRoundsId', '=', 'tasks.StudentRoundId')
+            ->join('students', 'studentrounds.StudentId', '=', 'students.StudentId')
+            ->join('grades', 'grades.TaskId', '=', 'tasks.TaskId')
+            ->where('SessionId', '=', $id)->get();
+
+        return View(
+            'Admin.MyCourses.session-practice-prog',
+            [
+                'ActiveRounds' => AdminController::ActiveRounds(),
+                'CountNotifications' => AdminController::CountNotifications(),
+                'Notifications' => AdminController::Notifications(),
+                'SessionId' => $id,
+                'Tasks' => $tasks,
+                'Round' => $Round,
+                'Course' => $Course,
+                'Session' => $Session
+            ]
+        );
+    }
+
     public function sessionProg(Request $request)
     {
         if($request->ajax()){
@@ -3204,4 +3328,92 @@ public function StudentResetPassword(Request $request)
 
         return $response;
     }
+    public function SessionPracticeProgressZip(int $id)
+    {
+        $Session = $Session = Sessions::find($id);
+        $Round = Rounds::find($Session->RoundId);
+        $tasks = DB::table('tasks')
+            ->join('studentrounds', 'studentrounds.StudentRoundsId', '=', 'tasks.StudentRoundId')
+            ->join('students', 'studentrounds.StudentId', '=', 'students.StudentId')
+            ->join('grades', 'grades.TaskId', '=', 'tasks.TaskId')
+            ->where('SessionId', '=', $id)->get();
+        $spreadsheet = new Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+        $worksheet->setCellValue('A1', '#')
+            ->setCellValue('B1', 'Full Name')
+            ->setCellValue('C1', 'State')
+            ->setCellValue('D1', 'Practice Link')
+            ->setCellValue('E1', 'Practice Student Notes')
+            ->setCellValue('F1', 'Practice Given Comments');
+
+        $style = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => Color::COLOR_DARKBLUE,
+                ],
+                'size' => 12
+            ],
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_WHITE,
+                ],
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ]
+
+        ];
+
+        $notsubstyle = [
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_DARKRED,
+                ],
+            ]
+
+        ];
+        $substyle = [
+            'font' => [
+                'color' => [
+                    'argb' => Color::COLOR_DARKGREEN,
+                ],
+            ]
+
+        ];
+
+        // Set the width of column A
+        $worksheet->getColumnDimension('A')->setWidth(10);
+        for ($col = 'B'; $col !== 'D'; $col++) {
+            $worksheet->getColumnDimension($col)->setWidth(40);
+        }
+        for ($col = 'D'; $col !== 'G'; $col++) {
+            $worksheet->getColumnDimension($col)->setWidth(80);
+        }
+
+        // Set the height of row 1
+        $worksheet->getRowDimension(1)->setRowHeight(30);
+        $worksheet->getStyle('A1:F1')->applyFromArray($style);
+        foreach ($tasks as $key => $task) {
+            $worksheet->setCellValue('A' . ($key + 2), $key + 2)
+                ->setCellValue('B' . ($key + 2), $task->FullnameEn)
+                ->setCellValue('C' . ($key + 2), $task->PracticeURL == null ? "Not Submitted" : "Submitted")
+                ->setCellValue('D' . ($key + 2), $task->PracticeURL)
+                ->setCellValue('E' . ($key + 2), $task->PracticeNotes)
+                ->setCellValue('F' . ($key + 2), $task->PracticeComment);
+
+            $worksheet->getStyle('C' . ($key + 2))->applyFromArray(($task->PracticeURL == null) ? $notsubstyle : $substyle);
+
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $pathToFile = public_path('Session_Practice__Round' . $Round->GroupNo . '_Session' . $Session->SessionNumber . '.xlsx');
+        $writer->save($pathToFile);
+
+        $response = response()->download($pathToFile, 'Session_Practice__Round' . $Round->GroupNo . '_Session' . $Session->SessionNumber . '.xlsx')->deleteFileAfterSend();
+
+        return $response;
+    }
+    
 }

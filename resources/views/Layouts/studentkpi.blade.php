@@ -153,6 +153,10 @@
     <li> <a href="/Student/Attendance/{{$StudentRound->StudentRoundsId}}">Attendence & Eval</a> </li>
 
     <li> <a href="/Student/TrainerCenter/{{$StudentRound->StudentRoundsId}}">Trainer-Center Eval</a> </li>
+    <li> <a href="/Student/Extra/{{$StudentRound->StudentRoundsId}}" class="bg-danger text-white">
+      
+      <span class="badge badge-pill badge-dark text-white">new!</span><br>
+      Round Extra Content </a></li>
 
                       
 
