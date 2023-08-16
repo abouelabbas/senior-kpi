@@ -135,6 +135,8 @@ Route::post('/Admin/Students/ResetPassword','AdminController@StudentResetPasswor
 //Student Routes
 Route::get('/Student','StudentController@Index');
 Route::get('/Student/Course/{id}', 'StudentController@CourseProgress');
+Route::post('/Student/ExtraTask/Submission', 'StudentController@ExtraTaskSubmission');
+Route::get('/Student/Course/{sid}/ExtraTasks/{id}', 'StudentController@CourseExtraTasks');
 Route::get('/Student/Extra/{id}','StudentController@ExtraContent');
 Route::get('/Student/Attendance/{id}','StudentController@AttendanceEvaluation');
 Route::get('/Student/Profile','StudentController@Profile');
@@ -159,6 +161,7 @@ Route::get('/Trainer/session/task/students/{id}','TrainerController@TaskProgress
 
 //other face
 Route::get('/Admin/Courses/{id}','AdminController@CourseProgress');
+Route::get('/Admin/Student/{srid}/ExtraTasks/{sid}','AdminController@StudentExtraTasks');
 Route::get('/Admin/Done/Track/{id}','AdminController@DoneTrack');
 Route::get('/Admin/Done/Track/{id}/Undo','AdminController@UndoDoneTrack');
 Route::get('/Trainer/Course/{id}/Students','TrainerController@CourseStudents');
@@ -184,11 +187,23 @@ Route::get('/sessionProg','TrainerController@sessionProg');
 Route::get('/sessionPracticeProg', 'TrainerController@sessionPracticeProg');
 Route::get('/Session/{id}/Progress/File', 'AdminController@SessionProgressZip');
 Route::get('/Admin/Round/{id}/Extra', 'AdminController@ExtraContentIndex');
+Route::get('/Admin/Round/{id}/ExtraTasks/{sid}', 'AdminController@ExtraTaskIndex');
+Route::get('/Trainer/Round/{id}/ExtraTasks/{sid}', 'TrainerController@ExtraTaskIndex');
 Route::get('/Admin/Content/{id}/Add', 'AdminController@AddExtraContent');
+Route::get('/Trainer/ExtraTask/{id}/Add/{sid}', 'TrainerController@AddExtraTask');
+Route::get('/Admin/ExtraTask/{id}/Add/{sid}', 'AdminController@AddExtraTask');
+Route::get('/Trainer/ExtraTask/{id}/Edit', 'TrainerController@EditExtraTask');
+Route::get('/Admin/ExtraTask/{id}/Edit', 'AdminController@EditExtraTask');
 Route::get('/Admin/Content/{id}/Edit', 'AdminController@EditExtraContent');
 Route::get('/Admin/Content/{id}/Delete', 'AdminController@DeleteExtraContent');
+Route::get('/Admin/ExtraTask/{id}/Delete', 'AdminController@DeleteExtraTask');
+Route::get('/Trainer/ExtraTask/{id}/Delete', 'TrainerController@DeleteExtraTask');
 Route::post('/Admin/ExtraContent/Create', 'AdminController@CreateExtraContent');
+Route::post('/Admin/ExtraTask/Create', 'AdminController@CreateExtraTask');
+Route::post('/Trainer/ExtraTask/Create', 'TrainerController@CreateExtraTask');
 Route::post('/Admin/ExtraContent/Edit', 'AdminController@UpdateExtraContent');
+Route::post('/Admin/ExtraTask/Edit', 'AdminController@UpdateExtraTask');
+Route::post('/Trainer/ExtraTask/Edit', 'TrainerController@UpdateExtraTask');
 Route::get('/Admin/Session/{id}/Practice/File', 'AdminController@SessionPracticeProgressZip');
 
 Route::get('/Trainer/Session/{id}/Practice/File','TrainerController@SessionPracticeProgressZip');

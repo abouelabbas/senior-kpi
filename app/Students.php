@@ -10,7 +10,24 @@ class Students extends Model
     protected $table = "students";
     protected $primaryKey = 'StudentId';
     public $timestamps = false;
-    protected $fillable = ['FullnameAr','FullnameEn','Email','Phone','Password','Birthdate','Company','Job','ImagePath','AdditionalNotes'];
+    protected $fillable = [
+        'FullnameAr',
+        'FullnameEn',
+        'Email',
+        'Phone',
+        'Password',
+        'Birthdate',
+        'Company',
+        'Job',
+        'ImagePath',
+        'AdditionalNotes',
+        'Facebook',
+        'Linkedin',
+        'Wuzzuf',
+        'GithubLink',
+        'CertificateName',
+        'PersonalEmail'
+    ];
 
     public function rounds() {
         return $this->belongsToMany('App\Round', 'studentrounds')->withPivot('StudentRoundId','StudentId','RoundId');

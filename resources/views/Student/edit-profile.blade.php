@@ -187,7 +187,132 @@
         </div>
 
          
+          <div class="col-md-6 mb-3">
 
+            <label for="phone">Certificate Name</label>
+
+            <div class="input-group">
+
+                <div class="input-group-prepend">
+
+                    <span class="input-group-text"><i class="fas fa-certificate"></i></span>
+
+                </div>
+
+              <input type="text" name="CertificateName" value="{{$Student->CertificateName}}" class="form-control" id="phone" placeholder="Student Certificate Name">
+
+
+            </div>
+
+        </div>
+
+        
+          <div class="col-md-6 mb-3">
+
+            <label for="phone">Linkedin Profile</label>
+
+            <div class="input-group">
+
+                <div class="input-group-prepend">
+
+                    <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+
+                </div>
+
+              <input type="text" name="Linkedin" value="{{$Student->Linkedin}}" class="form-control" id="phone" placeholder="Linkedin Profile">
+
+
+            </div>
+
+        </div>
+
+
+        
+        
+          <div class="col-md-6 mb-3">
+
+            <label for="phone">GitHub Profile</label>
+
+            <div class="input-group">
+
+                <div class="input-group-prepend">
+
+                    <span class="input-group-text"><i class="fab fa-github"></i></span>
+
+                </div>
+
+              <input type="text" name="GithubLink" value="{{$Student->GithubLink}}" class="form-control" id="phone" placeholder="GitHub Profile">
+
+
+            </div>
+
+        </div>
+
+        
+
+        
+        
+          <div class="col-md-6 mb-3">
+
+            <label for="phone">Wuzzuf Profile</label>
+
+            <div class="input-group">
+
+                <div class="input-group-prepend">
+
+                    <span class="input-group-text"><i class="fas fa-link"></i></span>
+
+                </div>
+
+              <input type="text" name="Wuzzuf" value="{{$Student->Wuzzuf}}" class="form-control" id="" placeholder="Wuzzuf Profile">
+
+
+            </div>
+
+        </div>
+        
+        
+          <div class="col-md-6 mb-3">
+
+            <label for="phone">Personal Email</label>
+
+            <div class="input-group">
+
+              <div class="input-group-prepend">
+
+                  <span class="input-group-text"><i class="fas fa-link"></i></span>
+
+              </div>
+
+              <input type="text" name="PersonalEmail" value="{{$Student->PersonalEmail}}" class="form-control" id="" placeholder="Personal Email">
+
+
+            </div>
+
+        </div>
+
+
+        
+        
+          <div class="col-md-6 mb-3">
+
+            <label for="phone">Facebook Profile</label>
+
+            <div class="input-group">
+
+                <div class="input-group-prepend">
+
+                    <span class="input-group-text"><i class="fab fa-facebook-square"></i></span>
+
+                </div>
+
+              <input type="text" name="Facebook" value="{{$Student->Facebook}}" class="form-control" id="" placeholder="Facebook Profile">
+
+
+            </div>
+
+        </div>
+        
           <div class="col-md-6 mb-3">
 
             <label for="Job">Job</label>

@@ -359,6 +359,7 @@
 
                                         <th>Download Task</th>
                                         <th>Task notes</th>
+                                        <th>Extra Tasks</th>
 
 
 
@@ -447,6 +448,9 @@
                                                             @endif
 
                                                         </td>
+                                                        <td>
+                                                            <a href="{{url("/Admin/Student/$StudentRound->StudentRoundsId/ExtraTasks/$Session->SessionId")}}" class="btn btn-primary">Extra Tasks</a>
+                                                        </td>
 
                                                     </form>
                                                 </tr>
@@ -464,6 +468,7 @@
 
                                                         <td colspan="6" class="bg-warning text-white text-center">
                                                             Session doesn't have task</td>
+                                                        
                                                 </tr>
                                             @endif
                                         @endif

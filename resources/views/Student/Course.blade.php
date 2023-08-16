@@ -141,6 +141,7 @@
 
                     <th>Tasks</th>
                     <th>Practice</th>
+                    <th>Extra Tasks</th>
 
                   </thead>
 
@@ -283,6 +284,16 @@
 
                   </a>
                   @endif
+                      </td>
+
+                      <td>
+
+                        
+                    <a href="{{url("/Student/Course/" . $StudentRoundId[0]->StudentRoundsId . "/ExtraTasks/$Session->SessionId")}}" class="btn btn-square btn-outline-info has-icon">
+
+                  <i class="fas fa-link"></i> Extra Tasks Page
+
+                  </a>
                       </td>
 
                     </tr>

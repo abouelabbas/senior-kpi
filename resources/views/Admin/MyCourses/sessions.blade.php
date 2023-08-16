@@ -55,6 +55,7 @@
                     <th class="text-left">Task</th>
                     <th class="text-left">Practice</th>
 
+                    <th class="text-left">Extra Tasks</th>
                     
 
                   </thead>
@@ -284,6 +285,20 @@
                         </a>
                           @endif
                         </td>
+
+                        <td>
+                            <a href='{{url("Admin/Round/$Round->RoundId/ExtraTasks/$Session->SessionId")}}' class="btn btn-square btn-outline-primary has-icon" >
+
+
+
+                            <i class="fa fa-cog"></i> 
+
+
+                            ExtraTasks
+
+                        </a>
+                        </td>
+                        
 
                       </tr>
 

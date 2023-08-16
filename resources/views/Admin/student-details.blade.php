@@ -51,6 +51,83 @@
                                                <input disabled type="text" name="Whatsapp" value="{{$Student->Whatsapp}}" class="form-control" id="student_Whatsapp" placeholder="Student Whatsapp">
                                             </div>
                                         </div>
+
+                                                                                
+                              
+                              <div class=" form-group col-md-6">
+
+                                  <label  >Certificate Name</label>
+
+                                  <div class="input-group">
+
+                                     <input type="text" name="CertificateName" disabled value="{{$Student->CertificateName}}" class="form-control" id="student_Whatsapp" placeholder="Student Certificate Name">
+
+                                  </div>
+
+                              </div>
+
+                              <div class=" form-group col-md-6">
+
+                                  <label  >GitHub Link</label>
+
+                                  <div class="input-group">
+
+                                     <input type="text" name="GithubLink" disabled value="{{$Student->GithubLink}}" class="form-control" id="student_Whatsapp" placeholder="Student GitHub Link">
+
+                                  </div>
+
+                              </div>
+
+                              
+                              <div class=" form-group col-md-6">
+
+                                  <label  >Linkedin</label>
+
+                                  <div class="input-group">
+
+                                     <input type="text" name="Linkedin" disabled value="{{$Student->Linkedin}}" class="form-control" id="student_Whatsapp" placeholder="Student LinkedIn Profile">
+
+                                  </div>
+
+                              </div>
+                              
+                              <div class=" form-group col-md-6">
+
+                                  <label  >Wuzzuf Link</label>
+
+                                  <div class="input-group">
+
+                                     <input type="text" name="Wuzzuf" disabled value="{{$Student->Wuzzuf}}" class="form-control" id="student_Whatsapp" placeholder="Student Wuzzuf Profile">
+
+                                  </div>
+
+                              </div>
+
+{{--                               
+                              <div class=" form-group col-md-6">
+
+                                  <label  >Facebook</label>
+
+                                  <div class="input-group">
+
+                                     <input type="text" name="Facebook" value="{{$Student->Facebook}}" class="form-control" id="student_Whatsapp" placeholder="Student Whatsapp">
+
+                                  </div>
+
+                              </div> --}}
+                              
+                              <div class=" form-group col-md-6">
+
+                                  <label  >Personal Email (Formal)</label>
+
+                                  <div class="input-group">
+
+                                     <input type="text" name="PersonalEmail" disabled value="{{$Student->PersonalEmail}}" class="form-control" id="student_Whatsapp" placeholder="Student Personal Email">
+
+                                  </div>
+
+                              </div>
+
                                         {{-- <div class=" form-group col-md-6">
                                             <label  >Student Phone</label>
                                             <div class="input-group">

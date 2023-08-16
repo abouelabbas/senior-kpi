@@ -12,6 +12,8 @@ use App\ExamGrades;
 use App\Exams;
 use App\Exceptions;
 use App\ExtraContent;
+use App\ExtraTasks;
+use App\ExtraTaskSubmissions;
 use App\Grades;
 use App\Labs;
 use App\Notifications;
@@ -294,6 +296,24 @@ class AdminController extends Controller
         ]);
     
     }
+    public function ExtraTaskIndex(int $id, int $sid)
+    {
+        $Tasks = ExtraTasks::where('SessionId', '=', $sid)->get();
+        $Round = Rounds::find($id);
+        $Course = Courses::find($Round->CourseId);
+        $Session = Sessions::find($sid);
+
+        return View('Admin.MyCourses.extratasks', [
+            'Tasks' => $Tasks,
+            'Round' => $Round,
+            'Course' => $Course,
+            'Session' => $Session,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]);
+
+    }
 
     public function AddExtraContent(int $id) {
         $Round = Rounds::find($id);
@@ -302,6 +322,21 @@ class AdminController extends Controller
         return View('Admin.MyCourses.extracontent-create', [
             'Round' => $Round,
             'Course' => $Course,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]); 
+    }
+
+    public function AddExtraTask(int $id, int $sid) {
+        $Round = Rounds::find($id);
+        $Course = Courses::find($Round->CourseId);
+        $Session = Sessions::find($sid);
+
+        return View('Admin.MyCourses.extratask-create', [
+            'Round' => $Round,
+            'Course' => $Course,
+            'Session' => $Session,
             'ActiveRounds' => AdminController::ActiveRounds(),
             'Notifications' => AdminController::Notifications(),
             'CountNotifications' => AdminController::CountNotifications()
@@ -322,6 +357,23 @@ class AdminController extends Controller
             'CountNotifications' => AdminController::CountNotifications()
         ]);
     }
+    public function EditExtraTask(int $id)
+    {
+        $Task = ExtraTasks::find($id);
+        // $Round = Rounds::find($Content->RoundId);
+        $Session = Sessions::find($Task->SessionId);
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+
+        return View('Admin.MyCourses.extratask-edit', [
+            'Task' => $Task,
+            'Round' => $Round,
+            'Course' => $Course,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]);
+    }
 
     public function DeleteExtraContent(int $id)
     {
@@ -329,6 +381,19 @@ class AdminController extends Controller
         $Content->delete();
 
         return redirect()->back()->with('status', 'Content has been deleted successfully!');
+    }
+
+    public function DeleteExtraTask(int $id)
+    {
+        $Task = ExtraTasks::find($id);
+        $Subs = ExtraTaskSubmissions::where('ExtraTaskId', '=', $id)->count();
+        if($Subs > 0)
+        {
+            return redirect()->back()->with('error', 'You can not delete this task because there are submissions for it!');
+        }
+        $Task->delete();
+
+        return redirect()->back()->with('status', 'Task has been deleted successfully!');
     }
 
     public function CreateExtraContent(Request $request)
@@ -345,6 +410,20 @@ class AdminController extends Controller
         return redirect()->to("/Admin/Round/$Round->RoundId/Extra")->with('status', 'Content has been created successfully!');
     }
 
+    public function CreateExtraTask(Request $request)
+    {
+        $Round = Rounds::find($request->RoundId);
+        $ExtraTask = new ExtraTasks();
+        $ExtraTask->ExtraTaskLink = $request->ExtraTaskLink;
+        $ExtraTask->SessionId = $request->SessionId;
+        $ExtraTask->ExtraTaskDesc = $request->ExtraTaskDesc;
+        $ExtraTask->ExtraTaskLevel = $request->ExtraTaskLevel;
+        // $ExtraTask->Type = $request->Type;
+        $ExtraTask->save();
+
+        return redirect()->to("/Admin/Round/$Round->RoundId/ExtraTasks/$request->SessionId")->with('status', 'Extra Task has been created successfully!');
+    }
+
     public function UpdateExtraContent(Request $request)
     {
         $ExtraContent = ExtraContent::find($request->ContentId);
@@ -355,6 +434,19 @@ class AdminController extends Controller
         $ExtraContent->save();
 
         return redirect()->to("/Admin/Round/$ExtraContent->RoundId/Extra")->with('status', 'Content has been updated successfully!');
+    }
+
+    public function UpdateExtraTask(Request $request)
+    {
+        $ExtraTask = ExtraTasks::find($request->ExtraTaskId);
+        $ExtraTask->ExtraTaskLink = $request->ExtraTaskLink;
+        $ExtraTask->ExtraTaskDesc = $request->ExtraTaskDesc;
+        $ExtraTask->ExtraTaskLevel = $request->ExtraTaskLevel;
+        $ExtraTask->save();
+        $Session = Sessions::find($ExtraTask->SessionId);
+        $Round = Rounds::find($Session->RoundId);
+
+        return redirect()->to("/Admin/Round/$Round->RoundId/ExtraTasks/$Session->SessionId")->with('status', 'Extra task has been updated successfully!');
     }
 
     //Admin courses handling
@@ -2020,6 +2112,11 @@ $TrainerRound->save();
         $Student->Company = $request->Company;
         $Student->Facebook = $request->Facebook;
         $Student->AdditionalNotes = $request->AdditionalNotes;
+        $Student->Wuzzuf = $request->Wuzzuf;
+        $Student->Linkedin = $request->Linkedin;
+        $Student->PersonalEmail = $request->PersonalEmail;
+        $Student->CertificateName = $request->CertificateName;
+        $Student->GithubLink = $request->GithubLink;
         if($request->hasFile('ImagePath')){
             if($request->ImagePath){
                 $filename = $request->ImagePath->store('/Students/Profiles',['disk' => 'public']);
@@ -2065,6 +2162,11 @@ $TrainerRound->save();
         $Student->Nationality = $request->Nationality;
         $Student->Phone = $request->Phone;
         $Student->Whatsapp = $request->Whatsapp;
+        $Student->Wuzzuf = $request->Wuzzuf;
+        $Student->Linkedin = $request->Linkedin;
+        $Student->PersonalEmail = $request->PersonalEmail;
+        $Student->CertificateName = $request->CertificateName;
+        $Student->GithubLink = $request->GithubLink;
         if($request->Birthdate){
             $Student->Birthdate = $request->Birthdate;
         }
@@ -2379,7 +2481,45 @@ public function ConfirmCancelStudentRegisteration(int $id)
 
         return $response;
     }
+    public function StudentExtraTasks(int $srid, int $sid){
+        $StudentRound = StudentRounds::find($srid);
+        $Round = Rounds::find($StudentRound->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        $Session = Sessions::find($sid);
+        $Tasks = DB::table('extratasks')
+            ->select([
+                'extratasks.ExtraTaskId',
+                'SessionId',
+                'ExtraTaskLink',
+                'ExtraTaskDesc',
+                'ExtraTaskType',
+                'ExtraTaskLevel',
+                'ExtraTaskDate',
+                'SubmissionId',
+                'SubmissionLink',
+                'SubmissionNotes',
+                'SubmissionComment',
+                'SubmissionGrade',
+                'StudentRoundId'
+            ])
+            ->leftJoin('extratasksubmissions', 'extratasksubmissions.ExtraTaskId', '=', 'extratasks.ExtraTaskId')
+            ->where('SessionId', '=', $sid)->get();
 
+        // return $Tasks;
+        return view('Admin.MyCourses.extratasks-std',[
+            'Tasks'=>$Tasks,
+            'Round'=>$Round,
+            'Session'=>$Session,
+            'Course'=>$Course,
+            'StudentRound'=>$StudentRound,
+            'StudentRoundId'=>$srid,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'CountNotifications' => AdminController::CountNotifications(),
+            'Notifications' => AdminController::Notifications(),
+
+        ]);
+
+    }
     public function StudentDetails(int $id)
     {
         $StudentRound = StudentRounds::find($id);

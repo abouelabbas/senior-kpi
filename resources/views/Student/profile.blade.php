@@ -216,7 +216,49 @@
 
                                         </tr>
 
+                                        <tr>
 
+                                            <th scope="row">Certificate Name</th>
+
+                                            <td colspan="3">{{$Student->CertificateName}}</td>
+
+                                        </tr>
+                                        
+                                        <tr>
+
+                                            <th scope="row">Linkedin Profile</th>
+
+                                            <td colspan="3">{{$Student->Linkedin}}</td>
+
+                                        </tr>
+
+                                        
+                                        <tr>
+
+                                            <th scope="row">GitHub Profile</th>
+
+                                            <td colspan="3">{{$Student->GithubLink}}</td>
+
+                                        </tr>
+
+                                        
+                                        <tr>
+
+                                            <th scope="row">Wuzzuf Profile</th>
+
+                                            <td colspan="3">{{$Student->Wuzzuf}}</td>
+
+                                        </tr>
+                                        
+
+
+                                        <tr>
+
+                                            <th scope="row">Personal Email</th>
+
+                                            <td colspan="3">{{$Student->PersonalEmail}}</td>
+
+                                        </tr>
 
                                        
 

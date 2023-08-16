@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\ExtraTasks;
+use App\ExtraTaskSubmissions;
 use App\TaskHistory;
 use Illuminate\Http\Request;
 use App\TrainerRounds;
@@ -1477,6 +1479,145 @@ if($dataPercentage){
         return $response;
     }
 
+
+    public function ExtraTaskIndex(int $id, int $sid)
+    {
+        $Tasks = ExtraTasks::where('SessionId', '=', $sid)->get();
+        $Round = Rounds::find($id);
+        $Course = Courses::find($Round->CourseId);
+        $Session = Sessions::find($sid);
+
+        return View('Trainer.extratasks', [
+            'Tasks' => $Tasks,
+            'Round' => $Round,
+            'Course' => $Course,
+            'Session' => $Session,
+
+            'TrainerRounds' => TrainerController::TrainerRounds(),
+            'HistoryRounds' => TrainerController::HistoryRounds(),
+            'CountNotifications' => AdminController::CountNotifications(),
+            'Notifications' => AdminController::Notifications(),
+        ]);
+
+    }
+    
+    public function AddExtraTask(int $id, int $sid) {
+        $Round = Rounds::find($id);
+        $Course = Courses::find($Round->CourseId);
+        $Session = Sessions::find($sid);
+
+        return View('Trainer.extratask-create', [
+            'Round' => $Round,
+            'Course' => $Course,
+            'Session' => $Session,
+
+            'TrainerRounds' => TrainerController::TrainerRounds(),
+            'HistoryRounds' => TrainerController::HistoryRounds(),
+            'CountNotifications' => AdminController::CountNotifications(),
+            'Notifications' => AdminController::Notifications(),
+        ]); 
+    }
+    public function EditExtraTask(int $id)
+    {
+        $Task = ExtraTasks::find($id);
+        // $Round = Rounds::find($Content->RoundId);
+        $Session = Sessions::find($Task->SessionId);
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+
+        return View('Trainer.extratask-edit', [
+            'Task' => $Task,
+            'Round' => $Round,
+            'Course' => $Course,
+
+            'TrainerRounds' => TrainerController::TrainerRounds(),
+            'HistoryRounds' => TrainerController::HistoryRounds(),
+            'CountNotifications' => AdminController::CountNotifications(),
+            'Notifications' => AdminController::Notifications(),
+        ]);
+    }
+
+
+    public function DeleteExtraTask(int $id)
+    {
+        $Task = ExtraTasks::find($id);
+        $Subs = ExtraTaskSubmissions::where('ExtraTaskId', '=', $id)->count();
+        if ($Subs > 0) {
+            return redirect()->back()->with('error', 'You can not delete this task because there are submissions for it!');
+        }
+        $Task->delete();
+
+        return redirect()->back()->with('status', 'Task has been deleted successfully!');
+    }
+
+    public function StudentExtraTasks(int $srid, int $sid)
+    {
+        $StudentRound = StudentRounds::find($srid);
+        $Round = Rounds::find($StudentRound->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        $Session = Sessions::find($sid);
+        $Tasks = DB::table('extratasks')
+            ->select([
+                'extratasks.ExtraTaskId',
+                'SessionId',
+                'ExtraTaskLink',
+                'ExtraTaskDesc',
+                'ExtraTaskType',
+                'ExtraTaskLevel',
+                'ExtraTaskDate',
+                'SubmissionId',
+                'SubmissionLink',
+                'SubmissionNotes',
+                'SubmissionComment',
+                'SubmissionGrade',
+                'StudentRoundId'
+            ])
+            ->leftJoin('extratasksubmissions', 'extratasksubmissions.ExtraTaskId', '=', 'extratasks.ExtraTaskId')
+            ->where('SessionId', '=', $sid)->get();
+
+        return view('Trainer.extratasks-std', [
+            'Tasks' => $Tasks,
+            'Round' => $Round,
+            'Session' => $Session,
+            'Course' => $Course,
+            'StudentRound' => $StudentRound,
+            'StudentRoundId' => $srid,
+            'TrainerRounds' => TrainerController::TrainerRounds(),
+            'HistoryRounds' => TrainerController::HistoryRounds(),
+            'CountNotifications' => AdminController::CountNotifications(),
+            'Notifications' => AdminController::Notifications(),
+
+        ]);
+
+    }
+
+    public function CreateExtraTask(Request $request)
+    {
+        $Round = Rounds::find($request->RoundId);
+        $ExtraTask = new ExtraTasks();
+        $ExtraTask->ExtraTaskLink = $request->ExtraTaskLink;
+        $ExtraTask->SessionId = $request->SessionId;
+        $ExtraTask->ExtraTaskDesc = $request->ExtraTaskDesc;
+        $ExtraTask->ExtraTaskLevel = $request->ExtraTaskLevel;
+        // $ExtraTask->Type = $request->Type;
+        $ExtraTask->save();
+
+        return redirect()->to("/Trainer/Round/$Round->RoundId/ExtraTasks/$request->SessionId")->with('status', 'Extra Task has been created successfully!');
+    }
+
+
+    public function UpdateExtraTask(Request $request)
+    {
+        $ExtraTask = ExtraTasks::find($request->ExtraTaskId);
+        $ExtraTask->ExtraTaskLink = $request->ExtraTaskLink;
+        $ExtraTask->ExtraTaskDesc = $request->ExtraTaskDesc;
+        $ExtraTask->ExtraTaskLevel = $request->ExtraTaskLevel;
+        $ExtraTask->save();
+        $Session = Sessions::find($ExtraTask->SessionId);
+        $Round = Rounds::find($Session->RoundId);
+
+        return redirect()->to("/Trainer/Round/$Round->RoundId/ExtraTasks/$Session->SessionId")->with('status', 'Extra task has been updated successfully!');
+    }
     public function SessionProgressZip(int $id)
     {
         $Session = $Session = Sessions::find($id);

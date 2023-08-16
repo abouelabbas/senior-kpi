@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\ExtraContent;
+use App\ExtraTasks;
+use App\ExtraTaskSubmissions;
 use Illuminate\Http\Request;
 use App\StudentRounds;
 use Illuminate\Support\Facades\DB;
@@ -133,6 +135,7 @@ class StudentController extends Controller
             ['StudentId','=',session('Id')],
             ['RoundId','=',$id]
         ])->get();
+
         // return $StudentRoundId;
 
         $Round = DB::table('rounds')
@@ -190,6 +193,53 @@ class StudentController extends Controller
             ]);
     }
 
+    public function CourseExtraTasks(int $sid, int $id){
+        $Session = Sessions::find($id);
+        $ExtraTasks = DB::table('extratasks')
+        ->select([
+            'extratasks.ExtraTaskId',
+            'SessionId', 'ExtraTaskLink','ExtraTaskDesc','ExtraTaskType',
+            'ExtraTaskLevel','ExtraTaskDate','SubmissionId','SubmissionLink','SubmissionNotes','SubmissionComment',
+            'SubmissionGrade','StudentRoundId'  
+        ])
+        ->leftJoin('extratasksubmissions', 'extratasksubmissions.ExtraTaskId', '=', 'extratasks.ExtraTaskId')
+        ->where('SessionId','=',$id)->get();
+        // $ExtraTasks = ExtraTasks::where('SessionId','=',$id)->get();
+        $Round = Rounds::find($Session->RoundId);
+        $Course = Courses::find($Round->CourseId);
+        
+        // return $ExtraTasks;
+        return View('Student.extratasks',[
+            'Session'=>$Session,
+            'Tasks'=>$ExtraTasks,
+            'Round'=>$Round,
+            'Course'=>$Course,
+            'StudentRoundId'=>$sid,
+            'Notifications'=>StudentController::Notifications(),
+            'CountNotifications'=>StudentController::CountNotifications(),
+            'StudentRounds'=>StudentController::StudentRounds()
+        ]);
+    }
+
+    public function ExtraTaskSubmission(Request $request){
+        $ExtraTaskSub = new ExtraTaskSubmissions();
+        if(ExtraTaskSubmissions::where([['ExtraTaskId', '=', $request->ExtraTaskId], ['StudentRoundId','=',$request->StudentRoundId]])->exists()){
+            $ExtraTaskSub = ExtraTaskSubmissions::where([['ExtraTaskId', '=', $request->ExtraTaskId], ['StudentRoundId','=',$request->StudentRoundId]])->first();
+        }
+        $ExtraTaskSub->ExtraTaskId = $request->ExtraTaskId;
+        $ExtraTaskSub->SubmissionLink = $request->SubmissionLink;
+        $ExtraTaskSub->SubmissionNotes = $request->SubmissionNotes;
+        $ExtraTaskSub->StudentRoundId = $request->StudentRoundId;
+
+        if($request->SubmissionGrade){
+            $ExtraTaskSub->SubmissionGrade = $request->SubmissionGrade;
+            $ExtraTaskSub->SubmissionComment = $request->SubmissionComment;
+        }
+
+        $ExtraTaskSub->save();
+
+        return redirect()->back()->with('success','Task Submitted Successfully');
+    }
     //
     // Attendance Evaluation of Student
     //
@@ -279,11 +329,13 @@ class StudentController extends Controller
         //Layout Objects
         $StudentRounds = StudentController::StudentRounds();
         //---
+        $Student = Students::find(session('Id'));
         $ExternalCourses = session()->get('ExternalCourses');
         $ExternalCoursesArr = explode(",",$ExternalCourses);
 
         return View('Student.profile',[
             'StudentRounds'=>$StudentRounds,
+            'Student'=>$Student,
             'ExternalCourses'=>$ExternalCoursesArr,
             'Notifications'=>StudentController::Notifications(),
             'CountNotifications'=>StudentController::CountNotifications()
@@ -318,6 +370,12 @@ class StudentController extends Controller
         $Student->JoinDate = Carbon::parse($request->JoinDate)->format('Y-m-d h:m:i');
         $Student->Job = $request->Job;
         $Student->Company = $request->Company;
+        $Student->Wuzzuf = $request->Wuzzuf;
+        $Student->Linkedin = $request->Linkedin;
+        $Student->PersonalEmail = $request->PersonalEmail;
+        $Student->CertificateName = $request->CertificateName;
+        $Student->GithubLink = $request->GithubLink;
+        $Student->Facebook = $request->Facebook;
         // $Student->ExternalCourses = $request->ExternalCourses;
         // $Student->AdditionalNotes = $request->AdditionalNotes;
         if($request->hasFile('ImagePath')){
