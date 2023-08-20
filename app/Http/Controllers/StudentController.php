@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\ExtraContent;
 use App\ExtraTasks;
 use App\ExtraTaskSubmissions;
+use App\StudentVideos;
 use Illuminate\Http\Request;
 use App\StudentRounds;
 use Illuminate\Support\Facades\DB;
@@ -85,6 +86,7 @@ class StudentController extends Controller
     {
         $StudentRounds = StudentController::StudentRounds();
         $HistoryRounds = TrainerController::HistoryRounds();
+        $StudentVideos = StudentVideos::all();
         $Rounds = Rounds::all()->count();
         $RunningRounds = Rounds::where('Done','=',1)->count();
         $Courses = Courses::all()->count();
@@ -94,6 +96,7 @@ class StudentController extends Controller
         $Labs = Labs::all()->count();
         $RecentStudents = DB::table('students')->orderBy('StudentId','Desc')->take(5)->get();
         return View('Student.index',[
+            'StudentVideos'=>$StudentVideos,
             'Rounds'=>$Rounds,'Running'=>$RunningRounds,'Courses'=>$Courses,'Students'=>$Students,'Trainers'=>$Trainers,
             'Branches'=>$Branches,'Labs'=>$Labs,'RecentStudents'=>$RecentStudents,
             'Notifications'=>StudentController::Notifications(),'CountNotifications'=>StudentController::CountNotifications(),'StudentRounds'=>$StudentRounds]);

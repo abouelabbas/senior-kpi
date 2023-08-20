@@ -27,6 +27,7 @@ use App\Sessions;
 use App\StudentEvaluations;
 use App\StudentRounds;
 use App\Students;
+use App\StudentVideos;
 use App\TaskHistory;
 use App\Tasks;
 use App\TrainerAgenda;
@@ -296,6 +297,19 @@ class AdminController extends Controller
         ]);
     
     }
+
+    public function StudentVideosIndex() {
+        $StudentVideos = StudentVideos::all();
+
+
+        return View('Admin.MyCourses.student-videos', [
+            'StudentVideos' => $StudentVideos,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]);
+    
+    }
     public function ExtraTaskIndex(int $id, int $sid)
     {
         $Tasks = ExtraTasks::where('SessionId', '=', $sid)->get();
@@ -315,7 +329,30 @@ class AdminController extends Controller
 
     }
 
-    public function AddExtraContent(int $id) {
+    public function StudentVideosAdd() {
+
+        return View('Admin.MyCourses.student-video-create', [
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]); 
+    }
+
+
+    public function StudentVideosEdit(int $id)
+    {
+        $StudentVideo = StudentVideos::find($id);
+
+        return View('Admin.MyCourses.student-video-edit', [
+            'StudentVideo' => $StudentVideo,
+            'ActiveRounds' => AdminController::ActiveRounds(),
+            'Notifications' => AdminController::Notifications(),
+            'CountNotifications' => AdminController::CountNotifications()
+        ]);
+    }
+
+    public function AddExtraContent(int $id)
+    {
         $Round = Rounds::find($id);
         $Course = Courses::find($Round->CourseId);
 
@@ -325,7 +362,7 @@ class AdminController extends Controller
             'ActiveRounds' => AdminController::ActiveRounds(),
             'Notifications' => AdminController::Notifications(),
             'CountNotifications' => AdminController::CountNotifications()
-        ]); 
+        ]);
     }
 
     public function AddExtraTask(int $id, int $sid) {
@@ -375,6 +412,14 @@ class AdminController extends Controller
         ]);
     }
 
+    public function StudentVideosDelete(int $id)
+    {
+        $StudentVideo = StudentVideos::find($id);
+        $StudentVideo->delete();
+
+        return redirect()->back()->with('status', '(Video - Link) has been deleted successfully!');
+    }
+
     public function DeleteExtraContent(int $id)
     {
         $Content = ExtraContent::find($id);
@@ -410,6 +455,17 @@ class AdminController extends Controller
         return redirect()->to("/Admin/Round/$Round->RoundId/Extra")->with('status', 'Content has been created successfully!');
     }
 
+    public function StudentVideosCreate(Request $request)
+    {
+        $StudentVideo = new StudentVideos();
+        $StudentVideo->StudentVideoLink = $request->StudentVideoLink;
+        $StudentVideo->StudentVideoTitle = $request->StudentVideoTitle;
+        $StudentVideo->StudentVideoType = $request->StudentVideoType;
+        $StudentVideo->save();
+
+        return redirect()->to("/Admin/Videos")->with('status', '(Video - Link) has been created successfully!');
+    }
+
     public function CreateExtraTask(Request $request)
     {
         $Round = Rounds::find($request->RoundId);
@@ -434,6 +490,17 @@ class AdminController extends Controller
         $ExtraContent->save();
 
         return redirect()->to("/Admin/Round/$ExtraContent->RoundId/Extra")->with('status', 'Content has been updated successfully!');
+    }
+
+    public function StudentVideosUpdate(Request $request)
+    {
+        $StudentVideo = StudentVideos::find($request->StudentVideoId);
+        $StudentVideo->StudentVideoLink = $request->StudentVideoLink;
+        $StudentVideo->StudentVideoTitle = $request->StudentVideoTitle;
+        $StudentVideo->StudentVideoType = $request->StudentVideoType;
+        $StudentVideo->save();
+
+        return redirect()->to("/Admin/Videos")->with('status', '(Video - Link) has been updated successfully!');
     }
 
     public function UpdateExtraTask(Request $request)

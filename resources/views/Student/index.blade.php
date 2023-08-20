@@ -182,6 +182,44 @@
 
               </div> --}}
               <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-12">
+                            
+                    <div class="ms-panel">
+                        <div class="ms-panel-header">
+                          <h6>Videos and Links</h6>
+                        </div>
+                        <div class="ms-panel-body">
+                            <div class="row no-gutters">
+                                <div class="col-md-12" style="text-align: center;padding:20px 50px 0;">
+                                    <div class="alert alert-primary" role="alert">
+                                        @if (count($StudentVideos) == 0)
+                                            Introduction Videos and Links will be available soon!
+                                        @else
+                                            Introduction Videos and Links are now available now!
+                                        @endif
+                                    </div>
+
+                                </div>
+                                @foreach ($StudentVideos as $Video)
+                                    <div class="col-md-4 p-1">
+                                        <div  style="border: 1px solid #ccc;border-radius:10px;" class="p-3">
+                                        <p>{{$Video->StudentVideoTitle}}</p>
+                                        @if ($Video->StudentVideoType == 0)
+                                            <iframe width="100%" height="200" src="{{$Video->StudentVideoLink}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>                                        
+                                        @else
+                                        <div  style="min-height:205px;">
+                                            <a href="{{$Video->StudentVideoLink}}" target="_blank" class="btn btn-block btn-primary">Link</a>
+                                        </div>
+                                        @endif
+                                        </div>
+                                    </div>            
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
                     <div class="ms-panel">
                         <div class="ms-panel-header">
                           <h6>why KPI?</h6>
@@ -271,7 +309,7 @@
                                                  
                             </div>
                         </div>
-                      </div>
+                    </div>
                 </div>
             </div>
   @endsection

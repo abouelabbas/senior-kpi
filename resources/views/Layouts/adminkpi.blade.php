@@ -265,6 +265,17 @@
         </li> --}}
 
         <!-- /Chat -->
+         <li class="menu-item">
+
+            <a href="/Admin/Videos">
+
+                <span><i class="material-icons fs-16">dashboard</i>Students Videos & Links </span>
+
+            </a>
+
+           
+
+        </li>
 
     </ul>
 
