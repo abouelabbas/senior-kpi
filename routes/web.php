@@ -34,6 +34,9 @@ Route::get('/clear-cache', function() {
 Route::get('/login','AuthenticationController@Login');
 Route::get('/Login','AuthenticationController@Login');
 Route::get('/Logout','AuthenticationController@logout');
+
+
+Route::get('/Student/Report','GeneralController@Report');
 //--------
 //Admin Routes
 Route::get('/Admin','AdminController@Index');

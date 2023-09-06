@@ -7158,3 +7158,18 @@ input[type = "submit"]{
 #modal1.modal-auth .ms-auth-bg::after{
     background-color: rgba(0, 0, 0, 0.8) !important;
 }
+.rp-cover{
+  height: 25vh;
+  background-color: #eee;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+.rp-image-holder{
+  position: relative;
+}
+.rp-image-frame{
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  bottom: 0;
+}
