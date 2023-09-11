@@ -30,7 +30,7 @@ class GeneralController extends Controller
         ->where("tasks.StudentRoundId", "=", $id);
         $SubmittedTasks = $Tasks->where("TaskURL", "!=", null)->count();
         $Tasks = $Tasks
-        ->where(['SessionTask','!=', null])
+        ->where('SessionTask','!=', null)
         ->get();
         $FirstName = explode(" ",$Student->FullnameEn)[0];
         $SessionsCount = Sessions::where([["RoundId", "=", $Round->RoundId],["IsDone",'=', 1],["IsCancelled",'=',null]])->count();
