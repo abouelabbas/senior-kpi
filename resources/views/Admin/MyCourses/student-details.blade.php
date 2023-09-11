@@ -203,7 +203,7 @@
                                         <li><i class="fas fa-circle"></i> Total sessions absent = {{ $NotAttend }} </li>
                                         <hr />
                                         <li class="text-info"><i class="fas fa-circle    "></i> Total tasks required =
-                                            {{ $Run - $SessionWithoutTask }} </li>
+                                            {{ $TasksReq }} </li>
 
                                         <li class="text-info"><i class="fas fa-circle    "></i> Total tasks solved =
                                             {{ $SolvedTasks }} </li>

@@ -2649,6 +2649,20 @@ public function ConfirmCancelStudentRegisteration(int $id)
             ['tasks.StudentRoundId','=',$id],
             ['RoundId','=',$StudentRound->RoundId]
         ])->get();
+
+
+        $TasksReq = DB::table("tasks")
+            ->leftJoin('grades', 'tasks.TaskId', '=', 'grades.TaskId')
+            ->leftJoin('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
+            ->where([
+                ['StudentRoundId', '=', $id],
+                // ['RoundId', '=', $StudentRound->RoundId],
+                ['HasTask', '=', 1],
+                ['IsDone', '=', 1],
+                ['IsCancelled', '=', null],
+                ['SessionTask', '!=', null]
+            ])->count();
+
         //
         //--Exams
         // $Exams = Exams::where([
@@ -2678,6 +2692,7 @@ public function ConfirmCancelStudentRegisteration(int $id)
             'IsPreJoined'=> $IsPreJoined,
             'Course'=>$Course,
             'Student'=>$Student,
+            'TasksReq'=>$TasksReq,
             // 'Exams'=>$Exams,
             'ExamGrades'=>$ExamGrades,
             'StudentRound'=>$StudentRound,
