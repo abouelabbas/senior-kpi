@@ -55,7 +55,7 @@ class GeneralController extends Controller
 
         $Grades = DB::table("tasks")
             ->leftJoin('grades', 'tasks.TaskId', '=', 'grades.TaskId')
-            ->join('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
+            ->leftJoin('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
             ->where([
                 ['tasks.StudentRoundId', '=', $id],
                 ['RoundId', '=', $StudentRound->RoundId],
