@@ -52,7 +52,7 @@ class GeneralController extends Controller
                 ['HasTask', '!=', 0],
                 ['IsDone', '=', 1],
                 ['IsCancelled', '=', null],
-                // ['SessionTask', '!=', null]
+                ['SessionTask', '!=', null]
             ])->get();
 
         $ExamGrades = DB::table('examgrades')
