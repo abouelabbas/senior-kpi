@@ -205,7 +205,7 @@
                                 </span>
                               </h4>
                               <div class="row">
-                                <div class="col-md-6 offset-md-3 p-3" id="attendance">
+                                <div class="col-12 text-center w-auto p-3" id="attendance">
                                   <div class="row stat-rp">
                                       <div class="information-box">
                                             <div class="information-left">
@@ -216,6 +216,10 @@
                                                 <div><span class="text-success"><strong>{{$Attended}}</strong></span></div>
                                                 <div><span class="text-success">Attended</span></div>
                                             </div>
+                                            <div class="information-middle">
+                                                <div><span class="text-secondary"><strong>{{$PreJoined}}</strong></span></div>
+                                                <div><span class="text-secondary">Pre-joined Sessions</span></div>
+                                            </div>
                                             <div class="information-right">
                                                 <div><span class="text-warning"><strong>{{$SubmittedTasks}}/{{count($Grades)}}</strong></span></div>
                                                 <div><span class="text-warning">Solved Tasks</span></div>
@@ -223,7 +227,7 @@
                                         </div>
                                   </div>
                                 </div>
-                                <div class="col-md-3"></div>
+                                {{-- <div class="col-md-2"></div> --}}
                                 <div class="col-12">
                                   <h5>Attendance Table</h5>
                                   <table class="table table-hover rp-table">
