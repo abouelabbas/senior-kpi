@@ -44,7 +44,8 @@ class GeneralController extends Controller
             ->where([
                 ['tasks.StudentRoundId', '=', $id],
                 ['RoundId', '=', $StudentRound->RoundId],
-                ['HasTask', '=', 1]
+                ['HasTask', '=', 1],
+                ['SessionTask', '!=', null]
             ])->get();
 
         $ExamGrades = DB::table('examgrades')
