@@ -26,7 +26,12 @@ class GeneralController extends Controller
         $Attendance = $AttendanceState->get();
         $Run = $AttendanceState->where([['IsDone', '=', 1], ['IsCancelled', '=', null]])->count();
 
-        $Attended = $AttendanceState->where([["IsAttend",'!=',0], ["IsAttend", '!=', null]])->count();
+        $Attended = $AttendanceState->where([
+            ["IsAttend",'!=',0], 
+            ["IsAttend", '!=', null],
+            ["IsDone", '=', 1],
+            ["IsCancelled", '=', null]
+        ])->count();
         // $Attendance = $Attendance->get();
         $Tasks = DB::table("tasks")
         ->leftJoin("grades", "grades.TaskId", "=", "tasks.TaskId")
