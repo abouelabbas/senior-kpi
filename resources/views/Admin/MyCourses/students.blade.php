@@ -49,6 +49,7 @@
                     <th>#</th>
 
                     <th>Student Name </th>
+                    <th>Report </th>
 
                     <th> Attendence</th>
 
@@ -92,7 +93,9 @@
                         @endif</td>
 
                     <td data-id="{{$RoundStudent->StudentRoundsId}}"><a href="/Admin/Course/Student/Details/{{$RoundStudent->StudentRoundsId}}">{{$RoundStudent->FullnameEn}}</a></td>
-
+                        <td>
+                          <a href="{{url("/Student/Report/$RoundStudent->StudentRoundsId")}}" class="btn btn-success"><i class="far fa-file-pdf"></i></a>
+                        </td>
                           <td>
 
                           <input type="hidden" value="{{$RoundStudent->StudentRoundsId}}" class="studentround">
