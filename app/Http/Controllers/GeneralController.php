@@ -8,6 +8,7 @@ use App\Rounds;
 use App\Sessions;
 use App\StudentRounds;
 use App\Students;
+use App\Tasks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -42,19 +43,25 @@ class GeneralController extends Controller
             ['HasTask', '=', 0]
         ])->count();
 
-        $Grades = DB::table("grades")
-            ->join('tasks', 'tasks.TaskId', '=', 'grades.TaskId')
+        $Grades = DB::table("tasks")
+            ->leftJoin('grades', 'tasks.TaskId', '=', 'grades.TaskId')
             ->join('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
             ->where([
                 ['tasks.StudentRoundId', '=', $id],
                 ['RoundId', '=', $StudentRound->RoundId],
-                ['HasTask', '=', 1]
+                ['HasTask', '!=', 0],
+                ['IsDone', '=', 1],
+                ['IsCancelled', '=', null],
                 // ['SessionTask', '!=', null]
             ])->get();
 
         $ExamGrades = DB::table('examgrades')
             ->join('exams', 'exams.ExamId', '=', 'examgrades.ExamId')
             ->where('StudentRoundId', '=', $id)->get();
+        $SolvedTasks = Tasks::where([
+            ['StudentRoundId', '=', $id],
+            ['TaskURL', '!=', null]
+        ])->count();
 
         return view('General.report',
     [
@@ -71,7 +78,8 @@ class GeneralController extends Controller
         'Attended' => $Attended,
         'Grades' => $Grades,
         'ExamGrades' => $ExamGrades,
-        'Run' => $Run
+        'Run' => $Run,
+        'SolvedTasks' => $SolvedTasks
     ]);
     }
 }
