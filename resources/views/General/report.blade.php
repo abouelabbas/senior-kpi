@@ -62,7 +62,7 @@
             <div class="module-inner">
                 <div class="side-bar">
                     <div class="user-info">
-                        <img class="img-profile img-circle img-responsive center-block" style="border-radius: 50%" src="{{ $Student->ImagePath ?  asset("/storage/app/public/$Student->ImagePath") : "https://t4.ftcdn.net/jpg/04/10/43/77/360_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg" }}" alt="">
+                        <img class="img-profile img-circle img-responsive center-block" style="border-radius: 50%" src="{{ $Student->ImagePath ?  asset("storage/app/public/$Student->ImagePath") : "https://t4.ftcdn.net/jpg/04/10/43/77/360_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg" }}" alt="">
                         <ul class="meta list list-unstyled">
                             <li class="name">{{$Student->FullnameEn}}
                                 <label class="label label-info">{{$Student->Job}}</label>
@@ -99,28 +99,61 @@
                                     </div>
                                 </div>
                               </div>
-                              <div class="col-md-6">
-                                <div class="form-group ms-custom">
-                                    <label class="control-label fw-bold">First Name</label>
-                                    <div class="">
-                                      Abdallah
-                                    </div>
-                                </div>
-                              </div>
-                              <div class="col-md-6">
-                                <div class="form-group ms-custom">
-                                  <label class="control-label fw-bold">Last Name</label>
-                                  <div class="">
-                                    Ahmed Ali
+                              @if ($Student->Birthdate == null)
+                                <div class="col-md-6">
+                                  <div class="form-group ms-custom">
+                                      <label class="control-label fw-bold">Birthdate</label>
+                                      <div class="">
+                                        {{$Student->Birthdate}}
+                                      </div>
                                   </div>
                                 </div>
-                              </div>
+                              @endif
+                              @if ($Student->Job == null)
+                                <div class="col-md-6">
+                                  <div class="form-group ms-custom">
+                                      <label class="control-label fw-bold">Job</label>
+                                      <div class="">
+                                        {{$Student->Job}}
+                                      </div>
+                                  </div>
+                                </div>
+                              @endif
+                              @if ($Student->Company == null)
+                                <div class="col-md-6">
+                                  <div class="form-group ms-custom">
+                                      <label class="control-label fw-bold">Company</label>
+                                      <div class="">
+                                        {{$Student->Company}}
+                                      </div>
+                                  </div>
+                                </div>
+                              @endif
+                              
+                              
                             </div>
                           </fieldset>
                           <br>
                           <fieldset id="contact" class="fieldset mb-0">
                             <h3 class="fieldset-title">Contact Info</h3>
                             <div class="row">
+                              
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-2  col-sm-3 col-xs-12 control-label">Phone</label>
+                                    <div class="col-md-10 col-sm-9 col-xs-12">
+                                        <i class="fas fa-phone"></i> | {{$Student->Phone}}
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-2  col-sm-3 col-xs-12 control-label">Phone</label>
+                                    <div class="col-md-10 col-sm-9 col-xs-12">
+                                        <i class="fab fa-whatsapp"></i> | {{$Student->Whatsapp}}
+                                    </div>
+                                </div>
+                              </div>
                               <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
