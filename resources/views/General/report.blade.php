@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                               </div>
-                              @if ($Student->Birthdate == null)
+                              @if ($Student->Birthdate != null)
                                 <div class="col-md-6">
                                   <div class="form-group ms-custom">
                                       <label class="control-label fw-bold">Birthdate</label>
@@ -109,7 +109,7 @@
                                   </div>
                                 </div>
                               @endif
-                              @if ($Student->Job == null)
+                              @if ($Student->Job != null)
                                 <div class="col-md-6">
                                   <div class="form-group ms-custom">
                                       <label class="control-label fw-bold">Job</label>
@@ -119,7 +119,7 @@
                                   </div>
                                 </div>
                               @endif
-                              @if ($Student->Company == null)
+                              @if ($Student->Company != null)
                                 <div class="col-md-6">
                                   <div class="form-group ms-custom">
                                       <label class="control-label fw-bold">Company</label>
