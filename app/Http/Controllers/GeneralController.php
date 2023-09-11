@@ -23,14 +23,17 @@ class GeneralController extends Controller
         $AttendanceState = DB::table("attendance")
         ->join("sessions", 'sessions.SessionId', '=', 'attendance.SessionId')
         ->where([["StudentRoundsId", '=' , $id]]);
-        $Attendance = $AttendanceState->get();
+        $Attendance = $AttendanceState
+        ->where([
+            ["IsDone", '=', 1],
+            ["IsCancelled", '=', null]
+        ])
+        ->get();
         $Run = $AttendanceState->where([['IsDone', '=', 1], ['IsCancelled', '=', null]])->count();
 
         $Attended = $AttendanceState->where([
             ["IsAttend",'!=',0], 
             ["IsAttend", '!=', null],
-            ["IsDone", '=', 1],
-            ["IsCancelled", '=', null]
         ])->count();
         // $Attendance = $Attendance->get();
         $Tasks = DB::table("tasks")
