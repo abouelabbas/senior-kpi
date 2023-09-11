@@ -36,13 +36,15 @@ class GeneralController extends Controller
             ["IsAttend", '!=', null],
         ])->count();
         // $Attendance = $Attendance->get();
-        $Tasks = DB::table("tasks")
+        $TasksState = DB::table("tasks")
         ->leftJoin("grades", "grades.TaskId", "=", "tasks.TaskId")
         ->leftJoin("sessions", "sessions.SessionId", "=", "tasks.SessionId")
         ->where("tasks.StudentRoundId", "=", $id);
-        $SubmittedTasks = $Tasks->where("TaskURL", "!=", null)->count();
-        $Tasks = $Tasks->where('SessionTask','!=', null)
+        $Tasks = $TasksState->where([['SessionTask','!=', null],
+            ["IsDone", '=', 1],
+            ["IsCancelled", '=', null]])
         ->get();
+        $SubmittedTasks = $Tasks->where("TaskURL", "!=", null)->count();
         $FirstName = explode(" ",$Student->FullnameEn)[0];
         $SessionsCount = Sessions::where([["RoundId", "=", $Round->RoundId],["IsDone",'=', 1],["IsCancelled",'=',null]])->count();
 
