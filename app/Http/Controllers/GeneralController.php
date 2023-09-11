@@ -36,7 +36,9 @@ class GeneralController extends Controller
             ["IsAttend", '!=', null],
             ["IsAttend", '!=', 3]
         ])->count();
-        $PreJoined = $AttendanceState->where([
+        $PreJoined = DB::table("attendance")
+            ->join("sessions", 'sessions.SessionId', '=', 'attendance.SessionId')
+            ->where([["StudentRoundsId", '=', $id]])->where([
             ["IsAttend", '=', 3]
         ])->count();
         // $Attendance = $Attendance->get();
