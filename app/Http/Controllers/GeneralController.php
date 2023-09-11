@@ -29,7 +29,9 @@ class GeneralController extends Controller
         ->leftJoin("grades", "grades.TaskId", "=", "tasks.TaskId")
         ->where("tasks.StudentRoundId", "=", $id);
         $SubmittedTasks = $Tasks->where("TaskURL", "!=", null)->count();
-        $Tasks = $Tasks->get();
+        $Tasks = $Tasks
+        ->where(['SessionTask','!=', null])
+        ->get();
         $FirstName = explode(" ",$Student->FullnameEn)[0];
         $SessionsCount = Sessions::where([["RoundId", "=", $Round->RoundId],["IsDone",'=', 1],["IsCancelled",'=',null]])->count();
 
