@@ -217,7 +217,7 @@
                                                 <div><span class="text-success">Attended</span></div>
                                             </div>
                                             <div class="information-right">
-                                                <div><span class="text-warning"><strong>{{$SubmittedTasks}}/{{$SessionsCount-$SessionWithoutTask}}</strong></span></div>
+                                                <div><span class="text-warning"><strong>{{$SubmittedTasks}}/{{$Run-$SessionWithoutTask}}</strong></span></div>
                                                 <div><span class="text-warning">Solved Tasks</span></div>
                                             </div>
                                         </div>

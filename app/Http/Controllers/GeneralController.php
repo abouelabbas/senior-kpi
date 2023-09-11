@@ -23,6 +23,8 @@ class GeneralController extends Controller
         ->join("sessions", 'sessions.SessionId', '=', 'attendance.SessionId')
         ->where([["StudentRoundsId", '=' , $id]]);
         $Attendance = $AttendanceState->get();
+        $Run = $AttendanceState->where([['IsDone', '=', 1], ['IsCancelled', '=', null]])->count();
+
         $Attended = $AttendanceState->where([["IsAttend",'!=',0], ["IsAttend", '!=', null]])->count();
         // $Attendance = $Attendance->get();
         $Tasks = DB::table("tasks")
@@ -68,7 +70,8 @@ class GeneralController extends Controller
         'SessionWithoutTask' => $SessionWithoutTask,
         'Attended' => $Attended,
         'Grades' => $Grades,
-        'ExamGrades' => $ExamGrades
+        'ExamGrades' => $ExamGrades,
+        'Run' => $Run
     ]);
     }
 }
