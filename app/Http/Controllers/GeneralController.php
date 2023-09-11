@@ -59,10 +59,10 @@ class GeneralController extends Controller
             ->where([
                 ['StudentRoundId', '=', $id],
                 // ['RoundId', '=', $StudentRound->RoundId],
-                ['HasTask', '!=', 0],
+                ['HasTask', '=', 1],
                 ['IsDone', '=', 1],
                 ['IsCancelled', '=', null],
-                // ['SessionTask', '!=', null]
+                ['SessionTask', '!=', null]
             ])->get();
 
         $ExamGrades = DB::table('examgrades')
