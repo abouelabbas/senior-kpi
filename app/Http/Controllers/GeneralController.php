@@ -34,6 +34,10 @@ class GeneralController extends Controller
         $Attended = $AttendanceState->where([
             ["IsAttend",'!=',0], 
             ["IsAttend", '!=', null],
+            ["IsAttend", '!=', 3]
+        ])->count();
+        $PreJoined = $AttendanceState->where([
+            ["IsAttend", '=', 3]
         ])->count();
         // $Attendance = $Attendance->get();
         $TasksState = DB::table("tasks")
@@ -89,7 +93,8 @@ class GeneralController extends Controller
         'Grades' => $Grades,
         'ExamGrades' => $ExamGrades,
         'Run' => $Run,
-        'SolvedTasks' => $SolvedTasks
+        'SolvedTasks' => $SolvedTasks,
+        'PreJoined' => $PreJoined
     ]);
     }
 }

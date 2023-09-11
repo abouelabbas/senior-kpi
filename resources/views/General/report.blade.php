@@ -247,6 +247,8 @@
                                         <td class="text-success">Attended Online</td>
                                         @elseif($attend->IsAttend == 0 || $attend->IsAttend == null)
                                         <td class="text-danger">Absent</td>
+                                        @elseif($attend->IsAttend == 3)
+                                        <td class="text-warning">Pre-joined</td>
                                         @endif
                                       </tr>
                                       @endforeach
