@@ -62,7 +62,7 @@
             <div class="module-inner">
                 <div class="side-bar">
                     <div class="user-info">
-                        <img class="img-profile img-circle img-responsive center-block" style="border-radius: 50%" src="{{ $Student->ImagePath ?  asset("storage/app/public/$Student->ImagePath") : "https://t4.ftcdn.net/jpg/04/10/43/77/360_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg" }}" alt="">
+                        <img class="img-profile img-circle img-responsive center-block" style="border-radius: 50%" src="{{ $Student->ImagePath ?  "/storage/app/public/$Student->ImagePath" : "https://t4.ftcdn.net/jpg/04/10/43/77/360_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg" }}" alt="">
                         <ul class="meta list list-unstyled">
                             <li class="name">{{$Student->FullnameEn}}
                                 <label class="label label-info">{{$Student->Job}}</label>
