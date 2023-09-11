@@ -62,12 +62,12 @@
             <div class="module-inner">
                 <div class="side-bar">
                     <div class="user-info">
-                        <img class="img-profile img-circle img-responsive center-block" style="border-radius: 50%" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                        <img class="img-profile img-circle img-responsive center-block" style="border-radius: 50%" src="{{ $Student->ImagePath ?  asset("/storage/app/public/$Student->ImagePath") : "https://t4.ftcdn.net/jpg/04/10/43/77/360_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg" }}" alt="">
                         <ul class="meta list list-unstyled">
-                            <li class="name">Abdallah Ahmed Ali
-                                <label class="label label-info">Software Engineer</label>
+                            <li class="name">{{$Student->FullnameEn}}
+                                <label class="label label-info">{{$Student->Job}}</label>
                             </li>
-                            <li class="email"><a href="#">abdallah@gmail.com</a></li>
+                            <li class="email"><a href="#">{{$Student->Email}}</a></li>
                             
                         </ul>
                     </div>
@@ -93,9 +93,9 @@
                             <div class="row">
                               <div class="col-md-6">
                                 <div class="form-group ms-custom">
-                                    <label class="control-label fw-bold">User Name</label>
+                                    <label class="control-label fw-bold">Full Name</label>
                                     <div class="">
-                                      abdallahahmedali
+                                      {{$Student->FullnameEn}}
                                     </div>
                                 </div>
                               </div>
@@ -125,34 +125,40 @@
                                 <div class="form-group">
                                     <label class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
                                     <div class="col-md-10 col-sm-9 col-xs-12">
-                                        <i class="fas fa-at"></i> | abdallah@gmail.com
+                                        <i class="fas fa-at"></i> | {{$Student->Email}}
                                     </div>
                                 </div>
                               </div>
+                              @if($Student->GithubLink)
                               <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-md-2  col-sm-3 col-xs-12 control-label">GitHub</label>
                                     <div class="col-md-10 col-sm-9 col-xs-12">
-                                        <i class="fab fa-github"></i> | <a href="">Abdallah's GitHub Profile</a>
+                                        <i class="fab fa-github"></i> | <a href="{{ $Student->GithubLink }}">{{$FirstName}}'s GitHub Profile</a>
                                     </div>
                                 </div>
                               </div>
+                              @endif
+                              @if($Student->Linkedin)
                               <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-md-2  col-sm-3 col-xs-12 control-label">Linkedin</label>
                                     <div class="col-md-10 col-sm-9 col-xs-12">
-                                        <i class="fab fa-linkedin"></i> | <a href="">Abdallah's Linkedin Profile</a>
+                                        <i class="fab fa-linkedin"></i> | <a href="{{ $Student->Linkedin }}">{{$FirstName}}'s Linkedin Profile</a>
                                     </div>
                                 </div>
                               </div>
+                              @endif
+                              @if($Student->Facebook)
                               <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-md-2  col-sm-3 col-xs-12 control-label">Facebook</label>
                                     <div class="col-md-10 col-sm-9 col-xs-12">
-                                        <i class="fab fa-facebook-square"></i> | <a href="">Abdallah's FB Profile</a>
+                                        <i class="fab fa-facebook-square"></i> | <a href="{{$Student->Facebook}}">{{$FirstName}}'s FB Profile</a>
                                     </div>
                                 </div>
                               </div>
+                              @endif
                             </div>
                         </fieldset>
                         <br>
@@ -160,9 +166,9 @@
                             <h3 class="fieldset-title">Courses</h3>
                             <div class="course">
                               <h4>
-                                1. Front-end Development 
+                                {{$Course->CourseNameEn}} - G{{$Round->GroupNo}} 
                                 <span class="float-right">
-                                  <span class="badge bg-info text-white">160 Hours</span>
+                                  <span class="badge bg-info text-white">{{$Course->Duration}} Hours</span>
                                 </span>
                               </h4>
                               <div class="row">
@@ -170,15 +176,15 @@
                                   <div class="row stat-rp">
                                       <div class="information-box">
                                             <div class="information-left">
-                                                <div><span class="text-info"><strong>67</strong></span></div>
+                                                <div><span class="text-info"><strong>{{$SessionsCount}}</strong></span></div>
                                                 <div><span class="text-info">Sessions</span></div>
                                             </div>
                                             <div class="information-middle">
-                                                <div><span class="text-success"><strong>62</strong></span></div>
+                                                <div><span class="text-success"><strong>{{$Attended}}</strong></span></div>
                                                 <div><span class="text-success">Attended</span></div>
                                             </div>
                                             <div class="information-right">
-                                                <div><span class="text-warning"><strong>124</strong></span></div>
+                                                <div><span class="text-warning"><strong>{{$SubmittedTasks}}/{{$SessionsCount-$SessionWithoutTask}}</strong></span></div>
                                                 <div><span class="text-warning">Solved Tasks</span></div>
                                             </div>
                                         </div>
@@ -196,31 +202,21 @@
                                       </tr>
                                     </thead>
                                     <tbody>
+                                      @foreach ($Attendance as $index => $attend)
+                                        
                                       <tr>
-                                        <th scope="row">1</th>
-                                        <td>Session 1</td>
+
+                                        <th scope="row">{{$index + 1}}</th>
+                                        <td>Session {{$attend->SessionNumber}}</td>
+                                        @if($attend->IsAttend == 1)
                                         <td class="text-success">Attended</td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">2</th>
-                                        <td>Session 2</td>
-                                        <td class="text-success">Attended</td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">3</th>
-                                        <td>Session 3</td>
-                                        <td class="text-success">Attended</td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">4</th>
-                                        <td>Session 4</td>
+                                        @elseif($attend->IsAttend == 2)
+                                        <td class="text-success">Attended Online</td>
+                                        @elseif($attend->IsAttend == 0 || $attend->IsAttend == null)
                                         <td class="text-danger">Absent</td>
+                                        @endif
                                       </tr>
-                                      <tr>
-                                        <th scope="row">5</th>
-                                        <td>Session 5</td>
-                                        <td class="text-success">Attended</td>
-                                      </tr>
+                                      @endforeach
                                     </tbody>
                                   </table>
                                 </div>
@@ -237,28 +233,34 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <tr>
-                                        <th scope="row">1</th>
+                                      @foreach ($Grades as $index => $Grade)
+                                      <tr
+                                      {{-- @if ($Grade->TaskURL == null)
+                                          class="grad-danger"
+                                      @elseif($Grade->TaskURL != null && $Grade->TaskGrade == null)
+                                          class="grad-warning"
+                                      @else
+                                          class="grad-success"
+                                      @endif --}}
+                                      >
+                                        <th scope="row">{{$index + 1}}</th>
                                         <td>
-                                          <a href=""><i class="fas fa-link"></i> Task 1 Description</a>
+                                          <a href="{{$Grade->SessionTask}}"><i class="fas fa-link"></i> Task {{$Grade->SessionNumber}} Description</a>
                                         </td>
+                                        @if ($Grade->TaskURL != null)
                                         <td class="">
-                                          <a href=""><i class="fas fa-link"></i> Task 1 Solution</a>
+                                          <a href="{{$Grade->TaskURL}}"><i class="fas fa-link"></i> Task {{$Grade->SessionNumber}} Solution</a>
                                         </td>
-                                        <td class="text-success">88/100</td>
-                                        <td class="text-success">Great Job!</td>
+                                            
+                                        <td class="text-success">{{$Grade->TaskGrade}}/100</td>
+                                        <td class="text-success">{{$Grade->TaskComment}}</td>
+                                        @else
+                                            <td colspan="3" class="text-danger text-center">Not Solved</td>
+                                            {{-- <td></td> --}}
+                                        @endif
                                       </tr>
-                                      <tr>
-                                        <th scope="row">2</th>
-                                        <td>
-                                          <a href=""><i class="fas fa-link"></i> Task 2 Description</a>
-                                        </td>
-                                        <td class="">
-                                          <a href=""><i class="fas fa-link"></i> Task 2 Solution</a>
-                                        </td>
-                                        <td class="text-warning">70/100</td>
-                                        <td class="text-warning">Good but needs some modifications!</td>
-                                      </tr>
+                                          
+                                      @endforeach
                                     </tbody>
                                   </table>
                                 </div>
@@ -274,22 +276,18 @@
                                       </tr>
                                     </thead>
                                     <tbody>
+                                      @foreach ($ExamGrades as $index => $Exam)
+                                          
                                       <tr>
-                                        <th scope="row">1</th>
+                                        <th scope="row">{{$index + 1}}</th>
                                         <td>
-                                          HTML - CSS Exam
+                                          {{$Exam->ExamNameEn}}
                                         </td>
-                                        <td class="text-success">88/100</td>
-                                        <td class="text-success">Great Job!</td>
+                                        <td class="text-success">{{$Exam->Grade ? $Exam->Grade : "-"}}/100</td>
+                                        <td class="text-success">{{$Exam->ExamNotes}}</td>
                                       </tr>
-                                      <tr>
-                                        <th scope="row">2</th>
-                                        <td>
-                                          JavaScript Exam
-                                        </td>
-                                        <td class="text-warning">70/100</td>
-                                        <td class="text-warning">Good with some revision you'll get better</td>
-                                      </tr>
+                                      @endforeach
+                                      
                                     </tbody>
                                   </table>
                                 </div>

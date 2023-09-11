@@ -36,7 +36,7 @@ Route::get('/Login','AuthenticationController@Login');
 Route::get('/Logout','AuthenticationController@logout');
 
 
-Route::get('/Student/Report','GeneralController@Report');
+Route::get('/Student/Report/{id}','GeneralController@Report');
 //--------
 //Admin Routes
 Route::get('/Admin','AdminController@Index');

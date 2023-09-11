@@ -544,7 +544,7 @@ body {
   .view-account .content-panel {
     min-height: 800px;
     border-left: 1px solid #f3f3f7;
-    margin-left: 200px
+    margin-left: 250px
   }
 
   .view-account .mail-subject .subject {
@@ -556,10 +556,22 @@ body {
 
   .view-account .side-bar {
     position: absolute;
-    width: 200px;
+    width: 250px;
     min-height: 600px
   }
 
+  .grad-danger{
+    background: rgb(255, 0, 0);
+      background: linear-gradient(270deg, rgba(255, 0, 0, 0.518) 0%, rgba(255, 255, 255, 1) 50%);
+  }
+  .grad-warning{
+    background: rgb(255, 255, 0);
+    background: linear-gradient(270deg, rgba(255, 255, 0, 0.518) 0%, rgba(255, 255, 255, 1) 50%);
+  }
+  .grad-success{
+    background: rgb(0, 255, 0);
+    background: linear-gradient(270deg, rgba(0, 255, 0, 0.518) 0%, rgba(255, 255, 255, 1) 50%);
+  }
   .view-account .side-bar .user-info {
     margin-bottom: 0;
     border-bottom: none;
