@@ -57,9 +57,9 @@ class GeneralController extends Controller
             ->leftJoin('grades', 'tasks.TaskId', '=', 'grades.TaskId')
             ->leftJoin('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
             ->where([
-                ['tasks.StudentRoundId', '=', $id],
-                ['RoundId', '=', $StudentRound->RoundId],
-                ['HasTask', '=', 1],
+                ['StudentRoundId', '=', $id],
+                // ['RoundId', '=', $StudentRound->RoundId],
+                ['HasTask', '!=', 0],
                 ['IsDone', '=', 1],
                 ['IsCancelled', '=', null],
                 ['SessionTask', '!=', null]
