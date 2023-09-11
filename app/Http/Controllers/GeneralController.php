@@ -43,7 +43,8 @@ class GeneralController extends Controller
             ->join('sessions', 'sessions.SessionId', '=', 'tasks.SessionId')
             ->where([
                 ['tasks.StudentRoundId', '=', $id],
-                ['RoundId', '=', $StudentRound->RoundId]
+                ['RoundId', '=', $StudentRound->RoundId],
+                ['HasTask', '=', 1]
             ])->get();
 
         $ExamGrades = DB::table('examgrades')
