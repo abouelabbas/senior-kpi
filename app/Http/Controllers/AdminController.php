@@ -1269,113 +1269,120 @@ class AdminController extends Controller
     }
     public function AddRound(Request $request)
     {
-        if(request()->ajax()){
-            $Round = new Rounds();
-            $Round->CourseId = $request->CourseId;
-            $Round->GroupNo = $request->RoundNumber;
-            $Round->LabId = $request->LabId;
-            $Round->StartDate = $request->StartDate;
-            $Round->EndDate = $request->EndDate;
-            $Round->Done = $request->active;
-            $Round->Notes = $request->notes;
-            $Round->save();
-            $RoundId = $Round->RoundId;
-            
-            if($request->RoundDays){
-                foreach ($request->RoundDays as $key => $Day) {
-                    $RoundDay = new RoundDays();
-                    $RoundDay->DayId = $Day['Day'];
-                    $RoundDay->RoundId = $RoundId;
-                    $RoundDay->From = $Day['Time'];
-                    $RoundDay->To = $Day['To'];
-                    $RoundDay->save();
-                    
-                }
-            }
-            // $DaySelected = DB::table('Days')->where('DayId','=',$Day['Day'])->first();
-                    $begin = new DateTime($request->StartDate );
-                    $end   = new DateTime( $request->EndDate );
-                    $Counter = 1;
-                    for($i = $begin; $i <= $end; $i->modify('+1 day')){
-                        
-                        for ($x=0; $x < Count($request->Days); $x++) { 
-                            $DaySelected = DB::table('days')->where('DayId','=',$request->Days[$x])->first();
-                            if($i->format("D") == $DaySelected->DayCode){
-                            $Session = new Sessions();
-                            $Session->RoundId = $RoundId;
-                            $Session->SessionNumber = $Counter;
-                            $Session->SessionDate = $i->format("y-m-d");
-                            $Session->save();
-                            echo $i->format("D");
-                            echo " --- ";
-                            echo $i->format("y-m-d");
-                            echo " --- ";
-                            $Counter++;
-                        }
-                        }
+        try {
+            DB::beginTransaction();
+            if(request()->ajax()){
+                $Round = new Rounds();
+                $Round->CourseId = $request->CourseId;
+                $Round->GroupNo = $request->RoundNumber;
+                $Round->LabId = $request->LabId;
+                $Round->StartDate = $request->StartDate;
+                $Round->EndDate = $request->EndDate;
+                $Round->Done = $request->active;
+                $Round->Notes = $request->notes;
+                $Round->save();
+                $RoundId = $Round->RoundId;
+                
+                if($request->RoundDays){
+                    foreach ($request->RoundDays as $key => $Day) {
+                        $RoundDay = new RoundDays();
+                        $RoundDay->DayId = $Day['Day'];
+                        $RoundDay->RoundId = $RoundId;
+                        $RoundDay->From = $Day['Time'];
+                        $RoundDay->To = $Day['To'];
+                        $RoundDay->save();
                         
                     }
-            if($request->Trainers){
-                $Trainers = $request->Trainers;
-                // return $Trainers;
-                foreach ($Trainers as $key => $value) {
-                    $TrainerRound = new TrainerRounds();
-                    $TrainerRound->TrainerId = $value;
-                    $TrainerRound->RoundId = $RoundId;
-                    $TrainerRound->save();
-                    $Course = Courses::find($request->CourseId);
-                    
-                    $TrainerAgenda = DB::table('traineragenda')
-                    ->join('trainercourses','trainercourses.TrainerCoursesId','=','traineragenda.TrainerCoursesId')
-                    ->join('contents','contents.ContentId','=','traineragenda.ContentId')
-                    ->where([
-                        ['TrainerId','=',$value],['CourseId','=',$Course->CourseId]
-                    ])->get();
-                    foreach ($TrainerAgenda as $key => $Agenda) {
-                        
-                        $RoundContent = new RoundContents();
-                        $RoundContent->RoundId = $RoundId;
-                        $RoundContent->Done = 0;
-                        $RoundContent->ContentNameEn = $Agenda->ContentNameEn;
-                        $RoundContent->ContentNameAr = $Agenda->ContentNameAr;
-                        $RoundContent->TrainerRoundsId = $TrainerRound->TrainerRoundsId;
-                        $RoundContent->save();
-                        
-                        $CenterEvaluation = new CenterEvaluations();
-                        $CenterEvaluation->RoundContentId = $RoundContent->RoundContentId;
-                        $CenterEvaluation->PersonId = $TrainerRound->TrainerRoundsId;
-                        $CenterEvaluation->PersonType = 'Trainer';
-                        $CenterEvaluation->save();
-                        $TrainerSub = TrainerSubAgenda::where('TrainerAgendaId','=',$Agenda->TrainerAgendaId)->get();
-                        foreach ($TrainerSub as $key => $subAgenda) {
-                            $RoundSub = new RoundSubContents();
-                        $RoundSub->RoundContentId = $RoundContent->RoundContentId;
-                        $RoundSub->SubContentNameEn = $subAgenda->SubAgendaNameEn;
-                        $RoundSub->SubContentNameAr = $subAgenda->SubAgendaNameAr;
-                        $RoundSub->PointDone = 0;
-                        $RoundSub->Example = $subAgenda->Example;
-                        $RoundSub->Task = $subAgenda->Task;
-                        $RoundSub->DoneTask = 0;
-                        $RoundSub->DoneExample = 0;
-                        $RoundSub->save();
-
-                        }
-                    }
-
                 }
+                // $DaySelected = DB::table('Days')->where('DayId','=',$Day['Day'])->first();
+                        $begin = new DateTime($request->StartDate );
+                        $end   = new DateTime( $request->EndDate );
+                        $Counter = 1;
+                        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+                            
+                            for ($x=0; $x < Count($request->Days); $x++) { 
+                                $DaySelected = DB::table('days')->where('DayId','=',$request->Days[$x])->first();
+                                if($i->format("D") == $DaySelected->DayCode){
+                                $Session = new Sessions();
+                                $Session->RoundId = $RoundId;
+                                $Session->SessionNumber = $Counter;
+                                $Session->SessionDate = $i->format("y-m-d");
+                                $Session->save();
+                                echo $i->format("D");
+                                echo " --- ";
+                                echo $i->format("y-m-d");
+                                echo " --- ";
+                                $Counter++;
+                            }
+                            }
+                            
+                        }
+                if($request->Trainers){
+                    $Trainers = $request->Trainers;
+                    // return $Trainers;
+                    foreach ($Trainers as $key => $value) {
+                        $TrainerRound = new TrainerRounds();
+                        $TrainerRound->TrainerId = $value;
+                        $TrainerRound->RoundId = $RoundId;
+                        $TrainerRound->save();
+                        $Course = Courses::find($request->CourseId);
+                        
+                        $TrainerAgenda = DB::table('traineragenda')
+                        ->join('trainercourses','trainercourses.TrainerCoursesId','=','traineragenda.TrainerCoursesId')
+                        ->join('contents','contents.ContentId','=','traineragenda.ContentId')
+                        ->where([
+                            ['TrainerId','=',$value],['CourseId','=',$Course->CourseId]
+                        ])->get();
+                        foreach ($TrainerAgenda as $key => $Agenda) {
+                            
+                            $RoundContent = new RoundContents();
+                            $RoundContent->RoundId = $RoundId;
+                            $RoundContent->Done = 0;
+                            $RoundContent->ContentNameEn = $Agenda->ContentNameEn;
+                            $RoundContent->ContentNameAr = $Agenda->ContentNameAr;
+                            $RoundContent->TrainerRoundsId = $TrainerRound->TrainerRoundsId;
+                            $RoundContent->save();
+                            
+                            $CenterEvaluation = new CenterEvaluations();
+                            $CenterEvaluation->RoundContentId = $RoundContent->RoundContentId;
+                            $CenterEvaluation->PersonId = $TrainerRound->TrainerRoundsId;
+                            $CenterEvaluation->PersonType = 'Trainer';
+                            $CenterEvaluation->save();
+                            $TrainerSub = TrainerSubAgenda::where('TrainerAgendaId','=',$Agenda->TrainerAgendaId)->get();
+                            foreach ($TrainerSub as $key => $subAgenda) {
+                                $RoundSub = new RoundSubContents();
+                            $RoundSub->RoundContentId = $RoundContent->RoundContentId;
+                            $RoundSub->SubContentNameEn = $subAgenda->SubAgendaNameEn;
+                            $RoundSub->SubContentNameAr = $subAgenda->SubAgendaNameAr;
+                            $RoundSub->PointDone = 0;
+                            $RoundSub->Example = $subAgenda->Example;
+                            $RoundSub->Task = $subAgenda->Task;
+                            $RoundSub->DoneTask = 0;
+                            $RoundSub->DoneExample = 0;
+                            $RoundSub->save();
+    
+                            }
+                        }
+    
+                    }
+                }
+    
+                
+    
+                // $Course = Courses::find($request->CourseId);
+    
+                // // $RoundDays = $request->RoundDays;
+                
+                // // foreach ($RoundDays as $key => $value) {
+                // //     $x = $value['Day'];
+                // //     return $x;
+                // // }
+                
             }
 
-            
-
-            // $Course = Courses::find($request->CourseId);
-
-            // // $RoundDays = $request->RoundDays;
-            
-            // // foreach ($RoundDays as $key => $value) {
-            // //     $x = $value['Day'];
-            // //     return $x;
-            // // }
-            
+            DB::commit()
+        } catch (\Throwable $th) {
+            throw $th;
         }
         
     }
