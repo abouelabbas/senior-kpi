@@ -1272,8 +1272,8 @@ class AdminController extends Controller
         try {
             DB::beginTransaction();
             $Round = Rounds::find($id);
-            RoundSubContents::where('RoundId', '=', $id)->delete();
             $RoundContentIds = DB::table('roundcontent')->where('RoundId', '=', $id)->pluck('RoundContentId');
+            RoundSubContents::whereIn('RoundContentId', $RoundContentIds)->delete();
             CenterEvaluations::whereIn('RoundContentId', $RoundContentIds)->delete();
             RoundContents::where('RoundId', '=', $id)->delete();
             TrainerRounds::where('RoundId', '=', $id)->delete();
