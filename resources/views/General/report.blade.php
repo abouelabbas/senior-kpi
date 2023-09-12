@@ -333,7 +333,7 @@
                                 <div class="col-12" id="eval">
                                   <h5>Center Evaluation</h5>
                                   <div class="alert alert-info" role="alert">
-                                    For inquiries about Abdallah's evaluation from our side as it's confidential, please contact us on (01097003465 - 01090873748)
+                                    For inquiries about {{$FirstName}}'s evaluation from our side as it's confidential, please contact us on (01097003465 - 01090873748)
                                   </div>
                                 </div>
                               </div>
