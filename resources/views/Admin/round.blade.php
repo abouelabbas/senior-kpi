@@ -109,8 +109,8 @@
                             <i class="fas fa-table    "></i>
 
                         </a>
-
-                        <a href="#" onclick="delette('this round');" class="ms-btn-icon btn-danger" data-toggle="tooltip" data-placement="top"  title="Delete">
+{{-- onclick="delette('this round');"  --}}
+                        <a href="{{url("/Admin/Rounds/Delete/$Round->RoundId")}}" class="ms-btn-icon btn-danger" data-toggle="tooltip" data-placement="top"  title="Delete">
 
                                 <i class="fas fa-trash"></i>
 

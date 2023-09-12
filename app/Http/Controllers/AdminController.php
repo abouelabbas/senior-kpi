@@ -1267,6 +1267,27 @@ class AdminController extends Controller
 
         return View('Admin.round',['Notifications'=>AdminController::Notifications(),'Rounds'=>$Rounds,'ActiveRounds'=>AdminController::ActiveRounds(),'CountNotifications'=>AdminController::CountNotifications(),'Courses'=>$Courses,'Days'=>$Days,'Labs'=>$Labs]);
     }
+
+    public function DeleteRound(int $id){
+        try {
+            DB::beginTransaction();
+            $Round = Rounds::find($id);
+            RoundSubContents::where('RoundId', '=', $id)->delete();
+            $RoundContentIds = DB::table('roundcontent')->where('RoundId', '=', $id)->pluck('RoundContentId');
+            CenterEvaluations::whereIn('RoundContentId', $RoundContentIds)->delete();
+            RoundContents::where('RoundId', '=', $id)->delete();
+            TrainerRounds::where('RoundId', '=', $id)->delete();
+            Sessions::where('RoundId', '=', $id)->delete();
+            RoundDays::where('RoundId', '=', $id)->delete();
+            $Round->delete();
+
+            DB::commit();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+    }
     public function AddRound(Request $request)
     {
         try {
