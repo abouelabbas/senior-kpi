@@ -26,7 +26,7 @@
 
         <div class="ms-panel-body">
 
-            <h2>{{ $Student->FullnameEn }}</h2>
+            <h2>{{ $Student->FullnameEn }} - {{$Student->Phone}}</h2>
 
             <h4>{{ $CourseS->CourseNameEn }} - GR{{ $Course->GroupNo }}</h4>
             <hr>

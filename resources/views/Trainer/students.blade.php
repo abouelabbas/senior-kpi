@@ -45,7 +45,7 @@
                     <th>#</th>
 
                     <th>Student Name </th>
-
+                    <th>Phone</th>
                     <th> Attendence</th>
 
                     <th>  Time Respect </th>
@@ -88,6 +88,7 @@
                       </td>
 
                       <td data-id="{{$RoundStudent->StudentRoundsId}}"><a href="/Course/Student/Details/{{$RoundStudent->StudentRoundsId}}">{{$RoundStudent->FullnameEn}}</a></td>
+                                          <td>{{$RoundStudent->Phone}}</td>
 
                             <td>
 

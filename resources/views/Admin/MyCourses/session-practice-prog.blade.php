@@ -10,7 +10,7 @@
 
             <li class="breadcrumb-item active" aria-current="page"><a href="/Admin/Courses/{{$Round->RoundId}}">{{$Course->CourseNameEn}} - {{$Round->GroupNo}}</a></li>
 
-              <li class="breadcrumb-item active" aria-current="page">Session progress</li>
+              <li class="breadcrumb-item active" aria-current="page">Session Practice</li>
 
             </ol>
 
@@ -53,7 +53,7 @@
                     <th>#</th>
 
                     <th class="text-left">Student name </th>
-
+                    <th class="text-left"> Phone</th>
                     <th class="text-left"> State</th>
 
                     <th class="text-left">Practice Link </th>
@@ -90,7 +90,7 @@
                               </span>
 
                             </td>
-
+                            <td>{{$Task->Phone}}</td>
                         <td>
                           @if($Task->PracticeURL == null)
                           <i class="fa fa-times"></i> 

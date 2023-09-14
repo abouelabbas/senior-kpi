@@ -254,7 +254,7 @@ class StudentController extends Controller
 
         //$StudentRoundId = $id;
         $StudentRound = StudentRounds::find($id);
-
+        $Student = Students::find($StudentRound->StudentId);
         $Attendance = DB::table('attendance')
         ->join('sessions','sessions.SessionId','=','attendance.SessionId')
         ->where('StudentRoundsId','=',$id)
@@ -321,6 +321,9 @@ class StudentController extends Controller
             'CountNotifications'=>StudentController::CountNotifications(), 
             'Run'=>$Run,
             'Cancelled'=>$Cancelled,
+            'StudentRound'=>$StudentRound,
+            'Student'=>$Student
+            
             ]);
     }
 

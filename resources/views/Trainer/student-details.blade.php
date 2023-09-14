@@ -37,7 +37,7 @@
               <div class="">
 
                 <div class="ms-panel-header">
-                <h2>{{$Student->FullnameEn}}</h2>
+                <h2>{{$Student->FullnameEn}} - {{$Student->Phone}}</h2>
                   <h6>Attendence</h6>
 
                 </div>

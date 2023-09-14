@@ -31,7 +31,9 @@
                 <div class="ms-panel-header">
 
                   <h6>Attendence</h6>
-
+                  <div class="text-right">
+                    <a href="{{url("/Student/Report/$StudentRound->StudentRoundsId")}}" class="btn btn-success">{{explode(" ", $Student->FullnameEn)[0]}}'s Progress Report</a>
+                  </div>
                 </div>
 
                 <div class="ms-panel-body">
