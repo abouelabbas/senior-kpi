@@ -53,7 +53,7 @@
                     <th>#</th>
 
                     <th class="text-left">Student name </th>
-
+                    <th class="text-left">Phone</th>
                     <th class="text-left"> State</th>
 
                     <th class="text-left">Task </th>
@@ -91,7 +91,7 @@
                               </span>
 
                             </td>
-
+                            <td>{{$Task->Phone}}</td>
                         <td>
                           @if($Task->TaskURL == null)
                           <i class="fa fa-times"></i> 
